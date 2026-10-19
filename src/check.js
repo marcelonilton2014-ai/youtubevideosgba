@@ -26,17 +26,42 @@ async function listVideoIds(playlist, max) {
   do {
     const d = await yt('playlistItems', { part: 'contentDetails', playlistId: playlist, maxResults: 50, ...(pageToken ? { pageToken } : {}) });
     for (const it of d.items ?? []) ids.push(it.contentDetails.videoId);
-    pageToken = d.nextPageToken;
-  } while (pageToken && ids.length < max);
-  return ids.slice(0, max);
-}
-
 async function getStats(ids) {
   const out = [];
   for (let i = 0; i < ids.length; i += 50) {
-    const d = await yt('videos', { part: 'snippet,statistics', id: ids.slice(i, i + 50).join(',') });
+    const d = await yt('videos', {
+      part: 'snippet,statistics,contentDetails',
+      id: ids.slice(i, i + 50).join(',')
+    });
+
     for (const v of d.items ?? []) {
       if (v.statistics?.viewCount === undefined) continue;
+
+      const duration = v.contentDetails?.duration || '';
+      const match = duration.match(
+        /^P(?:\d+D)?T?(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?$/
+      );
+      if (!match) continue;
+
+      const seconds =
+        Number(match[1] || 0) * 3600 +
+        Number(match[2] || 0) * 60 +
+        Number(match[3] || 0);
+
+      // Ignora vídeos com até 3 minutos
+      if (seconds <= 148) continue;
+
+      out.push({
+        id: v.id,
+        title: v.snippet.title,
+        publishedAt: v.snippet.publishedAt,
+        views: Number(v.statistics.viewCount)
+      });
+    }
+  }
+  return out;
+}
+
       out.push({ id: v.id, title: v.snippet.title, publishedAt: v.snippet.publishedAt, views: Number(v.statistics.viewCount) });
     }
   }
