@@ -1,7 +1,12 @@
 {
   "channels": [
-    { "name": "Artista Exemplo 1", "channel": "@handleDoCanal" },
-    { "name": "Artista Exemplo 2", "channel": "UCxxxxxxxxxxxxxxxxxxxxxx" }
+    { "name": "Davidson Silva", "channel": "@DavidsonSilvaOficial" },
+    { "name": "Ramone Rafael", "channel": "@ramonerafaelofc" },
+    { "name": "Flávio Vitor", "channel": "@flaviovitorc" },
+    { "name": "Fátima Souza", "channel": "@FátimaSouzaOficial" },
+    { "name": "Danubia MJ", "channel": "@danubiamjoficial" },
+    { "name": "GBA Music", "channel": "@gbamusicoficiall" },
+    { "name": "Um Peregrino", "channel": "@umperegrinooficial" }
   ],
   "milestones": [
     100000, 250000, 500000, 750000,
@@ -10,4 +15,3 @@
   ],
   "nearRatio": 0.9,
   "maxVideosPerChannel": 500
-}
