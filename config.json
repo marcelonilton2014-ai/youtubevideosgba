@@ -1,0 +1,13 @@
+{
+  "channels": [
+    { "name": "Artista Exemplo 1", "channel": "@handleDoCanal" },
+    { "name": "Artista Exemplo 2", "channel": "UCxxxxxxxxxxxxxxxxxxxxxx" }
+  ],
+  "milestones": [
+    100000, 250000, 500000, 750000,
+    1000000, 2000000, 3000000, 4000000, 5000000,
+    7500000, 10000000, 15000000, 20000000, 50000000, 100000000
+  ],
+  "nearRatio": 0.9,
+  "maxVideosPerChannel": 500
+}

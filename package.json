@@ -1,0 +1,8 @@
+{
+  "name": "youtube-milestones",
+  "version": "1.0.0",
+  "description": "Avisa quando vídeos dos canais monitorados batem marcas de views no YouTube",
+  "type": "module",
+  "scripts": { "check": "node src/check.js" },
+  "engines": { "node": ">=20" }
+}
