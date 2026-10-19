@@ -4,98 +4,199 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>YOUTUBE ARTISTAS GBA MUSIC</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#f6f6f4;--card:#fff;--pn:#fbfbf9;--tab:#ecece7;--tx:#1d1d1b;--mut:#6b6b66;--bd:#e3e3de;--ac:#c2410c;--ok:#15803d;--bar:#e8e8e3}
-@media(prefers-color-scheme:dark){:root{--bg:#141413;--card:#1e1e1c;--pn:#191918;--tab:#242422;--tx:#f1f1ec;--mut:#9a9a92;--bd:#33332f;--ac:#fb923c;--ok:#4ade80;--bar:#33332f}}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--tx);font:15px/1.45 system-ui,sans-serif}
-main{max-width:1100px;margin:0 auto;padding:24px 16px 60px}
-h1{font-size:22px;margin:0}h2{font-size:17px;margin:28px 0 12px}.mut{color:var(--mut);font-size:13px}
+:root{
+  --bg:#eceef3;--pn:#fff;--card:#f5f6fa;--tx:#14182b;--mut:#687089;--bd:#dde0ea;--bar:#e1e4ee;--ok:#12805c;--ind:#5b6bd6;
+  --hd:'Bricolage Grotesque',system-ui,sans-serif;--bd-f:'DM Sans',system-ui,sans-serif;
+}
+@media(prefers-color-scheme:dark){:root{--bg:#0d1020;--pn:#151a2f;--card:#1c2240;--tx:#eef0f8;--mut:#98a0bd;--bd:#283052;--bar:#2a3256;--ok:#4fd3a1;--ind:#8d9bff}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font:15px/1.5 var(--bd-f)}
+a{color:inherit}
+button{font-family:inherit}
 
-/* fichário */
-.tabs{display:flex;gap:4px;overflow-x:auto;margin:18px 0 0;padding:0 2px;scrollbar-width:thin}
-.tab{flex:none;display:flex;align-items:center;gap:6px;padding:9px 14px;border:1px solid var(--bd);border-bottom:none;border-radius:10px 10px 0 0;background:var(--tab);color:var(--mut);font:inherit;font-size:14px;cursor:pointer;position:relative;top:1px}
-.tab:hover{color:var(--tx)}
-.tab.on{background:var(--pn);color:var(--tx);font-weight:600;border-top:3px solid var(--ac);padding-top:7px;z-index:2}
-.tab:focus-visible{outline:2px solid var(--ac);outline-offset:-2px}
-.badge{background:var(--ac);color:#fff;border-radius:99px;font-size:11px;font-weight:700;padding:1px 7px}
-.panel{background:var(--pn);border:1px solid var(--bd);border-radius:0 12px 12px 12px;padding:8px 16px 24px;min-height:300px}
-.panel h2:first-child{margin-top:16px}
-.phead{margin:16px 0 0}.phead b{font-size:20px}
+/* cabeçalho */
+.top{background:#12172b;color:#fff}
+.top .in{max-width:1120px;margin:0 auto;padding:26px 18px 22px;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.logo{width:48px;height:48px;border-radius:12px;background:#f2b705;color:#12172b;display:grid;place-items:center;font:800 17px var(--hd);letter-spacing:-.5px;flex:none}
+.top h1{font:800 clamp(20px,4.2vw,32px)/1.05 var(--hd);letter-spacing:-.02em;margin:0}
+.top .sub{font-size:13px;color:#aab2d0;margin-top:4px}
+.top .tot{margin-left:auto;text-align:right}
+.top .tot b{display:block;font:800 clamp(22px,4vw,30px)/1 var(--hd)}
+.top .tot span{font-size:12px;color:#aab2d0}
+.spine{display:flex;height:6px}.spine i{flex:1}
 
-.stats{display:flex;gap:12px;flex-wrap:wrap;margin:16px 0}.stat{background:var(--card);border:1px solid var(--bd);border-radius:10px;padding:10px 16px}
-.stat b{display:block;font-size:22px}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:12px}
-.card{background:var(--card);border:1px solid var(--bd);border-radius:12px;overflow:hidden;display:flex;flex-direction:column}
-.card.hot{border-color:var(--ac)}.card img{width:100%;aspect-ratio:16/9;object-fit:cover;display:block}
-.card .b{padding:12px;display:flex;flex-direction:column;gap:6px}.card a{color:inherit;text-decoration:none;font-weight:600}
-.bar{height:8px;background:var(--bar);border-radius:99px;overflow:hidden}.bar i{display:block;height:100%;background:var(--ac)}
-.row{display:flex;justify-content:space-between;gap:8px;font-size:13px}.ok{color:var(--ok);font-weight:600}
-.tools{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}
-input,select{background:var(--card);color:var(--tx);border:1px solid var(--bd);border-radius:8px;padding:8px 10px;font:inherit}
-.tw{overflow-x:auto}table{width:100%;border-collapse:collapse;background:var(--card);border:1px solid var(--bd);border-radius:10px}
-th,td{padding:8px 10px;text-align:left;border-bottom:1px solid var(--bd);font-size:14px;white-space:nowrap}td:nth-child(2){white-space:normal;min-width:220px}
-td a{color:inherit}.empty{padding:20px;color:var(--mut)}
+main{max-width:1120px;margin:0 auto;padding:22px 14px 70px}
+
+/* abas */
+.tabs{display:flex;gap:5px;overflow-x:auto;padding:0 2px;scrollbar-width:thin;align-items:flex-end}
+.tab{flex:none;display:flex;align-items:center;gap:8px;padding:9px 14px 9px;border:1px solid var(--bd);border-top:5px solid var(--c);border-bottom:none;border-radius:10px 10px 0 0;background:var(--card);color:var(--mut);font-size:14px;font-weight:500;cursor:pointer;position:relative;top:1px;opacity:.8;transition:opacity .15s,color .15s}
+.tab:hover{opacity:1;color:var(--tx)}
+.tab.on{background:var(--pn);color:var(--tx);font-weight:700;opacity:1;padding-top:13px;z-index:2}
+.tab:focus-visible{outline:2px solid var(--c);outline-offset:-3px}
+.badge{background:var(--c);color:#fff;border-radius:99px;font-size:11px;font-weight:700;padding:1px 7px}
+
+.panel{background:var(--pn);border:1px solid var(--bd);border-top:5px solid var(--c);border-radius:0 16px 16px 16px;padding:22px 20px 30px;min-height:320px}
+
+/* cabeçalho do painel */
+.ph{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.mono{width:54px;height:54px;border-radius:50%;background:var(--c);color:#fff;display:grid;place-items:center;font:800 19px var(--hd);flex:none}
+.ph h2{font:800 clamp(22px,4vw,30px)/1.05 var(--hd);letter-spacing:-.02em;margin:0}
+.ph .mut{font-size:14px}
+.mut{color:var(--mut)}
+
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:20px 0 4px}
+.stat{background:var(--card);border-radius:12px;padding:12px 16px;border-left:4px solid var(--c)}
+.stat b{display:block;font:800 26px/1.1 var(--hd)}
+.stat span{font-size:13px;color:var(--mut)}
+
+.sec{display:flex;align-items:baseline;gap:10px;margin:34px 0 12px}
+.sec h3{font:700 19px var(--hd);margin:0;letter-spacing:-.01em}
+.sec span{font-size:13px;color:var(--mut)}
+
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:14px}
+
+/* pastas de artistas (visão geral) */
+.folder{all:unset;box-sizing:border-box;cursor:pointer;background:var(--card);border-radius:14px;padding:16px;display:flex;flex-direction:column;gap:12px;border-top:5px solid var(--c);transition:transform .15s}
+.folder:hover{transform:translateY(-3px)}
+.folder:focus-visible{outline:2px solid var(--c);outline-offset:2px}
+.folder .t{display:flex;align-items:center;gap:12px}
+.folder .mono{width:42px;height:42px;font-size:15px}
+.folder .n{font:700 17px/1.15 var(--hd)}
+.folder .v{font-size:13px;color:var(--mut)}
+.folder .m{display:flex;justify-content:space-between;font-size:13px}
+.folder .m b{font-size:15px}
+
+/* cards de vídeo */
+.card{background:var(--card);border-radius:14px;overflow:hidden;display:flex;flex-direction:column}
+.th{position:relative}
+.th img{width:100%;aspect-ratio:16/9;object-fit:cover;display:block}
+.tag{position:absolute;left:10px;top:10px;background:var(--c);color:#fff;font-size:12px;font-weight:700;padding:3px 10px;border-radius:99px}
+.card .b{padding:12px 14px 14px;display:flex;flex-direction:column;gap:7px}
+.card .ti{font-weight:700;text-decoration:none;line-height:1.3;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.card .ch{font-size:12px;color:var(--c);font-weight:700}
+.bar{height:10px;background:var(--bar);border-radius:99px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--c);border-radius:99px}
+.row{display:flex;justify-content:space-between;gap:8px;font-size:13px}
+.row b{font-size:15px}
+.ok{color:var(--ok);font-weight:700}
+.chk{display:flex;align-items:center;gap:8px;cursor:pointer}
+.chk input{width:18px;height:18px;accent-color:var(--c)}
+
+/* tabela */
+.tools{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+input[type=text],input:not([type]),select{background:var(--card);color:var(--tx);border:1px solid var(--bd);border-radius:10px;padding:9px 12px;font:inherit}
+input:focus-visible,select:focus-visible{outline:2px solid var(--c);outline-offset:1px}
+.tw{overflow-x:auto;border:1px solid var(--bd);border-radius:12px}
+table{width:100%;border-collapse:collapse}
+th{background:var(--card);font-size:12px;color:var(--mut);font-weight:700;text-align:left;padding:10px 12px;white-space:nowrap}
+td{padding:8px 12px;border-top:1px solid var(--bd);font-size:14px;white-space:nowrap}
+td:nth-child(2){white-space:normal;min-width:240px}
+tbody tr:hover td{background:var(--card)}
+td img{border-radius:6px;display:block}
+td .pct{display:inline-block;min-width:34px;font-weight:700;color:var(--c)}
+.empty{padding:22px;color:var(--mut);background:var(--card);border-radius:12px;grid-column:1/-1}
+
+@media(max-width:560px){.panel{padding:16px 12px 24px}.top .tot{margin-left:0;text-align:left}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
 </head>
 <body>
-<main>
-<h1>YOUTUBE ARTISTAS GBA MUSIC</h1>
-<div class="mut" id="upd">Carregando…</div>
-
-<div class="tabs" id="tabs" role="tablist"></div>
-<div class="panel" id="panel">
-  <div class="phead"><b id="ptitle">Visão geral</b> <span class="mut" id="psub"></span></div>
-  <div class="stats" id="stats"></div>
-
-  <h2>🔥 Quase lá</h2><div class="grid" id="near"></div>
-  <h2>🎉 Bateram recentemente (últimos 14 dias)</h2><div class="grid" id="hit"></div>
-
-  <h2>Todos os vídeos</h2>
-  <div class="tools">
-    <input id="q" placeholder="Buscar vídeo…">
-    <select id="ch"><option value="">Todos os canais</option></select>
-    <select id="so">
-      <option value="progress">Mais perto da meta</option>
-      <option value="views">Mais views</option>
-      <option value="recent">Mais recentes</option>
-    </select>
+<header class="top">
+  <div class="in">
+    <div class="logo">GBA</div>
+    <div>
+      <h1>YOUTUBE ARTISTAS GBA MUSIC</h1>
+      <div class="sub" id="upd">Carregando…</div>
+    </div>
+    <div class="tot"><b id="gtot">–</b><span>views somadas dos artistas</span></div>
   </div>
-  <div class="tw"><table><thead><tr><th></th><th>Vídeo</th><th>Canal</th><th>Views</th><th>Próxima meta</th><th>Faltam</th><th>Previsão</th></tr></thead><tbody id="rows"></tbody></table></div>
-</div>
+  <div class="spine" id="spine"></div>
+</header>
+
+<main>
+  <div class="tabs" id="tabs" role="tablist"></div>
+  <section class="panel" id="panel">
+    <div class="ph">
+      <div class="mono" id="mono">GBA</div>
+      <div><h2 id="ptitle">Visão geral</h2><div class="mut" id="psub"></div></div>
+    </div>
+    <div class="stats" id="stats"></div>
+
+    <div id="artwrap">
+      <div class="sec"><h3>Pastas dos artistas</h3><span>clique para abrir</span></div>
+      <div class="grid" id="artists"></div>
+    </div>
+
+    <div class="sec"><h3>🔥 Quase lá</h3><span>a 95% ou mais da próxima meta</span></div>
+    <div class="grid" id="near"></div>
+
+    <div class="sec"><h3>🎉 Bateram recentemente</h3><span>últimos 14 dias</span></div>
+    <div class="grid" id="hit"></div>
+
+    <div class="sec"><h3>Todos os vídeos</h3></div>
+    <div class="tools">
+      <input id="q" placeholder="Buscar vídeo…">
+      <select id="ch"><option value="">Todos os canais</option></select>
+      <select id="so">
+        <option value="progress">Mais perto da meta</option>
+        <option value="views">Mais views</option>
+        <option value="recent">Mais recentes</option>
+      </select>
+    </div>
+    <div class="tw"><table><thead><tr><th></th><th>Vídeo</th><th>Canal</th><th>Views</th><th>Próxima meta</th><th>Faltam</th><th>Previsão</th></tr></thead><tbody id="rows"></tbody></table></div>
+  </section>
 </main>
+
 <script>
 const $=s=>document.querySelector(s), fmt=n=>n.toLocaleString('pt-BR');
+const cmp=new Intl.NumberFormat('pt-BR',{notation:'compact',maximumFractionDigits:1});
 const lab=n=>n>=1e6?(n/1e6).toLocaleString('pt-BR')+(n===1e6?' milhão':' milhões'):(n/1e3).toLocaleString('pt-BR')+' mil';
-const esc=s=>s.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const eta=d=>d==null?'—':d<=1?'~1 dia':d>365?'> 1 ano':`~${d} dias`;
+
+/* cor de cada artista (novos canais ganham uma cor automática) */
+const COLORS={'Danubia MJ':'#d9467a','Davidson Silva':'#2f6fed','Fátima Souza':'#8a52d9','Flávio Vitor':'#e5532d','GBA Music':'#e0a800','Ramone Rafael':'#16a077','Um Peregrino':'#0e93b0'};
+const EXTRA=['#c2410c','#4d7c0f','#a21caf','#0369a1','#be123c','#7c6f00'];
+const colorOf=c=>{if(!c)return'#5b6bd6';if(COLORS[c])return COLORS[c];let h=0;for(const ch of c)h=(h*31+ch.charCodeAt(0))>>>0;return EXTRA[h%EXTRA.length]};
+const initials=c=>c?c.split(/\s+/).slice(0,2).map(w=>w[0]).join('').toUpperCase():'GBA';
+
 let posted={};try{posted=JSON.parse(localStorage.getItem('posted')||'{}')}catch(e){}
 const savePosted=()=>{try{localStorage.setItem('posted',JSON.stringify(posted))}catch(e){}};
 let D,cur='',chans=[];
 fetch('data.json?'+Date.now()).then(r=>r.json()).then(d=>{D=d;init()}).catch(()=>$('#upd').textContent='Não consegui carregar data.json');
 
+const list=()=>cur?D.videos.filter(v=>v.channel===cur):D.videos;
+const isNear=v=>v.next&&v.progress>=D.nearRatio;
+
 function card(v,kind){
   const k=v.id+':'+(kind==='hit'?v.lastMilestone:v.next);
+  const tag=kind==='hit'?`Meta de ${lab(v.lastMilestone)}`:`${Math.floor(v.progress*100)}% da meta`;
   const body=kind==='hit'
    ?`<div class="ok">Bateu ${lab(v.lastMilestone)} em ${v.reachedAt.split('-').reverse().join('/')}</div>
-     <label class="row"><span><input type="checkbox" data-k="${k}" ${posted[k]?'checked':''}> Post feito</span><span>${fmt(v.views)} views</span></label>`
+     <div class="row"><label class="chk"><input type="checkbox" data-k="${k}" ${posted[k]?'checked':''}> Post feito</label><span>${fmt(v.views)} views</span></div>`
    :`<div class="row"><b>${fmt(v.views)}</b><span>meta: ${lab(v.next)}</span></div>
      <div class="bar"><i style="width:${Math.min(100,v.progress*100)}%"></i></div>
      <div class="row"><span>faltam ${fmt(v.remaining)}</span><span>${v.etaDays!=null?'previsão '+eta(v.etaDays):''}</span></div>`;
-  return `<div class="card ${kind==='near'?'hot':''}"><img loading="lazy" src="https://i.ytimg.com/vi/${v.id}/mqdefault.jpg" alt="">
-   <div class="b"><a href="https://youtu.be/${v.id}" target="_blank" rel="noopener">${esc(v.title)}</a><span class="mut">${esc(v.channel)}</span>${body}</div></div>`;
+  return `<div class="card" style="--c:${colorOf(v.channel)}">
+    <div class="th"><img loading="lazy" src="https://i.ytimg.com/vi/${v.id}/mqdefault.jpg" alt=""><span class="tag">${tag}</span></div>
+    <div class="b"><a class="ti" href="https://youtu.be/${v.id}" target="_blank" rel="noopener">${esc(v.title)}</a><span class="ch">${esc(v.channel)}</span>${body}</div></div>`;
 }
-
-const list=()=>cur?D.videos.filter(v=>v.channel===cur):D.videos;
-const isNear=v=>v.next&&v.progress>=D.nearRatio;
 
 function init(){
   $('#upd').textContent=D.updatedAt?'Atualizado em '+new Date(D.updatedAt).toLocaleString('pt-BR'):'Ainda sem dados: rode o workflow no GitHub Actions.';
   chans=[...new Set(D.videos.map(v=>v.channel))].sort((a,b)=>a.localeCompare(b,'pt-BR'));
+  $('#spine').innerHTML=chans.map(c=>`<i style="background:${colorOf(c)}"></i>`).join('');
+  $('#gtot').textContent=cmp.format(D.videos.reduce((s,v)=>s+v.views,0));
   chans.forEach(c=>$('#ch').insertAdjacentHTML('beforeend',`<option>${esc(c)}</option>`));
   $('#hit').onchange=e=>{if(e.target.dataset.k){posted[e.target.dataset.k]=e.target.checked;savePosted()}};
-  $('#tabs').onclick=e=>{const b=e.target.closest('.tab');if(b)location.hash=b.dataset.c?encodeURIComponent(b.dataset.c):''};
+  const go=e=>{const b=e.target.closest('[data-c]');if(b)location.hash=b.dataset.c?encodeURIComponent(b.dataset.c):''};
+  $('#tabs').onclick=go;$('#artists').onclick=go;
   ['q','ch','so'].forEach(i=>$('#'+i).oninput=table);
-  window.addEventListener('hashchange',readHash);
+  addEventListener('hashchange',readHash);
   readHash();
 }
 
@@ -106,22 +207,33 @@ function readHash(){
 }
 
 function render(){
-  const cut=Date.now()-14*864e5, V=list();
-  // abas
+  const cut=Date.now()-14*864e5, V=list(), col=colorOf(cur);
+  $('#panel').style.setProperty('--c',col);
   $('#tabs').innerHTML=[''].concat(chans).map(c=>{
     const n=D.videos.filter(v=>(!c||v.channel===c)&&isNear(v)).length;
-    return `<button class="tab ${c===cur?'on':''}" role="tab" aria-selected="${c===cur}" data-c="${esc(c)}">${c?'📁 '+esc(c):'📂 Geral'}${n?`<span class="badge" title="vídeos quase na meta">${n}</span>`:''}</button>`;
+    return `<button class="tab ${c===cur?'on':''}" style="--c:${colorOf(c)}" role="tab" aria-selected="${c===cur}" data-c="${esc(c)}">${c?esc(c):'Geral'}${n?`<span class="badge" title="vídeos quase na meta">${n}</span>`:''}</button>`;
   }).join('');
-  // cabeçalho do painel
-  const tv=V.reduce((s,v)=>s+v.views,0);
-  $('#ptitle').textContent=cur||'Visão geral — todos os artistas';
-  $('#psub').textContent=fmt(tv)+' views somadas';
-  // blocos
+
+  $('#mono').textContent=initials(cur);
+  $('#ptitle').textContent=cur||'Visão geral';
+  $('#psub').textContent=(cur?'Pasta do artista · ':'Todos os artistas · ')+cmp.format(V.reduce((s,v)=>s+v.views,0))+' views somadas';
+
   const near=V.filter(isNear).sort((a,b)=>b.progress-a.progress);
   const hit=V.filter(v=>v.reachedAt&&new Date(v.reachedAt)>=cut).sort((a,b)=>b.reachedAt.localeCompare(a.reachedAt));
-  const st=[[V.length,'vídeos monitorados'],[near.length,'quase lá'],[hit.length,'bateram em 14 dias']];
+  const st=[[fmt(V.length),'vídeos monitorados'],[near.length,'quase lá'],[hit.length,'bateram em 14 dias']];
   if(!cur)st.push([chans.length,'artistas']);
-  $('#stats').innerHTML=st.map(([n,t])=>`<div class="stat"><b>${n}</b>${t}</div>`).join('');
+  $('#stats').innerHTML=st.map(([n,t])=>`<div class="stat"><b>${n}</b><span>${t}</span></div>`).join('');
+
+  $('#artwrap').style.display=cur?'none':'';
+  if(!cur){
+    $('#artists').innerHTML=chans.map(c=>{
+      const vs=D.videos.filter(v=>v.channel===c), tv=vs.reduce((s,v)=>s+v.views,0), n=vs.filter(isNear).length;
+      return `<button class="folder" style="--c:${colorOf(c)}" data-c="${esc(c)}">
+        <div class="t"><div class="mono">${esc(initials(c))}</div><div><div class="n">${esc(c)}</div><div class="v">${cmp.format(tv)} views</div></div></div>
+        <div class="m"><span>${fmt(vs.length)} vídeos</span><span><b>${n}</b> quase lá</span></div></button>`;
+    }).join('');
+  }
+
   $('#near').innerHTML=near.map(v=>card(v,'near')).join('')||'<div class="empty">Nenhum vídeo perto de uma meta agora.</div>';
   $('#hit').innerHTML=hit.map(v=>card(v,'hit')).join('')||'<div class="empty">Nenhuma meta batida recentemente.</div>';
   $('#ch').style.display=cur?'none':'';
@@ -133,9 +245,9 @@ function table(){
   const q=$('#q').value.toLowerCase(),ch=cur?'':$('#ch').value,so=$('#so').value;
   const s={progress:(a,b)=>b.progress-a.progress,views:(a,b)=>b.views-a.views,recent:(a,b)=>b.publishedAt.localeCompare(a.publishedAt)}[so];
   $('#rows').innerHTML=list().filter(v=>(!ch||v.channel===ch)&&v.title.toLowerCase().includes(q)).sort(s).slice(0,500).map(v=>
-   `<tr><td><img src="https://i.ytimg.com/vi/${v.id}/default.jpg" width="64" loading="lazy" alt=""></td>
+   `<tr style="--c:${colorOf(v.channel)}"><td><img src="https://i.ytimg.com/vi/${v.id}/default.jpg" width="64" loading="lazy" alt=""></td>
     <td><a href="https://youtu.be/${v.id}" target="_blank" rel="noopener">${esc(v.title)}</a></td><td>${esc(v.channel)}</td>
-    <td>${fmt(v.views)}</td><td>${v.next?lab(v.next)+' ('+Math.floor(v.progress*100)+'%)':'—'}</td><td>${v.next?fmt(v.remaining):'—'}</td><td>${eta(v.etaDays)}</td></tr>`).join('');
+    <td>${fmt(v.views)}</td><td>${v.next?lab(v.next)+' <span class="pct">'+Math.floor(v.progress*100)+'%</span>':'—'}</td><td>${v.next?fmt(v.remaining):'—'}</td><td>${eta(v.etaDays)}</td></tr>`).join('');
 }
 </script>
 </body>
