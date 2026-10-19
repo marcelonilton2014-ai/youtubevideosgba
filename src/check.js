@@ -99,4 +99,44 @@ state.lastRun = new Date().toISOString();
 await writeFile(P('state/state.json'), JSON.stringify(state, null, 2) + '\n');
 await mkdir(P('docs'), { recursive: true });
 await writeFile(P('docs/data.json'), JSON.stringify({ updatedAt: state.lastRun, nearRatio, milestones, videos: out }) + '\n');
+
+// ───────────────────────────────────────────────────────────────
+// HISTÓRICO DIÁRIO → docs/history.json (usado na página de acompanhamento)
+// Formato compacto:
+//   { base: 'AAAA-MM-DD' (dia 0), v: { <idDoVideo>: { s: dia em que apareceu, v: [views de cada dia, null = dia sem foto] } } }
+// O "dia" é o mesmo que o robô já usa (variável `today`).
+// ───────────────────────────────────────────────────────────────
+try {
+  const HIST = P('docs/history.json');
+  const idx = (a, b) => Math.round((Date.parse(b + 'T00:00:00Z') - Date.parse(a + 'T00:00:00Z')) / 864e5);
+  let hist = null;
+  try { hist = JSON.parse(await readFile(HIST, 'utf8')); } catch { /* ainda não existe */ }
+
+  const put = (id, date, views) => {
+    const i = idx(hist.base, date);
+    if (i < 0) return;
+    const e = (hist.v[id] ??= { s: i, v: [] });
+    const j = i - e.s;
+    if (j < 0) return;
+    while (e.v.length < j) e.v.push(null);
+    e.v[j] = views;
+  };
+
+  if (!hist) {
+    // primeira vez: aproveita os até 30 dias que o robô já tinha guardado em state.json
+    const datas = Object.values(state.videos).flatMap((e) => (e.history ?? []).map((h) => h[0]));
+    hist = { base: [...datas, today].sort()[0], v: {} };
+    for (const [id, e] of Object.entries(state.videos)) for (const [d, views] of e.history ?? []) put(id, d, views);
+    console.log(`Histórico criado. Dia 0 = ${hist.base}`);
+  }
+
+  for (const v of out) put(v.id, today, v.views); // foto de hoje (se rodar 2x no dia, só sobrescreve)
+  hist.updatedAt = state.lastRun;
+  await writeFile(HIST, JSON.stringify(hist) + '\n');
+  console.log(`Histórico: dia ${idx(hist.base, today)} gravado (${out.length} vídeos).`);
+} catch (e) {
+  // o histórico nunca deve derrubar o robô principal
+  console.error('Aviso: não consegui gravar o histórico:', e.message);
+}
+
 if (errors.length) process.exit(1);
