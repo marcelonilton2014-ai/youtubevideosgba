@@ -3,13 +3,25 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Marcos de views</title>
+<title>YOUTUBE ARTISTAS GBA MUSIC</title>
 <style>
-:root{--bg:#f6f6f4;--card:#fff;--tx:#1d1d1b;--mut:#6b6b66;--bd:#e3e3de;--ac:#c2410c;--ok:#15803d;--bar:#e8e8e3}
-@media(prefers-color-scheme:dark){:root{--bg:#141413;--card:#1e1e1c;--tx:#f1f1ec;--mut:#9a9a92;--bd:#33332f;--ac:#fb923c;--ok:#4ade80;--bar:#33332f}}
+:root{--bg:#f6f6f4;--card:#fff;--pn:#fbfbf9;--tab:#ecece7;--tx:#1d1d1b;--mut:#6b6b66;--bd:#e3e3de;--ac:#c2410c;--ok:#15803d;--bar:#e8e8e3}
+@media(prefers-color-scheme:dark){:root{--bg:#141413;--card:#1e1e1c;--pn:#191918;--tab:#242422;--tx:#f1f1ec;--mut:#9a9a92;--bd:#33332f;--ac:#fb923c;--ok:#4ade80;--bar:#33332f}}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--tx);font:15px/1.45 system-ui,sans-serif}
 main{max-width:1100px;margin:0 auto;padding:24px 16px 60px}
-h1{font-size:22px;margin:0}h2{font-size:17px;margin:32px 0 12px}.mut{color:var(--mut);font-size:13px}
+h1{font-size:22px;margin:0}h2{font-size:17px;margin:28px 0 12px}.mut{color:var(--mut);font-size:13px}
+
+/* fichário */
+.tabs{display:flex;gap:4px;overflow-x:auto;margin:18px 0 0;padding:0 2px;scrollbar-width:thin}
+.tab{flex:none;display:flex;align-items:center;gap:6px;padding:9px 14px;border:1px solid var(--bd);border-bottom:none;border-radius:10px 10px 0 0;background:var(--tab);color:var(--mut);font:inherit;font-size:14px;cursor:pointer;position:relative;top:1px}
+.tab:hover{color:var(--tx)}
+.tab.on{background:var(--pn);color:var(--tx);font-weight:600;border-top:3px solid var(--ac);padding-top:7px;z-index:2}
+.tab:focus-visible{outline:2px solid var(--ac);outline-offset:-2px}
+.badge{background:var(--ac);color:#fff;border-radius:99px;font-size:11px;font-weight:700;padding:1px 7px}
+.panel{background:var(--pn);border:1px solid var(--bd);border-radius:0 12px 12px 12px;padding:8px 16px 24px;min-height:300px}
+.panel h2:first-child{margin-top:16px}
+.phead{margin:16px 0 0}.phead b{font-size:20px}
+
 .stats{display:flex;gap:12px;flex-wrap:wrap;margin:16px 0}.stat{background:var(--card);border:1px solid var(--bd);border-radius:10px;padding:10px 16px}
 .stat b{display:block;font-size:22px}
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:12px}
@@ -27,24 +39,29 @@ td a{color:inherit}.empty{padding:20px;color:var(--mut)}
 </head>
 <body>
 <main>
-<h1>Marcos de views</h1>
+<h1>YOUTUBE ARTISTAS GBA MUSIC</h1>
 <div class="mut" id="upd">Carregando…</div>
-<div class="stats" id="stats"></div>
 
-<h2>🔥 Quase lá</h2><div class="grid" id="near"></div>
-<h2>🎉 Bateram recentemente (últimos 14 dias)</h2><div class="grid" id="hit"></div>
+<div class="tabs" id="tabs" role="tablist"></div>
+<div class="panel" id="panel">
+  <div class="phead"><b id="ptitle">Visão geral</b> <span class="mut" id="psub"></span></div>
+  <div class="stats" id="stats"></div>
 
-<h2>Todos os vídeos</h2>
-<div class="tools">
-  <input id="q" placeholder="Buscar vídeo…">
-  <select id="ch"><option value="">Todos os canais</option></select>
-  <select id="so">
-    <option value="progress">Mais perto da meta</option>
-    <option value="views">Mais views</option>
-    <option value="recent">Mais recentes</option>
-  </select>
+  <h2>🔥 Quase lá</h2><div class="grid" id="near"></div>
+  <h2>🎉 Bateram recentemente (últimos 14 dias)</h2><div class="grid" id="hit"></div>
+
+  <h2>Todos os vídeos</h2>
+  <div class="tools">
+    <input id="q" placeholder="Buscar vídeo…">
+    <select id="ch"><option value="">Todos os canais</option></select>
+    <select id="so">
+      <option value="progress">Mais perto da meta</option>
+      <option value="views">Mais views</option>
+      <option value="recent">Mais recentes</option>
+    </select>
+  </div>
+  <div class="tw"><table><thead><tr><th></th><th>Vídeo</th><th>Canal</th><th>Views</th><th>Próxima meta</th><th>Faltam</th><th>Previsão</th></tr></thead><tbody id="rows"></tbody></table></div>
 </div>
-<div class="tw"><table><thead><tr><th></th><th>Vídeo</th><th>Canal</th><th>Views</th><th>Próxima meta</th><th>Faltam</th><th>Previsão</th></tr></thead><tbody id="rows"></tbody></table></div>
 </main>
 <script>
 const $=s=>document.querySelector(s), fmt=n=>n.toLocaleString('pt-BR');
@@ -53,7 +70,7 @@ const esc=s=>s.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&qu
 const eta=d=>d==null?'—':d<=1?'~1 dia':d>365?'> 1 ano':`~${d} dias`;
 let posted={};try{posted=JSON.parse(localStorage.getItem('posted')||'{}')}catch(e){}
 const savePosted=()=>{try{localStorage.setItem('posted',JSON.stringify(posted))}catch(e){}};
-let D;
+let D,cur='',chans=[];
 fetch('data.json?'+Date.now()).then(r=>r.json()).then(d=>{D=d;init()}).catch(()=>$('#upd').textContent='Não consegui carregar data.json');
 
 function card(v,kind){
@@ -68,23 +85,54 @@ function card(v,kind){
    <div class="b"><a href="https://youtu.be/${v.id}" target="_blank" rel="noopener">${esc(v.title)}</a><span class="mut">${esc(v.channel)}</span>${body}</div></div>`;
 }
 
+const list=()=>cur?D.videos.filter(v=>v.channel===cur):D.videos;
+const isNear=v=>v.next&&v.progress>=D.nearRatio;
+
 function init(){
-  const V=D.videos, cut=Date.now()-14*864e5;
   $('#upd').textContent=D.updatedAt?'Atualizado em '+new Date(D.updatedAt).toLocaleString('pt-BR'):'Ainda sem dados: rode o workflow no GitHub Actions.';
-  const near=V.filter(v=>v.next&&v.progress>=D.nearRatio).sort((a,b)=>b.progress-a.progress);
+  chans=[...new Set(D.videos.map(v=>v.channel))].sort((a,b)=>a.localeCompare(b,'pt-BR'));
+  chans.forEach(c=>$('#ch').insertAdjacentHTML('beforeend',`<option>${esc(c)}</option>`));
+  $('#hit').onchange=e=>{if(e.target.dataset.k){posted[e.target.dataset.k]=e.target.checked;savePosted()}};
+  $('#tabs').onclick=e=>{const b=e.target.closest('.tab');if(b)location.hash=b.dataset.c?encodeURIComponent(b.dataset.c):''};
+  ['q','ch','so'].forEach(i=>$('#'+i).oninput=table);
+  window.addEventListener('hashchange',readHash);
+  readHash();
+}
+
+function readHash(){
+  let c='';try{c=decodeURIComponent(location.hash.slice(1))}catch(e){}
+  cur=chans.includes(c)?c:'';
+  render();
+}
+
+function render(){
+  const cut=Date.now()-14*864e5, V=list();
+  // abas
+  $('#tabs').innerHTML=[''].concat(chans).map(c=>{
+    const n=D.videos.filter(v=>(!c||v.channel===c)&&isNear(v)).length;
+    return `<button class="tab ${c===cur?'on':''}" role="tab" aria-selected="${c===cur}" data-c="${esc(c)}">${c?'📁 '+esc(c):'📂 Geral'}${n?`<span class="badge" title="vídeos quase na meta">${n}</span>`:''}</button>`;
+  }).join('');
+  // cabeçalho do painel
+  const tv=V.reduce((s,v)=>s+v.views,0);
+  $('#ptitle').textContent=cur||'Visão geral — todos os artistas';
+  $('#psub').textContent=fmt(tv)+' views somadas';
+  // blocos
+  const near=V.filter(isNear).sort((a,b)=>b.progress-a.progress);
   const hit=V.filter(v=>v.reachedAt&&new Date(v.reachedAt)>=cut).sort((a,b)=>b.reachedAt.localeCompare(a.reachedAt));
-  $('#stats').innerHTML=[[V.length,'vídeos monitorados'],[near.length,'quase lá'],[hit.length,'bateram em 14 dias']].map(([n,t])=>`<div class="stat"><b>${n}</b>${t}</div>`).join('');
+  const st=[[V.length,'vídeos monitorados'],[near.length,'quase lá'],[hit.length,'bateram em 14 dias']];
+  if(!cur)st.push([chans.length,'artistas']);
+  $('#stats').innerHTML=st.map(([n,t])=>`<div class="stat"><b>${n}</b>${t}</div>`).join('');
   $('#near').innerHTML=near.map(v=>card(v,'near')).join('')||'<div class="empty">Nenhum vídeo perto de uma meta agora.</div>';
   $('#hit').innerHTML=hit.map(v=>card(v,'hit')).join('')||'<div class="empty">Nenhuma meta batida recentemente.</div>';
-  $('#hit').onchange=e=>{if(e.target.dataset.k){posted[e.target.dataset.k]=e.target.checked;savePosted()}};
-  [...new Set(V.map(v=>v.channel))].sort().forEach(c=>$('#ch').insertAdjacentHTML('beforeend',`<option>${esc(c)}</option>`));
-  ['q','ch','so'].forEach(i=>$('#'+i).oninput=table);table();
+  $('#ch').style.display=cur?'none':'';
+  $('#ch').value='';
+  table();
 }
 
 function table(){
-  const q=$('#q').value.toLowerCase(),ch=$('#ch').value,so=$('#so').value;
+  const q=$('#q').value.toLowerCase(),ch=cur?'':$('#ch').value,so=$('#so').value;
   const s={progress:(a,b)=>b.progress-a.progress,views:(a,b)=>b.views-a.views,recent:(a,b)=>b.publishedAt.localeCompare(a.publishedAt)}[so];
-  $('#rows').innerHTML=D.videos.filter(v=>(!ch||v.channel===ch)&&v.title.toLowerCase().includes(q)).sort(s).slice(0,300).map(v=>
+  $('#rows').innerHTML=list().filter(v=>(!ch||v.channel===ch)&&v.title.toLowerCase().includes(q)).sort(s).slice(0,500).map(v=>
    `<tr><td><img src="https://i.ytimg.com/vi/${v.id}/default.jpg" width="64" loading="lazy" alt=""></td>
     <td><a href="https://youtu.be/${v.id}" target="_blank" rel="noopener">${esc(v.title)}</a></td><td>${esc(v.channel)}</td>
     <td>${fmt(v.views)}</td><td>${v.next?lab(v.next)+' ('+Math.floor(v.progress*100)+'%)':'—'}</td><td>${v.next?fmt(v.remaining):'—'}</td><td>${eta(v.etaDays)}</td></tr>`).join('');
