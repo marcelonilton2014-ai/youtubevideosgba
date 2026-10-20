@@ -1,5 +1,5 @@
 {
- "rev": 20,
+ "rev": 21,
  "projects": [
   {
    "id": "pmvgrcjil",
@@ -349,6 +349,32 @@
      "t": "Mostra a Tua Glória - GBA Worship (Video Oficial)",
      "c": "GBA Music",
      "d": "2025-06-05"
+    }
+   ]
+  },
+  {
+   "id": "pmvh1i147",
+   "artist": "Ramone Rafael",
+   "name": "O SOM DA IGREJA VOL 2",
+   "launch": "2026-10-11",
+   "videos": [
+    {
+     "id": "PRmuR13BY0I",
+     "t": "Este Pranto em Minhas Mãos - Ramon e Rafael | O Som da Igreja 2",
+     "c": "Ramone Rafael",
+     "d": "2026-10-16"
+    },
+    {
+     "id": "vj44etgNLqY",
+     "t": "Enquanto Eu Te Adoro - Ramon e Rafael | O Som da Igreja 2",
+     "c": "Ramone Rafael",
+     "d": "2026-10-14"
+    },
+    {
+     "id": "kUNa4VbAxM8",
+     "t": "Ave Maria - Ramon e Rafael | O Som da Igreja 2",
+     "c": "Ramone Rafael",
+     "d": "2026-10-11"
     }
    ]
   }
