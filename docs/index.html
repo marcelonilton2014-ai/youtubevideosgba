@@ -6,181 +6,272 @@
 <title>YOUTUBE ARTISTAS GBA MUSIC</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root{
-  --bg:#f7f7f9;--pn:#fff;--card:#f4f5f8;--tx:#111827;--mut:#6b7280;--bd:#e8eaef;--bar:#e9ebf1;--ok:#0f9d6b;--warn:#b45309;--warnbg:#fef3c7;
-  --sh:0 1px 2px rgba(16,24,40,.04),0 4px 16px rgba(16,24,40,.05);
-  --f:'Inter',system-ui,-apple-system,sans-serif;
+  --page:#e4e4e1;--shell:#f4f4f2;--pn:#fff;--soft:#f1f1ee;--tx:#17171a;--mut:#8b8b92;--bd:#ebebe8;
+  --ac:#ec6a4d;--ink:#121214;--inktx:#fff;--warn:#b4411f;--ok:#17916a;
+  --f:'Hanken Grotesk',system-ui,-apple-system,sans-serif;
+  --sh:0 1px 2px rgba(20,20,25,.04),0 8px 24px rgba(20,20,25,.05);
 }
-@media(prefers-color-scheme:dark){:root{--bg:#0b0d14;--pn:#13161f;--card:#1a1e2a;--tx:#f3f4f8;--mut:#9aa1b5;--bd:#252a39;--bar:#262b3b;--ok:#34d399;--warn:#fbbf24;--warnbg:#3a2e0b;--sh:none}}
+@media(prefers-color-scheme:dark){:root{--page:#08080a;--shell:#121214;--pn:#1b1b1f;--soft:#26262b;--tx:#f4f4f5;--mut:#9b9ba3;--bd:#2b2b31;--ac:#f1775a;--ink:#f4f4f5;--inktx:#111;--warn:#ffa58c;--ok:#4fd3a1;--sh:none}}
 *{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--tx);font:14.5px/1.5 var(--f);-webkit-font-smoothing:antialiased}
-a{color:inherit}button{font-family:inherit}
+body{margin:0;background:var(--page);color:var(--tx);font:15px/1.5 var(--f);-webkit-font-smoothing:antialiased;padding:14px}
+a{color:inherit}button{font-family:inherit;cursor:pointer}
+svg.i{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex:none}
+.hatch{background-color:color-mix(in srgb,var(--ac) 16%,var(--pn));background-image:repeating-linear-gradient(135deg,var(--ac) 0 2px,transparent 2px 7px)}
 
-/* topo */
-.top{background:var(--pn);border-bottom:1px solid var(--bd)}
-.top .in{max-width:1120px;margin:0 auto;padding:20px 18px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
-.logo{width:40px;height:40px;border-radius:11px;background:var(--tx);color:var(--pn);display:grid;place-items:center;font:800 14px var(--f);letter-spacing:-.3px;flex:none}
-.top h1{font:800 clamp(17px,3.4vw,22px)/1.1 var(--f);letter-spacing:-.02em;margin:0}
-.top .sub{font-size:12.5px;color:var(--mut);margin-top:3px}
-.hact{margin-left:auto;display:flex;gap:8px;flex-wrap:wrap;align-items:center}
-.rbtn{display:inline-flex;align-items:center;gap:6px;background:var(--pn);color:var(--tx);border:1px solid var(--bd);font-weight:600;font-size:13px;padding:8px 15px;border-radius:99px;cursor:pointer;transition:all .15s}
-.rbtn:hover{border-color:var(--tx)}.rbtn[disabled]{opacity:.7;cursor:progress}
-#msg{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);background:var(--tx);color:var(--pn);padding:11px 18px;border-radius:12px;font-size:13.5px;max-width:min(92vw,520px);box-shadow:0 8px 30px rgba(0,0,0,.25);opacity:0;pointer-events:none;transition:opacity .2s;z-index:9}
-#msg.on{opacity:1}
-.navlink{display:inline-flex;align-items:center;gap:6px;background:var(--tx);color:var(--pn);font-weight:600;font-size:13px;text-decoration:none;padding:9px 16px;border-radius:99px;transition:opacity .15s}
-.navlink:hover{opacity:.85}
-.spine{display:flex;height:3px}.spine i{flex:1}
+.shell{max-width:1400px;margin:0 auto;background:var(--shell);border-radius:38px;padding:18px 18px 28px}
 
-main{max-width:1120px;margin:0 auto;padding:24px 16px 70px}
+/* ===== barra superior ===== */
+.topbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;background:var(--pn);border-radius:99px;padding:8px 10px 8px 10px;box-shadow:var(--sh)}
+.brand{display:flex;align-items:center;gap:12px;padding-right:10px}
+.logo{width:46px;height:46px;border-radius:50%;background:var(--ink);color:var(--inktx);display:grid;place-items:center;font:700 14px var(--f);letter-spacing:-.3px}
+.brand span{font:500 20px/1 var(--f);letter-spacing:-.02em;white-space:nowrap}
+.chips{display:flex;gap:8px}
+.chip{background:var(--soft);border-radius:99px;padding:11px 20px;font-size:15px;text-decoration:none;white-space:nowrap;transition:background .15s}
+.chip.on{background:var(--ink);color:var(--inktx)}
+a.chip:hover{background:color-mix(in srgb,var(--ac) 18%,var(--soft))}
+.search{flex:1;min-width:190px;display:flex;align-items:center;gap:10px;background:var(--soft);border-radius:99px;padding:0 18px;height:46px;color:var(--mut)}
+.search input{all:unset;flex:1;font-size:15px;color:var(--tx);min-width:0}
+.search input::placeholder{color:var(--mut)}
+.datepill{display:flex;align-items:center;gap:10px;border:1px solid var(--bd);border-radius:99px;padding:4px 14px 4px 4px;font-size:14px;white-space:nowrap}
+.iconbtn{width:38px;height:38px;border-radius:50%;border:none;background:var(--soft);color:var(--tx);display:grid;place-items:center}
+.dbadge{background:var(--ac);color:#fff;font-size:12px;font-weight:700;border-radius:99px;padding:1px 9px}
+.dbadge:empty,.dbadge[data-n="0"]{display:none}
+.rbtn{display:inline-flex;align-items:center;gap:8px;background:var(--ink);color:var(--inktx);border:none;border-radius:99px;height:46px;padding:0 20px;font-size:14.5px;font-weight:500}
+.rbtn[disabled]{opacity:.7;cursor:progress}
+.rbtn.busy svg{animation:sp 1s linear infinite}@keyframes sp{to{transform:rotate(360deg)}}
 
-/* abas */
-.tabs{display:flex;gap:6px;overflow-x:auto;padding:2px 2px 14px;scrollbar-width:none}
-.tabs::-webkit-scrollbar{display:none}
-.tab{flex:none;display:flex;align-items:center;gap:8px;padding:8px 14px;border:1px solid var(--bd);border-radius:99px;background:var(--pn);color:var(--mut);font-size:13.5px;font-weight:500;cursor:pointer;transition:all .15s}
-.tab::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--c)}
-.tab:hover{color:var(--tx);border-color:var(--c)}
-.tab.on{background:var(--tx);border-color:var(--tx);color:var(--pn);font-weight:600}
-.tab:focus-visible{outline:2px solid var(--c);outline-offset:2px}
-.badge{background:var(--c);color:#fff;border-radius:99px;font-size:11px;font-weight:700;padding:1px 7px}
+/* ===== layout ===== */
+.layout{display:grid;grid-template-columns:86px 1fr;gap:18px;margin-top:18px;align-items:start}
+.rail{position:sticky;top:14px;background:var(--pn);border-radius:44px;padding:14px 0;display:flex;flex-direction:column;align-items:center;gap:12px;box-shadow:var(--sh);max-height:calc(100vh - 28px);overflow:auto;scrollbar-width:none}
+.rail::-webkit-scrollbar{display:none}
+.rb{position:relative;width:54px;height:54px;border-radius:50%;border:none;background:var(--soft);color:var(--mut);display:grid;place-items:center;font:600 15px var(--f);transition:all .15s;flex:none}
+.rb:hover{color:var(--tx);box-shadow:inset 0 0 0 2px var(--c,var(--ac))}
+.rb.on{background:var(--ac);color:#fff;box-shadow:none}
+.rb .dot{position:absolute;right:3px;top:3px;width:12px;height:12px;border-radius:50%;background:var(--c);border:2px solid var(--pn)}
+.rb:focus-visible{outline:2px solid var(--ac);outline-offset:2px}
+.rsep{width:30px;height:1px;background:var(--bd);flex:none}
+.content{min-width:0;display:flex;flex-direction:column;gap:18px}
 
-.panel{background:var(--pn);border:1px solid var(--bd);border-radius:20px;padding:26px 24px 32px;box-shadow:var(--sh);min-height:320px}
-
-/* cabeçalho do painel */
-.ph{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
-.mono{width:48px;height:48px;border-radius:14px;background:var(--c);color:#fff;display:grid;place-items:center;font:800 16px var(--f);flex:none}
-.ph h2{font:800 clamp(22px,4vw,28px)/1.1 var(--f);letter-spacing:-.025em;margin:0}
-.ph .mut{font-size:13.5px}
+.card{background:var(--pn);border-radius:30px;padding:22px;box-shadow:var(--sh)}
 .mut{color:var(--mut)}
 
-.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:22px 0 0}
-.stat{background:var(--card);border-radius:14px;padding:14px 16px}
-.stat b{display:block;font:800 24px/1.1 var(--f);letter-spacing:-.02em}
-.stat span{font-size:12.5px;color:var(--mut)}
+/* ===== topo do conteúdo ===== */
+.row1{display:grid;grid-template-columns:1fr 400px;gap:18px;align-items:stretch}
+.greet h1{font:400 clamp(34px,5.2vw,58px)/1.05 var(--f);letter-spacing:-.035em;margin:6px 0 8px}
+.greet .lead{color:var(--mut);font-size:15.5px;max-width:520px;margin:0}
+.bal{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:26px}
+.bc{display:flex;align-items:center;gap:16px;background:var(--pn);border-radius:30px;padding:22px;box-shadow:var(--sh)}
+.ico{width:56px;height:56px;border-radius:17px;display:grid;place-items:center;flex:none;color:#fff}
+.ico.dark{background:var(--ink);color:var(--inktx)}.ico.acc{background:var(--ac)}
+.bc .l{color:var(--mut);font-size:15px}
+.bc .v{font:400 clamp(26px,3vw,36px)/1.1 var(--f);letter-spacing:-.03em}
+.delta{margin-left:auto;align-self:flex-end;background:var(--ink);color:var(--inktx);font-size:12px;font-weight:600;border-radius:99px;padding:3px 10px;white-space:nowrap}
+.delta.ac{background:var(--ac);color:#fff}
 
-.sec{display:flex;align-items:center;gap:10px;margin:36px 0 14px}
-.sec h3{font:700 17px var(--f);margin:0;letter-spacing:-.015em}
-.sec span{font-size:13px;color:var(--mut)}
-.sec .pill{background:var(--tx);color:var(--pn);font-weight:700;font-size:12px;padding:2px 9px;border-radius:99px}
+/* medidor */
+.gcard{display:flex;flex-direction:column;gap:6px}
+.ghead{display:flex;align-items:center;gap:10px;font-weight:500;font-size:17px}
+.gbody{display:grid;grid-template-columns:128px 1fr;gap:14px;align-items:center;margin-top:8px}
+.tiles{display:flex;flex-direction:column;gap:10px}
+.tile{background:var(--soft);border-radius:18px;padding:12px 14px}
+.tile .l{font-size:12.5px;color:var(--mut);line-height:1.25}
+.tile .n{font:400 26px/1.1 var(--f);letter-spacing:-.02em;margin-top:3px}
+.gauge{position:relative}
+.gauge svg{width:100%;display:block}
+.gauge .c{position:absolute;left:0;right:0;bottom:2px;text-align:center}
+.gauge .c b{display:block;font:400 clamp(34px,4vw,46px)/1 var(--f);letter-spacing:-.04em}
+.gauge .c span{font-size:13px;color:var(--mut)}
+.gfoot{display:flex;align-items:center;gap:10px;background:var(--soft);border-radius:99px;padding:6px 6px 6px 16px;font-size:13px;margin-top:6px}
+.gfoot .pl{margin-left:auto;background:var(--ac);color:#fff;font-weight:600;font-size:12px;border-radius:99px;padding:3px 10px;white-space:nowrap;text-decoration:none}
 
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px}
+/* ===== títulos de seção ===== */
+.shead{display:flex;align-items:center;gap:12px;margin:0 4px 14px;flex-wrap:wrap}
+.shead h2{font:500 22px/1 var(--f);letter-spacing:-.02em;margin:0;display:flex;align-items:center;gap:10px}
+.count{background:var(--ac);color:#fff;font-weight:700;font-size:13px;border-radius:99px;padding:2px 11px}
+.shead .mut{font-size:14px}
 
-/* METAS BATIDAS (destaque no topo) */
-.hits{margin:26px 0 0}
-.hits .sec{margin-top:0}
-.hitlist{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,430px),1fr));gap:14px}
-.hit{position:relative;display:flex;gap:16px;align-items:stretch;border-radius:18px;padding:14px;border:1px solid color-mix(in srgb,var(--c) 35%,var(--bd));background:linear-gradient(135deg,color-mix(in srgb,var(--c) 14%,var(--pn)),var(--pn) 70%);overflow:hidden}
-.hit::after{content:"";position:absolute;right:-40px;top:-40px;width:140px;height:140px;border-radius:50%;background:var(--c);opacity:.08}
-.hit .th{flex:none;width:168px;align-self:center}
-.hit .th img{width:100%;aspect-ratio:16/9;object-fit:cover;display:block;border-radius:11px}
-.hit .b{display:flex;flex-direction:column;gap:6px;min-width:0;flex:1;justify-content:center}
-.medal{align-self:flex-start;background:var(--c);color:#fff;font-weight:800;font-size:13px;padding:4px 12px;border-radius:99px;letter-spacing:-.01em}
-.hit .big{font:800 22px/1.05 var(--f);letter-spacing:-.025em}
-.hit .ti{font-weight:600;font-size:13.5px;text-decoration:none;line-height:1.3;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-.hit .ch{font-size:12px;color:var(--mut);font-weight:500}
-.hit .foot{display:flex;align-items:center;gap:10px;flex-wrap:wrap;font-size:12.5px;margin-top:2px}
-.pend{background:var(--warnbg);color:var(--warn);font-weight:700;font-size:11.5px;padding:2px 9px;border-radius:99px}
-.done{color:var(--ok);font-weight:700;font-size:11.5px}
-.hit.isdone{opacity:.62}
-.chk{display:flex;align-items:center;gap:7px;cursor:pointer;font-weight:500}
-.chk input{width:17px;height:17px;accent-color:var(--c)}
-@media(max-width:520px){.hit{flex-direction:column}.hit .th{width:100%}}
+/* ===== METAS BATIDAS ===== */
+.hitlist{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,470px),1fr));gap:16px}
+.hit{position:relative;display:flex;gap:18px;background:var(--pn);border-radius:30px;padding:16px;box-shadow:var(--sh);overflow:hidden}
+.hit::before{content:"";position:absolute;inset:0 0 auto 0;height:5px;background-image:repeating-linear-gradient(135deg,var(--ac) 0 3px,transparent 3px 8px);opacity:.9}
+.hit .th{flex:none;width:176px;align-self:center}
+.hit .th img{width:100%;aspect-ratio:16/9;object-fit:cover;display:block;border-radius:18px}
+.hit .b{display:flex;flex-direction:column;gap:7px;min-width:0;flex:1;justify-content:center;padding:6px 4px 2px 0}
+.medal{align-self:flex-start;background:var(--ac);color:#fff;font-weight:600;font-size:12.5px;padding:4px 13px;border-radius:99px}
+.hit .big{font:400 38px/1 var(--f);letter-spacing:-.04em;color:var(--ac)}
+.hit .ti{font-weight:500;font-size:15px;text-decoration:none;line-height:1.3;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.hit .ch{font-size:13px;color:var(--mut)}
+.hit .foot{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:4px}
+.tg{display:inline-flex;align-items:center;gap:8px;background:var(--soft);border-radius:99px;padding:5px 14px 5px 6px;font-size:13px;font-weight:500;cursor:pointer;user-select:none}
+.tg input{appearance:none;width:22px;height:22px;border-radius:50%;background:var(--pn);border:2px solid var(--bd);margin:0;display:grid;place-items:center;cursor:pointer}
+.tg input:checked{background:var(--ink);border-color:var(--ink)}
+.tg input:checked::after{content:"✓";color:var(--inktx);font-size:13px;line-height:1}
+.pend{background:color-mix(in srgb,var(--ac) 16%,var(--pn));color:var(--warn);font-weight:600;font-size:12px;border-radius:99px;padding:3px 11px}
+.done{color:var(--ok);font-weight:600;font-size:12.5px}
+.hit.isdone{opacity:.6}.hit.isdone::before{opacity:.25}
+@media(max-width:560px){.hit{flex-direction:column}.hit .th{width:100%}}
 
-/* pastas de artistas */
-.folder{all:unset;box-sizing:border-box;cursor:pointer;background:var(--card);border:1px solid transparent;border-radius:16px;padding:16px;display:flex;flex-direction:column;gap:12px;transition:all .15s}
-.folder:hover{border-color:var(--c);background:var(--pn);box-shadow:var(--sh);transform:translateY(-2px)}
-.folder:focus-visible{outline:2px solid var(--c);outline-offset:2px}
-.folder .t{display:flex;align-items:center;gap:12px}
-.folder .mono{width:40px;height:40px;font-size:14px;border-radius:12px}
-.folder .n{font:700 15.5px/1.15 var(--f)}
-.folder .v{font-size:12.5px;color:var(--mut)}
-.folder .m{display:flex;justify-content:space-between;font-size:12.5px;color:var(--mut)}
-.folder .m b{font-size:14px;color:var(--tx)}
+/* ===== painel de análise ===== */
+.panel{background:var(--pn);border-radius:34px;padding:20px;box-shadow:var(--sh)}
+.phead{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:2px 4px 16px}
+.phead h2{font:500 20px/1 var(--f);letter-spacing:-.02em;margin:0;display:flex;align-items:center;gap:10px}
+.pills{display:flex;gap:8px;flex-wrap:wrap;margin-left:auto;align-items:center}
+.pill{background:var(--soft);border:none;border-radius:99px;padding:10px 20px;font-size:14.5px;color:var(--tx);text-decoration:none;transition:background .15s}
+.pill.on{background:var(--ink);color:var(--inktx)}
+.agrid{display:grid;grid-template-columns:1.25fr 1fr 1fr;gap:16px}
+.sub{background:var(--shell);border-radius:26px;padding:18px;min-width:0}
+.sub .st{display:flex;align-items:center;gap:10px;font-weight:500;font-size:16px;margin-bottom:4px}
+.sub .ss{font-size:13px;color:var(--mut);margin-bottom:12px}
 
-/* cards de vídeo */
-.card{background:var(--card);border-radius:16px;overflow:hidden;display:flex;flex-direction:column;border:1px solid transparent;transition:all .15s}
-.card:hover{background:var(--pn);border-color:var(--bd);box-shadow:var(--sh)}
-.card .th{position:relative}
-.card .th img{width:100%;aspect-ratio:16/9;object-fit:cover;display:block}
-.tag{position:absolute;left:10px;top:10px;background:rgba(17,24,39,.78);backdrop-filter:blur(4px);color:#fff;font-size:11.5px;font-weight:700;padding:3px 10px;border-radius:99px}
-.card .b{padding:12px 14px 15px;display:flex;flex-direction:column;gap:7px}
-.card .ti{font-weight:600;text-decoration:none;line-height:1.3;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-.card .ch{font-size:12px;color:var(--c);font-weight:600}
-.bar{height:8px;background:var(--bar);border-radius:99px;overflow:hidden}
-.bar i{display:block;height:100%;background:var(--c);border-radius:99px}
-.row{display:flex;justify-content:space-between;gap:8px;font-size:12.5px;color:var(--mut)}
-.row b{font-size:15px;color:var(--tx)}
+/* quase lá (lista) */
+.nl{display:flex;flex-direction:column;gap:8px;max-height:430px;overflow:auto;padding-right:4px;scrollbar-width:thin}
+.nr{display:grid;grid-template-columns:58px 1fr;gap:12px;align-items:center;background:var(--pn);border-radius:18px;padding:8px 12px 8px 8px}
+.nr img{width:58px;aspect-ratio:16/9;object-fit:cover;border-radius:11px;display:block}
+.nr .t{font-size:13.5px;font-weight:500;text-decoration:none;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block}
+.nr .m{display:flex;align-items:center;gap:8px;margin-top:5px}
+.hb{flex:1;height:10px;border-radius:99px;overflow:hidden;background:var(--soft)}
+.hb i{display:block;height:100%;border-radius:99px}
+.nr .p{font-size:12.5px;font-weight:700;min-width:34px;text-align:right}
+.nr .f{font-size:12px;color:var(--mut);margin-top:3px}
+
+/* barras */
+.bars{display:flex;align-items:flex-end;gap:10px;height:230px;padding-top:30px}
+.bcol{flex:1;min-width:0;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;gap:7px;position:relative}
+.bcol .bar{width:100%;max-width:46px;border-radius:99px 99px 14px 14px;position:relative;min-height:12px}
+.bcol .bar.top{background:var(--ac)}
+.bcol .bar::before{content:"";position:absolute;left:50%;top:-5px;width:11px;height:11px;margin-left:-5.5px;border-radius:50%;background:var(--ac);border:2px solid var(--pn)}
+.bcol .bv{position:absolute;top:-28px;font-size:11.5px;font-weight:600;white-space:nowrap}
+.bcol .bl{font-size:11.5px;color:var(--mut);max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;height:16px}
+
+/* anel */
+.ringwrap{display:flex;flex-direction:column;align-items:center;gap:14px;padding-top:6px}
+.ring{width:150px;aspect-ratio:1;border-radius:50%;display:grid;place-items:center;position:relative;background:conic-gradient(var(--ac) calc(var(--p)*1%),color-mix(in srgb,var(--ac) 14%,var(--shell)) 0);box-shadow:0 0 0 10px color-mix(in srgb,var(--ac) 11%,transparent)}
+.ring::before{content:"";position:absolute;inset:15px;border-radius:50%;background:var(--shell)}
+.ring span{position:relative;font:400 32px var(--f);letter-spacing:-.03em}
+.ring small{display:block;font-size:12px;color:var(--mut);text-align:center;margin-top:-4px}
+.big2{font:400 40px/1 var(--f);letter-spacing:-.04em;text-align:center}
+.cap{font-size:13px;color:var(--mut);text-align:center;max-width:220px}
 
 /* tabela */
-.tools{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
-input[type=text],input:not([type]),select{background:var(--card);color:var(--tx);border:1px solid transparent;border-radius:10px;padding:9px 13px;font:inherit;font-size:13.5px}
-input:focus-visible,select:focus-visible{outline:2px solid var(--c,#6366f1);outline-offset:1px;background:var(--pn)}
-.tw{overflow-x:auto;border:1px solid var(--bd);border-radius:14px}
-table{width:100%;border-collapse:collapse}
-th{background:var(--card);font-size:11.5px;color:var(--mut);font-weight:600;text-transform:uppercase;letter-spacing:.04em;text-align:left;padding:11px 12px;white-space:nowrap}
-td{padding:9px 12px;border-top:1px solid var(--bd);font-size:13.5px;white-space:nowrap}
+.tw{overflow-x:auto}
+table{width:100%;border-collapse:separate;border-spacing:0 6px}
+th{font-size:12.5px;color:var(--mut);font-weight:500;text-align:left;padding:4px 12px;white-space:nowrap}
+td{padding:9px 12px;background:var(--shell);font-size:14px;white-space:nowrap}
+td:first-child{border-radius:16px 0 0 16px;padding-left:10px}td:last-child{border-radius:0 16px 16px 0}
 td:nth-child(2){white-space:normal;min-width:240px}
-tbody tr:hover td{background:var(--card)}
-td img{border-radius:7px;display:block}
+tbody tr:hover td{background:var(--soft)}
+td img{border-radius:10px;display:block}
 td a{text-decoration:none;font-weight:500}td a:hover{text-decoration:underline}
-td .pct{display:inline-block;min-width:34px;font-weight:700;color:var(--c)}
-.empty{padding:20px;color:var(--mut);background:var(--card);border-radius:14px;grid-column:1/-1;font-size:13.5px}
+td .pc{font-weight:700;color:var(--ac)}
+td .cdot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:7px;background:var(--c)}
+.empty{padding:20px;color:var(--mut);background:var(--shell);border-radius:20px;grid-column:1/-1;font-size:14px}
 
-@media(max-width:560px){.panel{padding:18px 14px 24px;border-radius:16px}.hact{margin-left:0}}
-@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+#msg{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--ink);color:var(--inktx);padding:12px 20px;border-radius:99px;font-size:14px;max-width:min(92vw,540px);box-shadow:0 10px 34px rgba(0,0,0,.28);opacity:0;pointer-events:none;transition:opacity .2s;z-index:9}
+#msg.on{opacity:1}
+
+/* ===== responsivo ===== */
+@media(max-width:1180px){.row1{grid-template-columns:1fr}.agrid{grid-template-columns:1fr 1fr}.agrid .sub:first-child{grid-column:1/-1}}
+@media(max-width:900px){
+  body{padding:8px}.shell{border-radius:28px;padding:12px 12px 22px}
+  .topbar{border-radius:30px}.chips{order:3}.brand span{font-size:17px}
+  .layout{grid-template-columns:1fr}
+  .rail{position:static;flex-direction:row;border-radius:99px;padding:8px 12px;max-height:none;overflow-x:auto;justify-content:flex-start}
+  .rsep{width:1px;height:30px}
+}
+@media(max-width:640px){.bal{grid-template-columns:1fr}.agrid{grid-template-columns:1fr}.gbody{grid-template-columns:1fr}.tiles{flex-direction:row}.tiles .tile{flex:1}.rbtn span{display:none}.rbtn{padding:0 14px}.datepill .dt{display:none}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 </style>
 </head>
 <body>
-<header class="top">
-  <div class="in">
-    <div class="logo">GBA</div>
-    <div>
-      <h1>YOUTUBE ARTISTAS GBA MUSIC</h1>
-      <div class="sub" id="upd">Carregando…</div>
-    </div>
-    <div class="hact"><button class="rbtn" id="refresh" type="button">🔄 Atualizar agora</button><a class="navlink" href="acompanhamento.html">📈 Acompanhamento de projetos</a></div>
+<div class="shell">
+
+<header class="topbar">
+  <div class="brand"><div class="logo">GBA</div><span>YOUTUBE ARTISTAS GBA MUSIC</span></div>
+  <nav class="chips">
+    <span class="chip on">Dashboard</span>
+    <a class="chip" href="acompanhamento.html">Acompanhamento</a>
+  </nav>
+  <label class="search"><svg class="i" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><input id="q" type="search" placeholder="Buscar vídeo…" autocomplete="off"></label>
+  <div class="datepill">
+    <button class="iconbtn" id="bell" type="button" aria-label="Ver metas batidas"><svg class="i" viewBox="0 0 24 24"><path d="M6 8a6 6 0 1 1 12 0c0 7 3 8 3 8H3s3-1 3-8"/><path d="M10.3 20a2 2 0 0 0 3.4 0"/></svg></button>
+    <span class="dt" id="dt"></span><span class="dbadge" id="pbadge" data-n="0"></span>
   </div>
-  <div class="spine" id="spine"></div>
+  <button class="rbtn" id="refresh" type="button"><svg class="i" viewBox="0 0 24 24"><path d="M20 12a8 8 0 1 1-2.3-5.6"/><path d="M20 4v5h-5"/></svg><span id="rtxt">Atualizar agora</span></button>
 </header>
 
-<main>
-  <div class="tabs" id="tabs" role="tablist"></div>
-  <section class="panel" id="panel">
-    <div class="ph">
-      <div class="mono" id="mono">GBA</div>
-      <div><h2 id="ptitle">Visão geral</h2><div class="mut" id="psub"></div></div>
-    </div>
+<div class="layout">
+  <aside class="rail" id="rail" aria-label="Artistas"></aside>
 
-    <!-- metas batidas: logo no topo, com destaque -->
-    <div class="hits" id="hitswrap">
-      <div class="sec"><h3>🎉 Metas batidas</h3><span class="pill" id="hitcount">0</span><span>últimos 14 dias</span></div>
+  <main class="content">
+
+    <section class="row1">
+      <div class="greet">
+        <h1 id="ptitle">Visão geral</h1>
+        <p class="lead" id="psub"></p>
+        <div class="bal">
+          <div class="bc"><div class="ico dark"><svg class="i" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="m10 9.5 5 2.5-5 2.5z"/></svg></div><div><div class="l">Views somadas</div><div class="v" id="v1">–</div></div><span class="delta" id="d1"></span></div>
+          <div class="bc"><div class="ico acc"><svg class="i" viewBox="0 0 24 24"><path d="M13 3 5 13.5h6L10 21l8-10.5h-6z"/></svg></div><div><div class="l">Quase lá</div><div class="v" id="v2">–</div></div><span class="delta ac" id="d2"></span></div>
+        </div>
+      </div>
+
+      <div class="card gcard">
+        <div class="ghead"><svg class="i" viewBox="0 0 24 24"><path d="M5 20V10M12 20V4M19 20v-7"/></svg>Metas e posts</div>
+        <div class="gbody">
+          <div class="tiles">
+            <div class="tile"><div class="l">Metas batidas<br>(14 dias)</div><div class="n" id="t1">0</div></div>
+            <div class="tile"><div class="l">Posts<br>pendentes</div><div class="n" id="t2">0</div></div>
+          </div>
+          <div class="gauge"><svg id="gsvg" viewBox="0 0 260 140"></svg><div class="c"><b id="gpct">—</b><span>Posts feitos</span></div></div>
+        </div>
+        <div class="gfoot"><span id="gtxt"></span><a class="pl" href="#hitswrap" id="glink">ver metas</a></div>
+      </div>
+    </section>
+
+    <!-- METAS BATIDAS: logo no topo, com destaque -->
+    <section id="hitswrap">
+      <div class="shead"><h2>Metas batidas</h2><span class="count" id="hitcount">0</span><span class="mut">últimos 14 dias</span></div>
       <div class="hitlist" id="hit"></div>
-    </div>
+    </section>
 
-    <div class="stats" id="stats"></div>
+    <section class="panel" id="analytics">
+      <div class="phead">
+        <h2><svg class="i" viewBox="0 0 24 24"><path d="m3 17 6-6 4 4 8-8"/><path d="M15 7h6v6"/></svg>Análise de vídeos</h2>
+        <div class="pills"><a class="pill" href="#tablepanel" id="seeall">Ver todos os vídeos ↓</a></div>
+      </div>
+      <div class="agrid">
+        <div class="sub">
+          <div class="st">🔥 Quase lá</div><div class="ss" id="nearsub"></div>
+          <div class="nl" id="near"></div>
+        </div>
+        <div class="sub">
+          <div class="st" id="bt">Views por artista</div><div class="ss" id="bs"></div>
+          <div class="bars" id="bars"></div>
+        </div>
+        <div class="sub">
+          <div class="st">Cobertura de metas</div><div class="ss" id="rs"></div>
+          <div class="ringwrap"><div class="ring" id="ring" style="--p:0"><span id="rp">0%</span></div><div class="big2" id="rn">0</div><div class="cap" id="rc"></div></div>
+        </div>
+      </div>
+    </section>
 
-    <div id="artwrap">
-      <div class="sec"><h3>Pastas dos artistas</h3><span>clique para abrir</span></div>
-      <div class="grid" id="artists"></div>
-    </div>
+    <section class="panel" id="tablepanel">
+      <div class="phead">
+        <h2><svg class="i" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h10"/></svg>Todos os vídeos <span class="mut" id="tcount" style="font-weight:400;font-size:14px"></span></h2>
+        <div class="pills" id="sortpills">
+          <button class="pill on" data-so="progress" type="button">Mais perto da meta</button>
+          <button class="pill" data-so="views" type="button">Mais views</button>
+          <button class="pill" data-so="recent" type="button">Mais recentes</button>
+        </div>
+      </div>
+      <div class="tw"><table><thead><tr><th></th><th>Vídeo</th><th>Canal</th><th>Views</th><th>Próxima meta</th><th>Faltam</th><th>Previsão</th></tr></thead><tbody id="rows"></tbody></table></div>
+    </section>
 
-    <div class="sec"><h3>🔥 Quase lá</h3><span id="nearsub">perto da próxima meta</span></div>
-    <div class="grid" id="near"></div>
-
-    <div class="sec"><h3>Todos os vídeos</h3></div>
-    <div class="tools">
-      <input id="q" placeholder="Buscar vídeo…">
-      <select id="ch"><option value="">Todos os canais</option></select>
-      <select id="so">
-        <option value="progress">Mais perto da meta</option>
-        <option value="views">Mais views</option>
-        <option value="recent">Mais recentes</option>
-      </select>
-    </div>
-    <div class="tw"><table><thead><tr><th></th><th>Vídeo</th><th>Canal</th><th>Views</th><th>Próxima meta</th><th>Faltam</th><th>Previsão</th></tr></thead><tbody id="rows"></tbody></table></div>
-  </section>
-</main>
+  </main>
+</div>
+</div>
 <div id="msg" role="status" aria-live="polite"></div>
 
 <script>
@@ -198,8 +289,8 @@ const initials=c=>c?c.split(/\s+/).slice(0,2).map(w=>w[0]).join('').toUpperCase(
 
 let posted={};try{posted=JSON.parse(localStorage.getItem('posted')||'{}')}catch(e){}
 const savePosted=()=>{try{localStorage.setItem('posted',JSON.stringify(posted))}catch(e){}};
-let D,cur='',chans=[];
-fetch('data.json?'+Date.now()).then(r=>r.json()).then(d=>{D=d;init()}).catch(()=>$('#upd').textContent='Não consegui carregar data.json');
+let D,cur='',chans=[],sortKey='progress';
+fetch('data.json?'+Date.now()).then(r=>r.json()).then(d=>{D=d;init()}).catch(()=>$('#psub').textContent='Não consegui carregar data.json');
 
 const list=()=>cur?D.videos.filter(v=>v.channel===cur):D.videos;
 const isNear=v=>v.next&&v.progress>=D.nearRatio;
@@ -207,40 +298,59 @@ const hitKey=v=>v.id+':'+v.lastMilestone;
 
 function hitCard(v){
   const k=hitKey(v),done=!!posted[k];
-  return `<div class="hit ${done?'isdone':''}" style="--c:${colorOf(v.channel)}">
+  return `<div class="hit ${done?'isdone':''}">
     <div class="th"><img loading="lazy" src="https://i.ytimg.com/vi/${v.id}/mqdefault.jpg" alt=""></div>
     <div class="b">
-      <span class="medal">🏆 Meta batida</span>
+      <span class="medal">Meta batida</span>
       <div class="big">${lab(v.lastMilestone)}</div>
       <a class="ti" href="https://youtu.be/${v.id}" target="_blank" rel="noopener">${esc(v.title)}</a>
       <span class="ch">${esc(v.channel)} · ${fmt(v.views)} views · ${v.reachedAt.split('-').reverse().join('/')}</span>
-      <div class="foot"><label class="chk"><input type="checkbox" data-k="${k}" ${done?'checked':''}> Post feito</label>${done?'<span class="done">✔ publicado</span>':'<span class="pend">Post pendente</span>'}</div>
+      <div class="foot"><label class="tg"><input type="checkbox" data-k="${k}" ${done?'checked':''}> Post feito</label>${done?'<span class="done">publicado</span>':'<span class="pend">Post pendente</span>'}</div>
     </div></div>`;
 }
 
-function card(v){
-  return `<div class="card" style="--c:${colorOf(v.channel)}">
-    <div class="th"><img loading="lazy" src="https://i.ytimg.com/vi/${v.id}/mqdefault.jpg" alt=""><span class="tag">${Math.floor(v.progress*100)}% da meta</span></div>
-    <div class="b"><a class="ti" href="https://youtu.be/${v.id}" target="_blank" rel="noopener">${esc(v.title)}</a><span class="ch">${esc(v.channel)}</span>
-     <div class="row"><b>${fmt(v.views)}</b><span>meta: ${lab(v.next)}</span></div>
-     <div class="bar"><i style="width:${Math.min(100,v.progress*100)}%"></i></div>
-     <div class="row"><span>faltam ${fmt(v.remaining)}</span><span>${v.etaDays!=null?'previsão '+eta(v.etaDays):''}</span></div></div></div>`;
+function nearRow(v){
+  const p=Math.floor(v.progress*100);
+  return `<div class="nr"><img loading="lazy" src="https://i.ytimg.com/vi/${v.id}/default.jpg" alt="">
+    <div style="min-width:0"><a class="t" href="https://youtu.be/${v.id}" target="_blank" rel="noopener" title="${esc(v.title)}">${esc(v.title)}</a>
+    <div class="m"><div class="hb"><i class="hatch" style="width:${Math.min(100,v.progress*100)}%"></i></div><span class="p">${p}%</span></div>
+    <div class="f"><span style="color:${colorOf(v.channel)};font-weight:600">${esc(v.channel)}</span> · meta ${lab(v.next)} · faltam ${fmt(v.remaining)}${v.etaDays!=null?' · '+eta(v.etaDays):''}</div></div></div>`;
+}
+
+/* medidor segmentado */
+function gauge(pct){
+  const N=28,cx=130,cy=132,n=pct==null?0:Math.round(pct*N);let s='';
+  for(let i=0;i<N;i++){
+    const th=Math.PI*(1-i/(N-1)),r1=70,r2=96+i*0.9;
+    const x1=cx+r1*Math.cos(th),y1=cy-r1*Math.sin(th),x2=cx+r2*Math.cos(th),y2=cy-r2*Math.sin(th);
+    s+=`<line x1="${x1.toFixed(1)}" y1="${y1.toFixed(1)}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}" stroke="${i<n?'var(--ac)':'var(--soft)'}" stroke-width="8" stroke-linecap="round"/>`;
+  }
+  $('#gsvg').innerHTML=s;
+}
+
+/* barras hachuradas */
+function bars(items){
+  const mx=Math.max(...items.map(i=>i.v),1),top=items.reduce((a,b)=>b.v>a.v?b:a,items[0]||{v:0});
+  $('#bars').innerHTML=items.map(i=>`<div class="bcol" title="${esc(i.full||i.n)}: ${fmt(i.v)}"><span class="bv">${cmp.format(i.v)}</span><div class="bar ${i===top?'top':'hatch'}" style="height:${Math.max(6,i.v/mx*78)}%"></div><span class="bl">${esc(i.n)}</span></div>`).join('')||'<div class="empty">Sem dados.</div>';
 }
 
 function applyData(){
-  $('#upd').textContent=D.updatedAt?'Atualizado em '+new Date(D.updatedAt).toLocaleString('pt-BR'):'Ainda sem dados: rode o workflow no GitHub Actions.';
+  $('#psub').textContent=D.updatedAt?'Atualizado em '+new Date(D.updatedAt).toLocaleString('pt-BR')+'. Aqui estão as metas e o ritmo dos seus vídeos.':'Ainda sem dados: rode o workflow no GitHub Actions.';
   $('#nearsub').textContent='a '+Math.round(D.nearRatio*100)+'% ou mais da próxima meta';
   chans=[...new Set(D.videos.map(v=>v.channel))].sort((a,b)=>a.localeCompare(b,'pt-BR'));
-  $('#spine').innerHTML=chans.map(c=>`<i style="background:${colorOf(c)}"></i>`).join('');
-  $('#ch').innerHTML='<option value="">Todos os canais</option>'+chans.map(c=>`<option>${esc(c)}</option>`).join('');
   readHash();
 }
 
 function init(){
   $('#hit').onchange=e=>{if(e.target.dataset.k){posted[e.target.dataset.k]=e.target.checked;savePosted();render()}};
-  const go=e=>{const b=e.target.closest('[data-c]');if(b)location.hash=b.dataset.c?encodeURIComponent(b.dataset.c):''};
-  $('#tabs').onclick=go;$('#artists').onclick=go;
-  ['q','ch','so'].forEach(i=>$('#'+i).oninput=table);
+  $('#rail').onclick=e=>{const b=e.target.closest('[data-c]');if(b)location.hash=b.dataset.c?encodeURIComponent(b.dataset.c):''};
+  let had=false;
+  $('#q').oninput=()=>{table();const has=!!$('#q').value;if(has&&!had)$('#tablepanel').scrollIntoView({behavior:'smooth',block:'start'});had=has};
+  $('#sortpills').onclick=e=>{const b=e.target.closest('[data-so]');if(!b)return;sortKey=b.dataset.so;[...$('#sortpills').children].forEach(x=>x.classList.toggle('on',x===b));table()};
+  $('#bell').onclick=()=>$('#hitswrap').scrollIntoView({behavior:'smooth'});
+  $('#glink').onclick=e=>{e.preventDefault();$('#hitswrap').scrollIntoView({behavior:'smooth'})};
+  $('#seeall').onclick=e=>{e.preventDefault();$('#tablepanel').scrollIntoView({behavior:'smooth'})};
+  $('#dt').textContent=new Date().toLocaleDateString('pt-BR',{weekday:'short',day:'2-digit',month:'short'});
   addEventListener('hashchange',readHash);
   $('#refresh').onclick=refresh;
   applyData();
@@ -255,16 +365,16 @@ const loadData=()=>fetch('data.json?'+Date.now(),{cache:'no-store'}).then(r=>r.j
 let busy=false;
 async function refresh(){
   if(busy)return;busy=true;
-  const btn=$('#refresh'),label='🔄 Atualizar agora',t0=D.updatedAt;btn.disabled=true;
+  const btn=$('#refresh'),tx=$('#rtxt'),label='Atualizar agora',t0=D.updatedAt;btn.disabled=true;btn.classList.add('busy');
   try{
     const T=getToken();
     if(!T){
-      btn.textContent='⏳ Recarregando…';
+      tx.textContent='Recarregando…';
       const n=await loadData();const novo=n.updatedAt!==t0;D=n;applyData();
       say(novo?'Dados novos carregados.':'Os dados já estão atualizados. Para rodar o robô agora, conecte o GitHub na página de Acompanhamento (token com permissão Actions).',novo?4000:9000);
       return;
     }
-    btn.textContent='⏳ Iniciando robô…';
+    tx.textContent='Iniciando robô…';
     const H={Authorization:'Bearer '+T,Accept:'application/vnd.github+json','X-GitHub-Api-Version':'2022-11-28'};
     const api=`https://api.github.com/repos/${OWNER}/${REPO}/actions/workflows`;
     const r=await fetch(api,{headers:H});
@@ -274,7 +384,7 @@ async function refresh(){
     if(!w)throw new Error('Não encontrei o workflow do robô no repositório.');
     const d=await fetch(`${api}/${w.id}/dispatches`,{method:'POST',headers:{...H,'Content-Type':'application/json'},body:JSON.stringify({ref:BRANCH})});
     if(d.status!==204)throw new Error(d.status===403||d.status===404?'Seu token não tem permissão para rodar o robô (Actions: Read and write).':'O GitHub não aceitou iniciar o robô. Veja se o workflow está ativo em Actions.');
-    btn.textContent='⏳ Atualizando…';say('Robô iniciado. Leva de 1 a 3 minutos; a página atualiza sozinha.',7000);
+    tx.textContent='Atualizando…';say('Robô iniciado. Leva de 1 a 3 minutos; a página atualiza sozinha.',7000);
     for(let i=0;i<32;i++){
       await sleep(15000);
       let n;try{n=await loadData()}catch(e){continue}
@@ -282,7 +392,7 @@ async function refresh(){
     }
     say('O robô ainda está processando. Recarregue a página em alguns minutos.',9000);
   }catch(e){say(e.message,9000)}
-  finally{busy=false;btn.disabled=false;btn.textContent=label}
+  finally{busy=false;btn.disabled=false;btn.classList.remove('busy');tx.textContent=label}
 }
 
 function readHash(){
@@ -292,52 +402,62 @@ function readHash(){
 }
 
 function render(){
-  const cut=Date.now()-14*864e5, V=list(), col=colorOf(cur);
-  $('#panel').style.setProperty('--c',col);
-  $('#tabs').innerHTML=[''].concat(chans).map(c=>{
-    const n=D.videos.filter(v=>(!c||v.channel===c)&&isNear(v)).length;
-    return `<button class="tab ${c===cur?'on':''}" style="--c:${colorOf(c)}" role="tab" aria-selected="${c===cur}" data-c="${esc(c)}">${c?esc(c):'Geral'}${n?`<span class="badge" title="vídeos quase na meta">${n}</span>`:''}</button>`;
-  }).join('');
+  const cut=Date.now()-14*864e5,V=list();
+  // barra lateral de artistas
+  const home='<svg class="i" viewBox="0 0 24 24"><path d="m3 11 9-8 9 8"/><path d="M5 10v10h14V10"/></svg>';
+  $('#rail').innerHTML=`<button class="rb ${cur===''?'on':''}" data-c="" title="Visão geral" aria-label="Visão geral">${home}</button><span class="rsep"></span>`+
+    chans.map(c=>`<button class="rb ${c===cur?'on':''}" style="--c:${colorOf(c)}" data-c="${esc(c)}" title="${esc(c)}" aria-label="${esc(c)}">${esc(initials(c))}<i class="dot"></i></button>`).join('');
 
-  $('#mono').textContent=initials(cur);
   $('#ptitle').textContent=cur||'Visão geral';
-  $('#psub').textContent=(cur?'Pasta do artista · ':'Todos os artistas · ')+cmp.format(V.reduce((s,v)=>s+v.views,0))+' views somadas';
 
   const near=V.filter(isNear).sort((a,b)=>b.progress-a.progress);
   // metas batidas: pendentes de post primeiro, depois as mais recentes
   const hit=V.filter(v=>v.reachedAt&&new Date(v.reachedAt)>=cut)
     .sort((a,b)=>(!!posted[hitKey(a)]-!!posted[hitKey(b)])||b.reachedAt.localeCompare(a.reachedAt));
-  const pend=hit.filter(v=>!posted[hitKey(v)]).length;
-  const st=[[fmt(V.length),'vídeos monitorados'],[near.length,'quase lá'],[hit.length,'bateram em 14 dias'],[pend,'posts pendentes']];
-  if(!cur)st.push([chans.length,'artistas']);
-  $('#stats').innerHTML=st.map(([n,t])=>`<div class="stat"><b>${n}</b><span>${t}</span></div>`).join('');
+  const pend=hit.filter(v=>!posted[hitKey(v)]).length,donec=hit.length-pend,tv=V.reduce((s,v)=>s+v.views,0);
+
+  $('#v1').textContent=cmp.format(tv);$('#d1').textContent=fmt(V.length)+' vídeos';
+  $('#v2').textContent=near.length;$('#d2').textContent='≥ '+Math.round(D.nearRatio*100)+'%';
+  $('#t1').textContent=hit.length;$('#t2').textContent=pend;
+  const gp=hit.length?donec/hit.length:null;
+  gauge(gp);$('#gpct').textContent=gp==null?'—':Math.round(gp*100)+'%';
+  $('#gtxt').textContent=!hit.length?'Nenhuma meta nova nos últimos 14 dias':pend?`${pend} post${pend==1?'':'s'} pendente${pend==1?'':'s'}`:'Todos os posts publicados 🎉';
+  $('#pbadge').textContent=pend||'';$('#pbadge').dataset.n=pend;
 
   $('#hitcount').textContent=hit.length;
   $('#hit').innerHTML=hit.map(hitCard).join('')||'<div class="empty">Nenhuma meta batida nos últimos 14 dias. Quando algum vídeo bater uma meta, ele aparece aqui no topo.</div>';
 
-  $('#artwrap').style.display=cur?'none':'';
+  $('#near').innerHTML=near.map(nearRow).join('')||'<div class="empty">Nenhum vídeo perto de uma meta agora.</div>';
+
+  // barras: views por artista (visão geral) ou maiores vídeos (pasta do artista)
   if(!cur){
-    $('#artists').innerHTML=chans.map(c=>{
-      const vs=D.videos.filter(v=>v.channel===c), tv=vs.reduce((s,v)=>s+v.views,0), n=vs.filter(isNear).length;
-      return `<button class="folder" style="--c:${colorOf(c)}" data-c="${esc(c)}">
-        <div class="t"><div class="mono">${esc(initials(c))}</div><div><div class="n">${esc(c)}</div><div class="v">${cmp.format(tv)} views</div></div></div>
-        <div class="m"><span>${fmt(vs.length)} vídeos</span><span><b>${n}</b> quase lá</span></div></button>`;
-    }).join('');
+    $('#bt').textContent='Views por artista';$('#bs').textContent='total de views de cada canal';
+    bars(chans.map(c=>({n:c.split(' ')[0],full:c,v:D.videos.filter(v=>v.channel===c).reduce((s,v)=>s+v.views,0)})).sort((a,b)=>b.v-a.v));
+  }else{
+    $('#bt').textContent='Maiores vídeos';$('#bs').textContent='os 7 vídeos com mais views';
+    bars([...V].sort((a,b)=>b.views-a.views).slice(0,7).map((v,i)=>({n:'#'+(i+1)+' '+v.title.slice(0,6),full:v.title,v:v.views})));
   }
 
-  $('#near').innerHTML=near.map(card).join('')||'<div class="empty">Nenhum vídeo perto de uma meta agora.</div>';
-  $('#ch').style.display=cur?'none':'';
-  $('#ch').value='';
+  // anel: quantos vídeos já bateram a primeira meta
+  const m0=(D.milestones&&D.milestones[0])||100000,passed=V.filter(v=>v.views>=m0).length,rp=V.length?Math.round(passed/V.length*100):0;
+  $('#rs').textContent='vídeos que passaram da primeira meta';
+  $('#ring').style.setProperty('--p',rp);$('#rp').textContent=rp+'%';
+  $('#rn').textContent=fmt(passed);
+  $('#rc').textContent=`de ${fmt(V.length)} vídeos já passaram de ${lab(m0)} views`;
+
+  $('#psub').textContent=(D.updatedAt?'Atualizado em '+new Date(D.updatedAt).toLocaleString('pt-BR')+'. ':'')+(cur?'Pasta do artista: metas, ritmo e vídeos.':'Metas, ritmo e vídeos de todos os artistas.');
   table();
 }
 
 function table(){
-  const q=$('#q').value.toLowerCase(),ch=cur?'':$('#ch').value,so=$('#so').value;
-  const s={progress:(a,b)=>b.progress-a.progress,views:(a,b)=>b.views-a.views,recent:(a,b)=>b.publishedAt.localeCompare(a.publishedAt)}[so];
-  $('#rows').innerHTML=list().filter(v=>(!ch||v.channel===ch)&&v.title.toLowerCase().includes(q)).sort(s).slice(0,500).map(v=>
+  const q=$('#q').value.toLowerCase().trim();
+  const s={progress:(a,b)=>b.progress-a.progress,views:(a,b)=>b.views-a.views,recent:(a,b)=>b.publishedAt.localeCompare(a.publishedAt)}[sortKey];
+  const rows=list().filter(v=>!q||v.title.toLowerCase().includes(q)||v.channel.toLowerCase().includes(q)).sort(s);
+  $('#tcount').textContent='· '+fmt(rows.length);
+  $('#rows').innerHTML=rows.slice(0,500).map(v=>
    `<tr style="--c:${colorOf(v.channel)}"><td><img src="https://i.ytimg.com/vi/${v.id}/default.jpg" width="64" loading="lazy" alt=""></td>
-    <td><a href="https://youtu.be/${v.id}" target="_blank" rel="noopener">${esc(v.title)}</a></td><td>${esc(v.channel)}</td>
-    <td>${fmt(v.views)}</td><td>${v.next?lab(v.next)+' <span class="pct">'+Math.floor(v.progress*100)+'%</span>':'—'}</td><td>${v.next?fmt(v.remaining):'—'}</td><td>${eta(v.etaDays)}</td></tr>`).join('');
+    <td><a href="https://youtu.be/${v.id}" target="_blank" rel="noopener">${esc(v.title)}</a></td><td><span class="cdot"></span>${esc(v.channel)}</td>
+    <td>${fmt(v.views)}</td><td>${v.next?lab(v.next)+' <span class="pc">'+Math.floor(v.progress*100)+'%</span>':'—'}</td><td>${v.next?fmt(v.remaining):'—'}</td><td>${eta(v.etaDays)}</td></tr>`).join('')||'<tr><td colspan="7" style="border-radius:16px" class="mut">Nenhum vídeo encontrado.</td></tr>';
 }
 </script>
 </body>
