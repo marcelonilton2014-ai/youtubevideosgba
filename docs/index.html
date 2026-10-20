@@ -346,10 +346,17 @@ async function refresh(){
     const r=await fetch(api,{headers:H});
     if(r.status===401||r.status===403||r.status===404)throw new Error('Seu token não tem permissão de Actions. No GitHub, edite o token e coloque "Actions: Read and write".');
     if(!r.ok)throw new Error('Não consegui falar com o GitHub agora. Tente de novo em instantes.');
-    const wf=(await r.json()).workflows||[];const w=wf.find(x=>/atualizar/i.test(x.name))||wf[0];
-    if(!w)throw new Error('Não encontrei o workflow do robô no repositório.');
+    const wf=((await r.json()).workflows||[]).filter(x=>!(x.path||'').startsWith('dynamic/'));
+    const w=wf.find(x=>/atualizar|dashboard/i.test(x.name+' '+x.path))||(wf.length===1?wf[0]:null);
+    if(!w)throw new Error('Não achei o workflow do robô. Workflows encontrados: '+(wf.map(x=>x.name).join(', ')||'nenhum')+'.');
     const d=await fetch(`${api}/${w.id}/dispatches`,{method:'POST',headers:{...H,'Content-Type':'application/json'},body:JSON.stringify({ref:BRANCH})});
-    if(d.status!==204)throw new Error(d.status===403||d.status===404?'Seu token não tem permissão para rodar o robô (Actions: Read and write).':'O GitHub não aceitou iniciar o robô. Veja se o workflow está ativo em Actions.');
+    if(d.status!==204){
+      let gm='';try{gm=(await d.json()).message||''}catch(e){}
+      const dica=d.status===403?'O token precisa de "Actions: Read and write" (confira se salvou com Update e se é o token desta página).'
+        :d.status===404?'O GitHub não achou o workflow ou o token não enxerga o repositório.'
+        :d.status===422?'O workflow não tem "workflow_dispatch:" no arquivo .yml (use o atualizar-dashboard.yml novo).':'Veja o workflow em Actions.';
+      throw new Error(`Falhou (${d.status}) no workflow "${w.name}". ${dica}${gm?' GitHub: '+gm:''}`);
+    }
     tx.textContent='Atualizando…';say('Robô iniciado. Leva de 1 a 3 minutos; a página atualiza sozinha.',7000);
     for(let i=0;i<32;i++){
       await sleep(15000);
