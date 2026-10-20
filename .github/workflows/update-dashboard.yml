@@ -1,17 +1,31 @@
-
 name: Atualizar dashboard
 
 on:
   schedule:
-    - cron: '0 */6 * * *'
+    - cron: '*/30 * * * *'   # rápido: a cada 30 minutos
+    - cron: '0 9 * * *'      # completo: 1x por dia (06h em Brasília)
   workflow_dispatch:
+    inputs:
+      mode:
+        description: 'quick = só o que importa | full = todos os vídeos'
+        default: 'quick'
+        type: choice
+        options: [quick, full]
 
 permissions:
   contents: write
 
+# nunca roda duas atualizações ao mesmo tempo
+concurrency:
+  group: atualizar-dashboard
+  cancel-in-progress: false
+
 jobs:
-  update:
+  atualizar:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      MODE: ${{ github.event.schedule == '0 9 * * *' && 'full' || github.event.inputs.mode || 'quick' }}
     steps:
       - uses: actions/checkout@v4
 
@@ -19,15 +33,24 @@ jobs:
         with:
           node-version: 20
 
-      - name: Atualizar dados do YouTube
+      - name: Rodar o robô
         run: node src/check.js
         env:
           YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
+          MODE: ${{ env.MODE }}
 
-      - name: Salvar dados
+      - name: Salvar alterações
         if: always()
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add state docs
-          git diff --staged --quiet || (git commit -m "chore: atualiza dados" && git push)
+          if git diff --cached --quiet; then
+            echo "Sem mudanças para salvar."
+            exit 0
+          fi
+          git commit -m "Atualiza dados ($MODE)"
+          for i in 1 2 3; do
+            git pull --rebase origin main && git push origin HEAD:main && break
+            sleep 5
+          done
