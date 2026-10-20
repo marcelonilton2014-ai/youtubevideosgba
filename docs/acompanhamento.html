@@ -16,10 +16,12 @@
 }
 @media(prefers-color-scheme:dark){:root{--bg:#08080a;--shell:#121214;--pn:#1b1b1f;--card:#121214;--soft:#26262b;--tx:#f4f4f5;--mut:#9b9ba3;--bd:#2b2b31;--bar:#2b2b31;--ac:#d4502f;--ink:#f4f4f5;--inktx:#111;--ok:#4fd3a1;--warn:#f2b79d;--warnbg:#3a2418;--sh:none}}
 *{box-sizing:border-box}
+html{zoom:.82}
+@media(max-width:640px){html{zoom:.92}}
 body{margin:0;background:var(--bg);color:var(--tx);font:15px/1.5 var(--bd-f);-webkit-font-smoothing:antialiased;padding:14px}
 a{color:inherit}button,input,select{font-family:inherit}
 .mut{color:var(--mut)}
-.shell{max-width:1400px;margin:0 auto;background:var(--shell);border-radius:38px;padding:18px 18px 30px}
+.shell{max-width:1640px;margin:0 auto;background:var(--shell);border-radius:38px;padding:18px 18px 30px}
 
 /* barra superior (igual ao dashboard) */
 .topbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;background:var(--pn);border-radius:99px;padding:8px 10px;box-shadow:var(--sh)}
