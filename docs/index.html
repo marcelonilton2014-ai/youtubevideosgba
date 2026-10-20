@@ -52,6 +52,8 @@ a.chip:hover{background:color-mix(in srgb,var(--ac) 18%,var(--soft))}
 .rb:hover .av{box-shadow:0 0 0 3px var(--c,var(--ac))}
 .rb.on .av{box-shadow:0 0 0 3px var(--pn),0 0 0 6px var(--ac)}
 .rb.home.on .av{background:var(--ac);color:#fff}
+.avw{position:relative;display:block}
+.bdg{position:absolute;right:-6px;top:-5px;min-width:24px;height:24px;padding:0 6px;border-radius:99px;background:var(--ac2);color:#2b1a05;font:700 12.5px/1 var(--f);font-style:normal;display:grid;place-items:center;border:2.5px solid var(--pn);z-index:2}
 .nm{font-size:11.5px;line-height:1.15;text-align:center;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;max-width:80px;word-break:break-word}
 .rb.on .nm{color:var(--tx);font-weight:700}.rb:hover .nm{color:var(--tx)}
 .rb:focus-visible{outline:2px solid var(--ac);outline-offset:2px}
@@ -379,8 +381,10 @@ function render(){
   // barra lateral de artistas
   const home='<svg class="i" viewBox="0 0 24 24"><path d="m3 11 9-8 9 8"/><path d="M5 10v10h14V10"/></svg>';
   const av=c=>D.avatars&&D.avatars[c];
-  $('#rail').innerHTML=`<button class="rb home ${cur===''?'on':''}" data-c="" title="Visão geral" aria-label="Visão geral"><span class="av">${home}</span><span class="nm">Geral</span></button><span class="rsep"></span>`+
-    chans.map(c=>`<button class="rb ${c===cur?'on':''}" style="--c:${colorOf(c)}" data-c="${esc(c)}" title="${esc(c)}" aria-label="${esc(c)}"><span class="av">${esc(initials(c))}${av(c)?`<img src="${esc(av(c))}" alt="" referrerpolicy="no-referrer" onerror="this.remove()">`:''}</span><span class="nm">${esc(c)}</span></button>`).join('');
+  const nn=c=>D.videos.filter(v=>(!c||v.channel===c)&&isNear(v)).length;
+  const bd=n=>n?`<i class="bdg" title="${n} vídeo${n==1?'':'s'} quase na meta">${n}</i>`:'';
+  $('#rail').innerHTML=`<button class="rb home ${cur===''?'on':''}" data-c="" title="Visão geral: ${nn('')} quase lá" aria-label="Visão geral, ${nn('')} vídeos quase na meta"><span class="avw"><span class="av">${home}</span>${bd(nn(''))}</span><span class="nm">Geral</span></button><span class="rsep"></span>`+
+    chans.map(c=>`<button class="rb ${c===cur?'on':''}" style="--c:${colorOf(c)}" data-c="${esc(c)}" title="${esc(c)}: ${nn(c)} quase lá" aria-label="${esc(c)}, ${nn(c)} vídeos quase na meta"><span class="avw"><span class="av">${esc(initials(c))}${av(c)?`<img src="${esc(av(c))}" alt="" referrerpolicy="no-referrer" onerror="this.remove()">`:''}</span>${bd(nn(c))}</span><span class="nm">${esc(c)}</span></button>`).join('');
 
   $('#ptitle').textContent=cur||'Visão geral';
 
