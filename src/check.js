@@ -41,7 +41,11 @@ async function resolveChannel(ref) {
   return {
     id: item.id,
     title: item.snippet.title,
-    uploads: item.contentDetails.relatedPlaylists.uploads
+    uploads: item.contentDetails.relatedPlaylists.uploads,
+    thumb:
+      item.snippet.thumbnails?.medium?.url ||
+      item.snippet.thumbnails?.default?.url ||
+      null
   };
 }
 
@@ -140,11 +144,13 @@ const today = new Date().toLocaleDateString('en-CA', {
 let mode = process.env.MODE === 'quick' ? 'quick' : 'full';
 
 const prevVideos = new Map();
+const avatars = {};
 const projectIds = new Set();
 
 try {
   const pd = JSON.parse(await readFile(P('docs/data.json'), 'utf8'));
   for (const v of pd.videos ?? []) prevVideos.set(v.id, v);
+  Object.assign(avatars, pd.avatars ?? {});
 } catch {}
 
 try {
@@ -189,6 +195,7 @@ for (const ch of config.channels) {
     const firstTime = !state.channels[info.id]?.baselined;
 
     const who = ch.name || info.title;
+    if (info.thumb) avatars[who] = info.thumb;
 
     let videos;
     const carried = [];
@@ -319,6 +326,7 @@ await writeFile(
     updatedAt: state.lastRun,
     nearRatio,
     milestones,
+    avatars,
     videos: out
   }) + '\n'
 );
