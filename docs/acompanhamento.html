@@ -88,6 +88,7 @@ input:focus-visible,select:focus-visible,.btn:focus-visible,summary:focus-visibl
 .chart{width:100%;height:auto;display:block;background:var(--card);border-radius:14px}
 .chart text{fill:var(--mut);font:12px var(--bd-f)}.chart .lbl{fill:var(--tx);font-weight:700}
 .chart .gl{stroke:var(--bd)}
+.vm{width:92px;padding:6px 8px!important}.vm.man{border-color:var(--c)!important;font-weight:700}.nw{white-space:nowrap}
 .vgr td{padding:0;background:var(--card)}.vgb{padding:14px 12px 16px}.vgs{display:flex;gap:18px;flex-wrap:wrap;font-size:13px;color:var(--mut);margin-bottom:8px}.vgs b{color:var(--tx)}
 .hint{font-size:13px;color:var(--mut);margin:8px 2px 0}
 
@@ -239,15 +240,24 @@ function viewsOn(x,date){
   return null;                                   // histórico não cobre esse dia
 }
 function totalOn(infos,date){let s=0,ap=false;for(const x of infos){const r=viewsOn(x,date);if(!r)return null;s+=r.v;ap=ap||!!r.approx}return{v:s,approx:ap}}
+function vMarco(p,x,n,date,future){
+  if(future)return null;
+  const m=p.mv?.[x.id]?.[n];
+  if(m!=null&&m!=='')return{v:Number(m),src:'manual'};
+  const r=viewsOn(x,date);
+  return r?{v:r.v,src:r.approx?'aprox':'auto'}:null;
+}
 function marcos(p,infos){
   const today=todayStr();
   return MARCOS.map(n=>{
-    const date=addDays(p.launch,n),future=date>today,man=p.manual?.[n];
-    const auto=future?null:totalOn(infos,date);
+    const date=addDays(p.launch,n),future=date>today;
+    const parts=infos.map(x=>vMarco(p,x,n,date,future)).filter(Boolean),miss=infos.length-parts.length,leg=p.manual?.[n];
     let val=null,src=null;
-    if(man!=null&&man!==''){val=Number(man);src='manual'}
-    else if(auto){val=auto.v;src=auto.approx?'aprox':'auto'}
-    return{n,date,future,daysLeft:future?diffDays(today,date):0,val,src,auto};
+    if(!future){
+      if(infos.length&&miss===0){val=parts.reduce((a,b)=>a+b.v,0);src=parts.some(q=>q.src==='manual')?'manual':parts.some(q=>q.src==='aprox')?'aprox':'auto'}
+      else if(leg!=null&&leg!==''){val=Number(leg);src='legacy'}
+    }
+    return{n,date,future,daysLeft:future?diffDays(today,date):0,val,src,miss,total:infos.length};
   });
 }
 
@@ -304,6 +314,7 @@ function chart(p,ms,infos,c){
 function vchart(x,p,c){
   const today=todayStr(),days=Math.max(diffDays(p.launch,today),1),total=Math.max(days,7),pts=new Map();
   for(let i=0;i<=Math.min(days,800);i++){const r=viewsOn(x,addDays(p.launch,i));if(r)pts.set(i,r.v)}
+  MARCOS.forEach(n=>{const m=p.mv?.[x.id]?.[n];if(m!=null&&m!==''&&n<=days)pts.set(n,Number(m))});
   if(x.views!=null)pts.set(days,x.views);
   const arr=[...pts.entries()].sort((a,b)=>a[0]-b[0]);
   const last7=(()=>{const r=viewsOn(x,addDays(today,-7));return r&&x.views!=null?x.views-r.v:null})();
@@ -333,16 +344,17 @@ function projectView(id){
   <div class="sec"><h3>Marcos</h3><span>views acumuladas desde o lançamento</span></div><div class="marcos">`;
   h+=ms.map((m,i)=>{
     const prev=ms.slice(0,i).reverse().find(x=>x.val!=null),gain=m.val!=null&&prev?m.val-prev.val:null;
-    const st=m.future?`faltam ${m.daysLeft} dia${m.daysLeft==1?'':'s'}`:m.val==null?'⚠ preencher manualmente':m.src==='manual'?'valor manual':m.src==='aprox'?'automático (aproximado)':'automático';
-    return `<div class="mc ${m.val!=null?'has':!m.future?'miss':''}"><div class="mh">${m.n} dias<span>${dmy(m.date)}</span></div><div class="mv">${m.val!=null?fmt(m.val):'—'}</div><div class="ms">${st}</div>${gain!=null?`<div class="mg">+${fmt(gain)} desde ${prev.n} dias</div>`:''}
-    ${m.future?'':`<div class="mi"><input type="number" min="0" inputmode="numeric" data-man="${m.n}" placeholder="${m.auto?fmt(m.auto.v):'views'}" value="${p.manual?.[m.n]??''}" ${TOKEN?'':'disabled'} aria-label="Views em ${m.n} dias"><button class="btn sm" data-act="saveman" data-n="${m.n}" ${TOKEN?'':'disabled'}>Salvar</button></div>`}</div>`}).join('');
-  h+=`</div><div class="hint">Digite as views de um marco passado para corrigir ou preencher à mão. Deixe vazio e salve para voltar ao valor automático.</div>
+    const st=m.future?`faltam ${m.daysLeft} dia${m.daysLeft==1?'':'s'}`:m.val==null?`⚠ faltam ${m.miss} de ${m.total} vídeo${m.total==1?'':'s'} — preencha na tabela abaixo`:m.src==='legacy'?'valor manual do projeto (antigo)':m.src==='manual'?'soma dos vídeos (com valores manuais)':m.src==='aprox'?'soma dos vídeos (aproximado)':'soma automática dos vídeos';
+    return `<div class="mc ${m.val!=null?'has':!m.future?'miss':''}"><div class="mh">${m.n} dias<span>${dmy(m.date)}</span></div><div class="mv">${m.val!=null?fmt(m.val):'—'}</div><div class="ms">${st}</div>${gain!=null?`<div class="mg">+${fmt(gain)} desde ${prev.n} dias</div>`:''}</div>`}).join('');
+  h+=`</div><div class="hint">O total de cada marco é a soma dos vídeos. Para preencher ou corrigir, digite as views de 7, 30, 60 e 90 dias de cada vídeo na tabela abaixo e clique em Salvar na linha.</div>
   <div class="sec"><h3>Crescimento</h3></div>${chart(p,ms,infos,c)}`;
   const by={};infos.forEach(x=>{const k=x.c||'—';by[k]=(by[k]||0)+(x.views||0)});
   const rows=Object.entries(by).sort((a,b)=>b[1]-a[1]),mxv=Math.max(...rows.map(r=>r[1]),1);
   h+=`<div class="sec"><h3>Por canal</h3><span>onde as views estão</span></div><div class="chbars">${rows.map(([k,v])=>`<div class="cb" style="--c:${colorOf(k)}"><span>${esc(k)}</span><div class="bar"><i style="width:${v/mxv*100}%"></i></div><b>${cmp.format(v)}</b></div>`).join('')}</div>`;
-  h+=`<div class="sec"><h3>Vídeos</h3><span>views automáticas por marco, quando o histórico cobre o dia</span></div><div class="tw"><table><thead><tr><th>Vídeo</th><th>Canal</th><th>Publicado</th><th>Hoje</th><th>Curtidas</th>${MARCOS.map(n=>`<th>${n}d</th>`).join('')}<th>Gráfico</th></tr></thead><tbody>`;
-  h+=[...infos].sort((a,b)=>(b.views||0)-(a.views||0)).map(x=>`<tr><td class="t"><div class="vt"><img src="https://i.ytimg.com/vi/${esc(x.id)}/default.jpg" width="56" loading="lazy" alt=""><a href="https://youtu.be/${esc(x.id)}" target="_blank" rel="noopener">${esc(x.t)}</a></div></td><td>${esc(x.c)}</td><td>${dmy(x.d)}</td><td><b>${x.views==null?'—':fmt(x.views)}</b></td><td>${x.likes==null?'<span class="mut">—</span>':fmt(x.likes)}</td>${ms.map(m=>{if(m.future)return'<td class="mut">—</td>';const r=viewsOn(x,m.date);return`<td>${r?fmt(r.v):'<span class="mut">—</span>'}</td>`}).join('')}<td><button class="btn sm ghost" data-act="vgraph" data-id="${esc(x.id)}" aria-expanded="false">📈 Ver</button></td></tr><tr class="vgr" id="vg-${esc(x.id)}" hidden><td colspan="${6+MARCOS.length}"><div class="vgb"></div></td></tr>`).join('');
+  h+=`<div class="sec"><h3>Vídeos</h3><span>campo vazio = valor automático (cinza); digite para sobrescrever</span></div><div class="tw"><table><thead><tr><th>Vídeo</th><th>Canal</th><th>Publicado</th><th>Hoje</th><th>Curtidas</th>${MARCOS.map(n=>`<th>${n}d</th>`).join('')}<th>Gráfico</th></tr></thead><tbody>`;
+  h+=[...infos].sort((a,b)=>(b.views||0)-(a.views||0)).map(x=>`<tr><td class="t"><div class="vt"><img src="https://i.ytimg.com/vi/${esc(x.id)}/default.jpg" width="56" loading="lazy" alt=""><a href="https://youtu.be/${esc(x.id)}" target="_blank" rel="noopener">${esc(x.t)}</a></div></td><td>${esc(x.c)}</td><td>${dmy(x.d)}</td><td><b>${x.views==null?'—':fmt(x.views)}</b></td><td>${x.likes==null?'<span class="mut">—</span>':fmt(x.likes)}</td>${ms.map(m=>{if(m.future)return'<td class="mut">—</td>';const r=vMarco(p,x,m.n,m.date,false);
+    if(!TOKEN)return`<td>${r?fmt(r.v)+(r.src==='manual'?' ✎':''):'<span class="mut">—</span>'}</td>`;
+    return`<td><input class="vm ${r&&r.src==='manual'?'man':''}" type="number" min="0" inputmode="numeric" data-mvid="${esc(x.id)}" data-n="${m.n}" value="${p.mv?.[x.id]?.[m.n]??''}" placeholder="${r?fmt(r.v):'—'}" aria-label="Views em ${m.n} dias"></td>`}).join('')}<td class="nw">${TOKEN?`<button class="btn sm" data-act="savevid" data-id="${esc(x.id)}">Salvar</button> `:''}<button class="btn sm ghost" data-act="vgraph" data-id="${esc(x.id)}" aria-expanded="false">📈 Ver</button></td></tr><tr class="vgr" id="vg-${esc(x.id)}" hidden><td colspan="${6+MARCOS.length}"><div class="vgb"></div></td></tr>`).join('');
   return h+'</tbody></table></div></section>';
 }
 
@@ -415,7 +427,7 @@ app.addEventListener('click',async e=>{
     if(!draft.sel.size)return toast('Escolha ao menos um vídeo.',true);
     const rec={id:draft.id||'p'+Date.now().toString(36),artist:draft.artist,name,launch:draft.launch,videos:[...draft.sel.values()].map(x=>({id:x.id,t:x.t,c:x.c,d:x.d}))};
     b.disabled=true;
-    try{await mutate(d=>{const old=d.projects.find(p=>p.id===rec.id);if(old){rec.manual=old.manual;Object.assign(old,rec)}else d.projects.push(rec);return d},(draft.id?'Edita':'Cria')+' projeto '+name);
+    try{await mutate(d=>{const old=d.projects.find(p=>p.id===rec.id);if(old){rec.manual=old.manual;rec.mv=old.mv;Object.assign(old,rec)}else d.projects.push(rec);return d},(draft.id?'Edita':'Cria')+' projeto '+name);
       toast('Projeto salvo ✔');location.hash='#/p/'+rec.id}
     catch(err){toast(err.message,true);b.disabled=false}
   }
@@ -423,6 +435,15 @@ app.addEventListener('click',async e=>{
     const p=PRJ.projects.find(x=>x.id===id);if(!p||!confirm(`Excluir o projeto "${p.name}"? Isso não apaga os vídeos, só o acompanhamento.`))return;
     try{await mutate(d=>{d.projects=d.projects.filter(x=>x.id!==id);return d},'Exclui projeto '+p.name);toast('Projeto excluído');location.hash='#/'}
     catch(err){toast(err.message,true)}
+  }
+  else if(act==='savevid'){
+    const vid=b.dataset.id,vals={};let bad=false;
+    app.querySelectorAll(`input[data-mvid="${CSS.escape(vid)}"]`).forEach(i=>{const r=i.value.trim();if(r!==''&&!(Number(r)>=0))bad=true;vals[i.dataset.n]=r});
+    if(bad)return toast('Digite só números.',true);
+    b.disabled=true;
+    try{await mutate(d=>{const p=d.projects.find(x=>x.id===id);if(!p)throw new Error('Projeto não existe mais.');p.mv??={};const o=p.mv[vid]??={};for(const[n,r]of Object.entries(vals)){if(r==='')delete o[n];else o[n]=Math.round(Number(r))}if(!Object.keys(o).length)delete p.mv[vid];return d},'Marcos do vídeo '+vid);
+      toast('Salvo ✔');route()}
+    catch(err){toast(err.message,true);b.disabled=false}
   }
   else if(act==='saveman'){
     const n=b.dataset.n,inp=app.querySelector(`[data-man="${n}"]`),raw=inp.value.trim();
