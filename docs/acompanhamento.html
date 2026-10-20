@@ -1,0 +1,456 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ACOMPANHAMENTO · GBA MUSIC</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#eceef3;--pn:#fff;--card:#f5f6fa;--tx:#14182b;--mut:#687089;--bd:#dde0ea;--bar:#e1e4ee;--ok:#12805c;--warn:#b45309;
+  --hd:'Bricolage Grotesque',system-ui,sans-serif;--bd-f:'DM Sans',system-ui,sans-serif;
+}
+@media(prefers-color-scheme:dark){:root{--bg:#0d1020;--pn:#151a2f;--card:#1c2240;--tx:#eef0f8;--mut:#98a0bd;--bd:#283052;--bar:#2a3256;--ok:#4fd3a1;--warn:#fbbf24}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font:15px/1.5 var(--bd-f)}
+a{color:inherit}button,input,select{font-family:inherit}
+.mut{color:var(--mut)}
+
+/* cabeçalho */
+.top{background:#12172b;color:#fff}
+.top .in{max-width:1120px;margin:0 auto;padding:26px 18px 22px;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.logo{width:48px;height:48px;border-radius:12px;background:#f2b705;color:#12172b;display:grid;place-items:center;font:800 17px var(--hd);flex:none}
+.top h1{font:800 clamp(20px,4.2vw,32px)/1.05 var(--hd);letter-spacing:-.02em;margin:0}
+.top .sub{font-size:13px;color:#aab2d0;margin-top:4px}
+.nav{margin-left:auto;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.nav a,.nav button{color:#fff;text-decoration:none;font-size:14px;font-weight:700;border:1px solid #3a4268;background:transparent;border-radius:10px;padding:8px 14px;cursor:pointer}
+.nav a:hover,.nav button:hover{background:#1f2644}
+.spine{display:flex;height:6px}.spine i{flex:1}
+main{max-width:1120px;margin:0 auto;padding:22px 14px 80px}
+
+/* botões e campos */
+.btn{display:inline-block;background:var(--c,#5b6bd6);color:#fff;border:none;border-radius:10px;padding:10px 16px;font-weight:700;font-size:14px;cursor:pointer;text-decoration:none}
+.btn.ghost{background:transparent;color:var(--tx);border:1px solid var(--bd)}
+.btn.sm{padding:6px 11px;font-size:13px}
+.btn.danger{background:#c0392b}
+.btn[disabled]{opacity:.45;cursor:not-allowed}
+input,select{background:var(--card);color:var(--tx);border:1px solid var(--bd);border-radius:10px;padding:9px 12px;font-size:15px;max-width:100%}
+input:focus-visible,select:focus-visible,.btn:focus-visible,summary:focus-visible{outline:2px solid var(--c,#5b6bd6);outline-offset:2px}
+.note{background:var(--card);border-left:4px solid var(--warn);border-radius:10px;padding:10px 14px;margin:0 0 18px;font-size:14px}
+.note button{background:none;border:none;color:var(--c,#5b6bd6);font-weight:700;cursor:pointer;padding:0;text-decoration:underline}
+
+.sec{display:flex;align-items:baseline;gap:10px;margin:28px 0 12px;flex-wrap:wrap}
+.sec h3{font:700 19px var(--hd);margin:0;letter-spacing:-.01em}
+.sec span{font-size:13px;color:var(--mut)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:14px}
+.mono{width:44px;height:44px;border-radius:50%;background:var(--c);color:#fff;display:grid;place-items:center;font:800 16px var(--hd);flex:none}
+
+/* lista suspensa de artistas */
+.acc{background:var(--pn);border:1px solid var(--bd);border-left:6px solid var(--c);border-radius:14px;margin-bottom:12px}
+.acc summary{list-style:none;display:flex;align-items:center;gap:14px;padding:14px 16px;cursor:pointer}
+.acc summary::-webkit-details-marker{display:none}
+.acc summary::after{content:"▾";margin-left:auto;color:var(--mut);transition:transform .15s}
+.acc[open] summary::after{transform:rotate(180deg)}
+.acc .an{font:700 18px var(--hd)}
+.accb{padding:4px 16px 18px}
+.newrow{margin-top:14px}
+.pcard{background:var(--card);border-radius:12px;padding:14px;display:flex;flex-direction:column;gap:6px;text-decoration:none;border-top:4px solid var(--c);transition:transform .15s}
+.pcard:hover{transform:translateY(-3px)}
+.pcard b{font:700 17px var(--hd)}
+.pcard .big{font:800 22px var(--hd)}
+.dots{display:flex;gap:6px;flex-wrap:wrap}
+.dot{font-size:11px;font-weight:700;border-radius:99px;padding:2px 8px;border:1px solid var(--bd);color:var(--mut)}
+.dot.ok{background:var(--c);border-color:var(--c);color:#fff}
+.dot.miss{border-color:var(--warn);color:var(--warn)}
+.empty{padding:18px;color:var(--mut);background:var(--card);border-radius:12px}
+
+/* painel do projeto */
+.back{margin:0 0 10px;font-size:14px}.back a{text-decoration:none;color:var(--mut)}.back a:hover{color:var(--tx)}
+.panel{background:var(--pn);border:1px solid var(--bd);border-top:5px solid var(--c);border-radius:16px;padding:22px 20px 30px}
+.ph{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.ph h2{font:800 clamp(22px,4vw,30px)/1.05 var(--hd);letter-spacing:-.02em;margin:0}
+.ph .acts{margin-left:auto;display:flex;gap:8px}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px;margin:20px 0 4px}
+.stat{background:var(--card);border-radius:12px;padding:12px 16px;border-left:4px solid var(--c)}
+.stat b{display:block;font:800 24px/1.15 var(--hd)}.stat span{font-size:13px;color:var(--mut)}
+
+.marcos{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px}
+.mc{background:var(--card);border-radius:14px;padding:14px;display:flex;flex-direction:column;gap:4px;border-top:4px solid var(--bd)}
+.mc.has{border-top-color:var(--c)}.mc.miss{border-top-color:var(--warn)}
+.mh{display:flex;justify-content:space-between;font-weight:700}.mh span{font-weight:400;color:var(--mut);font-size:13px}
+.mv{font:800 28px/1.1 var(--hd)}
+.ms{font-size:12px;color:var(--mut)}.mc.miss .ms{color:var(--warn);font-weight:700}
+.mg{font-size:13px;color:var(--ok);font-weight:700}
+.mi{display:flex;gap:6px;margin-top:8px}.mi input{width:100%;min-width:0;padding:7px 10px;font-size:14px}
+
+.chart{width:100%;height:auto;display:block;background:var(--card);border-radius:14px}
+.chart text{fill:var(--mut);font:12px var(--bd-f)}.chart .lbl{fill:var(--tx);font-weight:700}
+.chart .gl{stroke:var(--bd)}
+.hint{font-size:13px;color:var(--mut);margin:8px 2px 0}
+
+.chbars{display:flex;flex-direction:column;gap:10px}
+.cb{display:grid;grid-template-columns:150px 1fr 90px;gap:10px;align-items:center;font-size:14px}
+.cb .bar{height:12px;background:var(--bar);border-radius:99px;overflow:hidden}.cb .bar i{display:block;height:100%;background:var(--c);border-radius:99px}
+.cb b{text-align:right}
+
+.tw{overflow-x:auto;border:1px solid var(--bd);border-radius:12px}
+table{width:100%;border-collapse:collapse}
+th{background:var(--card);font-size:12px;color:var(--mut);text-align:left;padding:10px 12px;white-space:nowrap}
+td{padding:8px 12px;border-top:1px solid var(--bd);font-size:14px;white-space:nowrap}
+td.t{white-space:normal;min-width:220px}
+td img{border-radius:6px;display:block}
+td .miss{color:var(--warn);font-weight:700}
+.vt{display:flex;gap:10px;align-items:center}
+
+/* editor */
+.form{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin-top:18px}
+.form label{display:flex;flex-direction:column;gap:5px;font-weight:700;font-size:14px}
+.form .inl{display:flex;gap:8px;flex-wrap:wrap;align-items:center;font-weight:400}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px}
+.chip{display:flex;align-items:center;gap:8px;background:var(--card);border:1px solid var(--bd);border-left:4px solid var(--c);border-radius:99px;padding:4px 6px 4px 12px;font-size:13px;max-width:100%}
+.chip span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:340px}
+.chip button{border:none;background:var(--bar);color:var(--tx);border-radius:50%;width:22px;height:22px;cursor:pointer}
+.tools{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}.tools input{flex:1;min-width:200px}
+.res{display:flex;flex-direction:column;gap:6px;max-height:520px;overflow:auto;border:1px solid var(--bd);border-radius:12px;padding:6px}
+.rv{display:flex;gap:12px;align-items:center;padding:6px 8px;border-radius:10px;cursor:pointer}
+.rv:hover{background:var(--card)}
+.rv input{width:18px;height:18px;accent-color:var(--c);flex:none}
+.rv img{width:86px;border-radius:6px;flex:none}
+.rv b{display:block;font-size:14px;line-height:1.3}.rv span{font-size:12px;color:var(--mut)}
+.actions{margin-top:20px;display:flex;gap:10px}
+
+dialog{border:1px solid var(--bd);border-radius:16px;background:var(--pn);color:var(--tx);max-width:480px;width:92%;padding:22px}
+dialog::backdrop{background:rgba(5,8,20,.6)}
+dialog h3{font:800 20px var(--hd);margin:0 0 8px}dialog p,dialog li{font-size:14px;color:var(--mut)}
+dialog ol{padding-left:20px;margin:8px 0 14px}
+dialog input{width:100%;margin-bottom:12px}
+dialog .actions{margin-top:6px;flex-wrap:wrap}
+#toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);background:#12172b;color:#fff;border-radius:12px;padding:11px 18px;font-size:14px;opacity:0;pointer-events:none;transition:opacity .2s;max-width:90%;z-index:50}
+#toast.on{opacity:1}#toast.err{background:#a12a1f}
+@media(max-width:560px){.cb{grid-template-columns:100px 1fr 70px}.panel{padding:16px 12px 24px}.nav{margin-left:0}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="in">
+    <div class="logo">GBA</div>
+    <div>
+      <h1>ACOMPANHAMENTO DE PROJETOS</h1>
+      <div class="sub">Crescimento dos lançamentos em 7, 30, 60 e 90 dias</div>
+    </div>
+    <nav class="nav"><a href="index.html">← Dashboard</a><button id="tk" type="button">🔑 Conectar GitHub</button></nav>
+  </div>
+  <div class="spine" id="spine"></div>
+</header>
+<main id="app">Carregando…</main>
+
+<dialog id="dlg">
+  <h3>Conectar ao GitHub</h3>
+  <p>Para criar e editar projetos, o site precisa de uma chave que só você tem. Ela fica guardada neste navegador e nunca vai para o código do site.</p>
+  <ol>
+    <li>GitHub → foto do perfil → <b>Settings → Developer settings → Personal access tokens → Fine-grained tokens → Generate new token</b>.</li>
+    <li>Em <b>Repository access</b>, escolha <b>Only select repositories</b> e marque <b>youtubevideosgba</b>.</li>
+    <li>Em <b>Permissions → Repository permissions</b>, coloque <b>Contents: Read and write</b>.</li>
+    <li>Gere, copie o código e cole abaixo.</li>
+  </ol>
+  <input id="tk-in" type="password" placeholder="github_pat_…" autocomplete="off">
+  <div class="actions">
+    <button class="btn" id="tk-save" type="button">Conectar</button>
+    <button class="btn ghost" id="tk-del" type="button">Remover chave</button>
+    <button class="btn ghost" id="tk-close" type="button">Fechar</button>
+  </div>
+</dialog>
+<div id="toast" role="status"></div>
+
+<script>
+/* ===== configuração do repositório ===== */
+const OWNER='marcelonilton2014-ai', REPO='youtubevideosgba', BRANCH='main', FILE='docs/projects.json';
+const API=`https://api.github.com/repos/${OWNER}/${REPO}/contents/${FILE}`;
+const MARCOS=[7,30,60,90];
+
+/* ===== utilidades ===== */
+const $=s=>document.querySelector(s), fmt=n=>Number(n).toLocaleString('pt-BR');
+const cmp=new Intl.NumberFormat('pt-BR',{notation:'compact',maximumFractionDigits:1});
+const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const norm=s=>String(s).normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();
+const brDay=iso=>new Date(iso).toLocaleDateString('en-CA',{timeZone:'America/Sao_Paulo'});
+const todayStr=()=>brDay(new Date());
+const T12=s=>Date.parse(s+'T12:00:00Z');
+const addDays=(s,n)=>new Date(T12(s)+n*864e5).toISOString().slice(0,10);
+const diffDays=(a,b)=>Math.round((T12(b)-T12(a))/864e5);
+const dmy=s=>s?s.split('-').reverse().join('/'):'';
+const COLORS={'Danubia MJ':'#d9467a','Davidson Silva':'#2f6fed','Fátima Souza':'#8a52d9','Flávio Vitor':'#e5532d','GBA Music':'#e0a800','Ramone Rafael':'#16a077','Um Peregrino':'#0e93b0'};
+const EXTRA=['#c2410c','#4d7c0f','#a21caf','#0369a1','#be123c','#7c6f00'];
+const colorOf=c=>{if(!c)return'#5b6bd6';if(COLORS[c])return COLORS[c];let h=0;for(const ch of c)h=(h*31+ch.charCodeAt(0))>>>0;return EXTRA[h%EXTRA.length]};
+const initials=c=>c?c.split(/\s+/).slice(0,2).map(w=>w[0]).join('').toUpperCase():'GBA';
+const b64enc=s=>{let t='';new TextEncoder().encode(s).forEach(x=>t+=String.fromCharCode(x));return btoa(t)};
+const b64dec=s=>new TextDecoder().decode(Uint8Array.from(atob(s.replace(/\s/g,'')),c=>c.charCodeAt(0)));
+let toastT;const toast=(m,err)=>{const t=$('#toast');t.textContent=m;t.className='on'+(err?' err':'');clearTimeout(toastT);toastT=setTimeout(()=>t.className='',err?5000:2800)};
+
+/* ===== estado ===== */
+let D,H=null,PRJ={rev:0,projects:[]},byId=new Map(),chans=[],draft=null;
+let TOKEN='';try{TOKEN=localStorage.getItem('ghtoken')||''}catch(e){}
+
+/* ===== GitHub (salvar projetos) ===== */
+const hdr=()=>({Authorization:'Bearer '+TOKEN,Accept:'application/vnd.github+json'});
+async function apiGet(){
+  const r=await fetch(API+'?ref='+BRANCH+'&t='+Date.now(),{headers:hdr()});
+  if(r.status===404)return{data:{rev:0,projects:[]},sha:null};
+  if(!r.ok)throw new Error('GitHub '+r.status+(r.status===401?' (chave inválida ou vencida)':''));
+  const j=await r.json();return{data:JSON.parse(b64dec(j.content)),sha:j.sha};
+}
+async function loadProjects(){
+  try{
+    if(TOKEN){PRJ=(await apiGet()).data;}
+    else{const r=await fetch('projects.json?'+Date.now());PRJ=r.ok?await r.json():{rev:0,projects:[]};}
+  }catch(e){toast('Não consegui carregar os projetos: '+e.message,true);}
+  PRJ.projects??=[];
+}
+/* aplica a mudança sempre sobre a versão mais nova do arquivo, para não apagar nada */
+async function mutate(fn,msg){
+  if(!TOKEN)throw new Error('Conecte a chave do GitHub primeiro.');
+  for(let t=0;t<2;t++){
+    const cur=await apiGet();
+    const next=fn(structuredClone(cur.data));next.projects??=[];next.rev=(cur.data.rev||0)+1;
+    const body={message:msg,content:b64enc(JSON.stringify(next,null,1)+'\n'),branch:BRANCH};
+    if(cur.sha)body.sha=cur.sha;
+    const r=await fetch(API,{method:'PUT',headers:hdr(),body:JSON.stringify(body)});
+    if(r.ok){PRJ=next;return}
+    if(r.status===409||r.status===422)continue;
+    throw new Error('GitHub '+r.status+': '+(await r.text()).slice(0,160));
+  }
+  throw new Error('Conflito ao salvar. Tente de novo.');
+}
+
+/* ===== cálculos ===== */
+const vinfo=x=>{const v=byId.get(x.id);return{id:x.id,t:v?v.title:x.t,c:v?v.channel:x.c,d:v?brDay(v.publishedAt):(x.d||'0000-00-00'),views:v?v.views:null}};
+const nowTotal=p=>p.videos.reduce((s,x)=>s+(byId.get(x.id)?.views||0),0);
+function viewsOn(x,date){
+  if(x.d>date)return{v:0};                       // vídeo ainda nem existia
+  if(!H)return null;
+  const e=H.v[x.id];if(!e)return null;
+  const i=diffDays(H.base,date)-e.s;
+  if(i>=0&&e.v[i]!=null)return{v:e.v[i]};
+  for(let k=1;k<=3;k++)for(const j of[i-k,i+k])if(j>=0&&e.v[j]!=null)return{v:e.v[j],approx:true};
+  return null;                                   // histórico não cobre esse dia
+}
+function totalOn(infos,date){let s=0,ap=false;for(const x of infos){const r=viewsOn(x,date);if(!r)return null;s+=r.v;ap=ap||!!r.approx}return{v:s,approx:ap}}
+function marcos(p,infos){
+  const today=todayStr();
+  return MARCOS.map(n=>{
+    const date=addDays(p.launch,n),future=date>today,man=p.manual?.[n];
+    const auto=future?null:totalOn(infos,date);
+    let val=null,src=null;
+    if(man!=null&&man!==''){val=Number(man);src='manual'}
+    else if(auto){val=auto.v;src=auto.approx?'aprox':'auto'}
+    return{n,date,future,daysLeft:future?diffDays(today,date):0,val,src,auto};
+  });
+}
+
+/* ===== telas ===== */
+const banner=()=>TOKEN?'':`<div class="note">Modo visualização. Para criar ou editar projetos, <button type="button" data-act="token">conecte sua chave do GitHub</button>.</div>`;
+
+function pcard(p){
+  const infos=p.videos.map(vinfo),ms=marcos(p,infos),d=diffDays(p.launch,todayStr());
+  const dots=ms.map(m=>`<span class="dot ${m.val!=null?'ok':m.future?'':'miss'}" title="${m.n} dias">${m.n}d</span>`).join('');
+  return `<a class="pcard" style="--c:${colorOf(p.artist)}" href="#/p/${esc(p.id)}"><b>${esc(p.name)}</b>
+    <span class="mut">Lançado em ${dmy(p.launch)} · ${d>=0?'há '+d+(d==1?' dia':' dias'):'em '+(-d)+(d==-1?' dia':' dias')}</span>
+    <span class="big">${cmp.format(nowTotal(p))} views</span><div class="dots">${dots}</div><span class="mut">${p.videos.length} vídeo${p.videos.length==1?'':'s'}</span></a>`;
+}
+
+function home(){
+  const by={};PRJ.projects.forEach(p=>(by[p.artist]??=[]).push(p));
+  const arts=[...new Set([...chans,...Object.keys(by)])];
+  let h=banner()+`<div class="sec"><h3>Artistas</h3><span>abra a lista para ver os projetos ou criar um novo</span></div>`;
+  h+=arts.map(a=>{const ps=(by[a]||[]).sort((x,y)=>y.launch.localeCompare(x.launch));
+    return `<details class="acc" style="--c:${colorOf(a)}" ${ps.length?'open':''}><summary><div class="mono">${esc(initials(a))}</div><div class="an">${esc(a)}</div><span class="mut">${ps.length} projeto${ps.length==1?'':'s'}</span></summary>
+    <div class="accb">${ps.length?`<div class="grid">${ps.map(pcard).join('')}</div>`:'<div class="empty">Nenhum projeto ainda.</div>'}
+    <div class="newrow"><a class="btn" href="#/novo/${encodeURIComponent(a)}" data-need="token">+ Novo projeto</a></div></div></details>`}).join('');
+  if(PRJ.projects.length){
+    h+=`<div class="sec"><h3>Comparativo</h3><span>views acumuladas de cada projeto em cada marco</span></div><div class="tw"><table><thead><tr><th>Projeto</th><th>Artista</th><th>Lançamento</th>${MARCOS.map(n=>`<th>${n} dias</th>`).join('')}<th>Hoje</th></tr></thead><tbody>`;
+    h+=[...PRJ.projects].sort((x,y)=>y.launch.localeCompare(x.launch)).map(p=>{
+      const ms=marcos(p,p.videos.map(vinfo));
+      return `<tr><td><a href="#/p/${esc(p.id)}"><b>${esc(p.name)}</b></a></td><td>${esc(p.artist)}</td><td>${dmy(p.launch)}</td>${ms.map(m=>`<td>${m.val!=null?fmt(m.val):m.future?'<span class="mut">em breve</span>':'<span class="miss">preencher</span>'}</td>`).join('')}<td><b>${fmt(nowTotal(p))}</b></td></tr>`}).join('');
+    h+='</tbody></table></div>';
+  }
+  return h;
+}
+
+function chart(p,ms,infos,c){
+  const today=todayStr(),days=diffDays(p.launch,today);
+  if(days<0)return`<div class="empty">O lançamento ainda não aconteceu.</div>`;
+  const total=Math.max(days,7),pts=new Map();
+  for(let i=0;i<=Math.min(days,800);i++){const t=totalOn(infos,addDays(p.launch,i));if(t)pts.set(i,{v:t.v,k:'auto'})}
+  ms.forEach(m=>{if(!m.future&&m.val!=null)pts.set(m.n,{v:m.val,k:'m',n:m.n})});
+  pts.set(days,{v:nowTotal(p),k:'now'});
+  const arr=[...pts.entries()].sort((a,b)=>a[0]-b[0]);
+  const W=720,Hh=270,L=58,R=22,T=26,B=34,X=i=>L+(W-L-R)*(i/total),mx=Math.max(...arr.map(a=>a[1].v),1)*1.12,Y=v=>T+(Hh-T-B)*(1-v/mx);
+  let s=`<svg class="chart" viewBox="0 0 ${W} ${Hh}" role="img" aria-label="Crescimento de views desde o lançamento">`;
+  for(let k=0;k<=4;k++){const v=mx*k/4,y=Y(v);s+=`<line class="gl" x1="${L}" x2="${W-R}" y1="${y}" y2="${y}"/><text x="${L-8}" y="${y+4}" text-anchor="end">${cmp.format(v)}</text>`}
+  const xt=new Set([0,total,...MARCOS.filter(n=>n<=total)]);
+  xt.forEach(i=>{s+=`<text x="${X(i)}" y="${Hh-10}" text-anchor="middle">${i===0?'lançamento':i+'d'}</text>`});
+  const line=arr.map(([i,p2],j)=>`${j?'L':'M'}${X(i).toFixed(1)} ${Y(p2.v).toFixed(1)}`).join(' ');
+  const base=Y(0);
+  s+=`<path d="${line} L${X(arr[arr.length-1][0])} ${base} L${X(arr[0][0])} ${base} Z" fill="${c}" opacity=".13"/><path d="${line}" fill="none" stroke="${c}" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/>`;
+  arr.forEach(([i,p2])=>{if(p2.k==='auto')return;const x=X(i),y=Y(p2.v),end=x>W-80;
+    s+=`<circle cx="${x}" cy="${y}" r="5.5" fill="${c}" stroke="var(--card)" stroke-width="2.5"/><text class="lbl" x="${x}" y="${y-11}" text-anchor="${end?'end':'middle'}">${p2.k==='now'?'hoje · ':p2.n+'d · '}${cmp.format(p2.v)}</text>`});
+  return s+'</svg>'+(arr.length<=2?`<div class="hint">Ainda não há dados diários suficientes para desenhar a curva. Preencha os marcos já passados (campos abaixo) ou espere o robô acumular mais dias.</div>`:'');
+}
+
+function projectView(id){
+  const p=PRJ.projects.find(x=>x.id===id);
+  if(!p)return`<div class="back"><a href="#/">← Todos os projetos</a></div><div class="empty">Projeto não encontrado. Se acabou de criar, aguarde um instante e recarregue.</div>`;
+  const c=colorOf(p.artist),infos=p.videos.map(vinfo),ms=marcos(p,infos),today=todayStr(),days=diffDays(p.launch,today);
+  const tot=nowTotal(p),w=days>=7?totalOn(infos,addDays(today,-7)):null;
+  let h=`<div class="back"><a href="#/">← Todos os projetos</a></div><section class="panel" style="--c:${c}">
+  <div class="ph"><div class="mono">${esc(initials(p.artist))}</div><div><h2>${esc(p.name)}</h2><div class="mut">${esc(p.artist)} · lançado em ${dmy(p.launch)} · ${days>=0?'dia '+days:'lança em '+(-days)+' dias'}</div></div>
+  <div class="acts"><a class="btn sm ghost" href="#/editar/${esc(p.id)}" data-need="token">Editar</a><button class="btn sm danger" data-act="del" ${TOKEN?'':'disabled'}>Excluir</button></div></div>
+  ${banner()}
+  <div class="stats"><div class="stat"><b>${fmt(tot)}</b><span>views hoje</span></div><div class="stat"><b>${p.videos.length}</b><span>vídeos no projeto</span></div>${w?`<div class="stat"><b>+${fmt(Math.max(0,tot-w.v))}</b><span>nos últimos 7 dias</span></div>`:''}</div>
+  <div class="sec"><h3>Marcos</h3><span>views acumuladas desde o lançamento</span></div><div class="marcos">`;
+  h+=ms.map((m,i)=>{
+    const prev=ms.slice(0,i).reverse().find(x=>x.val!=null),gain=m.val!=null&&prev?m.val-prev.val:null;
+    const st=m.future?`faltam ${m.daysLeft} dia${m.daysLeft==1?'':'s'}`:m.val==null?'⚠ preencher manualmente':m.src==='manual'?'valor manual':m.src==='aprox'?'automático (aproximado)':'automático';
+    return `<div class="mc ${m.val!=null?'has':!m.future?'miss':''}"><div class="mh">${m.n} dias<span>${dmy(m.date)}</span></div><div class="mv">${m.val!=null?fmt(m.val):'—'}</div><div class="ms">${st}</div>${gain!=null?`<div class="mg">+${fmt(gain)} desde ${prev.n} dias</div>`:''}
+    ${m.future?'':`<div class="mi"><input type="number" min="0" inputmode="numeric" data-man="${m.n}" placeholder="${m.auto?fmt(m.auto.v):'views'}" value="${p.manual?.[m.n]??''}" ${TOKEN?'':'disabled'} aria-label="Views em ${m.n} dias"><button class="btn sm" data-act="saveman" data-n="${m.n}" ${TOKEN?'':'disabled'}>Salvar</button></div>`}</div>`}).join('');
+  h+=`</div><div class="hint">Digite as views de um marco passado para corrigir ou preencher à mão. Deixe vazio e salve para voltar ao valor automático.</div>
+  <div class="sec"><h3>Crescimento</h3></div>${chart(p,ms,infos,c)}`;
+  const by={};infos.forEach(x=>{const k=x.c||'—';by[k]=(by[k]||0)+(x.views||0)});
+  const rows=Object.entries(by).sort((a,b)=>b[1]-a[1]),mxv=Math.max(...rows.map(r=>r[1]),1);
+  h+=`<div class="sec"><h3>Por canal</h3><span>onde as views estão</span></div><div class="chbars">${rows.map(([k,v])=>`<div class="cb" style="--c:${colorOf(k)}"><span>${esc(k)}</span><div class="bar"><i style="width:${v/mxv*100}%"></i></div><b>${cmp.format(v)}</b></div>`).join('')}</div>`;
+  h+=`<div class="sec"><h3>Vídeos</h3><span>views automáticas por marco, quando o histórico cobre o dia</span></div><div class="tw"><table><thead><tr><th>Vídeo</th><th>Canal</th><th>Publicado</th><th>Hoje</th>${MARCOS.map(n=>`<th>${n}d</th>`).join('')}</tr></thead><tbody>`;
+  h+=[...infos].sort((a,b)=>(b.views||0)-(a.views||0)).map(x=>`<tr><td class="t"><div class="vt"><img src="https://i.ytimg.com/vi/${esc(x.id)}/default.jpg" width="56" loading="lazy" alt=""><a href="https://youtu.be/${esc(x.id)}" target="_blank" rel="noopener">${esc(x.t)}</a></div></td><td>${esc(x.c)}</td><td>${dmy(x.d)}</td><td><b>${x.views==null?'—':fmt(x.views)}</b></td>${ms.map(m=>{if(m.future)return'<td class="mut">—</td>';const r=viewsOn(x,m.date);return`<td>${r?fmt(r.v):'<span class="mut">—</span>'}</td>`}).join('')}</tr>`).join('');
+  return h+'</tbody></table></div></section>';
+}
+
+/* ===== editor de projeto ===== */
+function editorView(){
+  const d=draft;
+  return `<div class="back"><a href="${d.id?'#/p/'+esc(d.id):'#/'}">← Cancelar</a></div><section class="panel" style="--c:${colorOf(d.artist)}" id="edp">
+  <div class="ph"><div class="mono" id="edm">${esc(initials(d.artist))}</div><h2>${d.id?'Editar projeto':'Novo projeto'}</h2></div>
+  ${banner()}
+  <div class="form">
+    <label>Nome do projeto<input id="f-name" value="${esc(d.name)}" placeholder="Ex.: Repouso" maxlength="80"></label>
+    <label>Artista<select id="f-art">${chans.map(a=>`<option ${a===d.artist?'selected':''}>${esc(a)}</option>`).join('')}</select></label>
+    <label>Data de lançamento<div class="inl"><input type="date" id="f-date" value="${esc(d.launch)}"><button type="button" class="btn sm ghost" data-act="usedate">Usar o vídeo mais antigo</button></div></label>
+  </div>
+  <div class="sec"><h3>Vídeos do projeto</h3><span id="selcount"></span></div>
+  <div class="chips" id="chips"></div>
+  <div class="tools"><input id="f-q" placeholder="Pesquisar vídeo pelo título…" autocomplete="off"><select id="f-ch"><option value="">Todos os canais</option>${chans.map(a=>`<option>${esc(a)}</option>`).join('')}</select></div>
+  <div class="res" id="res"></div>
+  <div class="hint">Aparecem os vídeos que o robô acompanha (acima de 2min28s). Marque os de qualquer canal: do artista e da GBA Music.</div>
+  <div class="actions"><button class="btn" type="button" data-act="save" ${TOKEN?'':'disabled'}>Salvar projeto</button><a class="btn ghost" href="${d.id?'#/p/'+esc(d.id):'#/'}">Cancelar</a></div></section>`;
+}
+function paintChips(){
+  const c=colorOf(draft.artist);
+  $('#chips').innerHTML=[...draft.sel.values()].map(x=>`<div class="chip" style="--c:${colorOf(x.c)}"><span title="${esc(x.t)}">${esc(x.t)}</span><button type="button" data-rm="${esc(x.id)}" aria-label="Remover">×</button></div>`).join('')||'<span class="mut">Nenhum vídeo escolhido ainda.</span>';
+  $('#selcount').textContent=draft.sel.size+' selecionado'+(draft.sel.size==1?'':'s');
+}
+function paintRes(){
+  const q=norm($('#f-q').value.trim()),ch=$('#f-ch').value;
+  const all=D.videos.filter(v=>(!ch||v.channel===ch)&&(!q||norm(v.title).includes(q))).sort((a,b)=>b.publishedAt.localeCompare(a.publishedAt));
+  const sh=all.slice(0,60);
+  $('#res').innerHTML=(sh.map(v=>`<label class="rv" style="--c:${colorOf(v.channel)}"><input type="checkbox" data-vid="${esc(v.id)}" ${draft.sel.has(v.id)?'checked':''}><img src="https://i.ytimg.com/vi/${esc(v.id)}/default.jpg" loading="lazy" alt=""><div><b>${esc(v.title)}</b><span>${esc(v.channel)} · ${dmy(brDay(v.publishedAt))} · ${fmt(v.views)} views</span></div></label>`).join('')||'<div class="empty">Nenhum vídeo encontrado.</div>')
+   +(all.length>60?`<div class="hint" style="padding:8px">Mostrando 60 de ${fmt(all.length)}. Refine a pesquisa para achar os outros.</div>`:'');
+}
+function startEditor(kind,arg){
+  if(kind==='novo'){const a=chans.includes(arg)?arg:chans[0];draft={artist:a,name:'',launch:'',sel:new Map()}}
+  else{const p=PRJ.projects.find(x=>x.id===arg);if(!p){draft=null;return}
+    draft={id:p.id,artist:p.artist,name:p.name,launch:p.launch,sel:new Map(p.videos.map(x=>{const i=vinfo(x);return[x.id,{id:x.id,t:i.t,c:i.c,d:i.d}]})),manual:p.manual}}
+}
+
+/* ===== rotas ===== */
+function route(){
+  const parts=location.hash.replace(/^#\/?/,'').split('/').map(decodeURIComponent),app=$('#app');
+  if(!D)return;
+  if(parts[0]==='p'){app.innerHTML=projectView(parts[1]);draft=null}
+  else if(parts[0]==='novo'||parts[0]==='editar'){startEditor(parts[0],parts[1]);if(!draft){app.innerHTML='<div class="empty">Projeto não encontrado.</div>';return}
+    app.innerHTML=editorView();paintChips();paintRes()}
+  else{app.innerHTML=home();draft=null}
+  scrollTo(0,0);
+}
+
+/* ===== eventos ===== */
+const app=$('#app');
+app.addEventListener('click',async e=>{
+  const need=e.target.closest('[data-need]');
+  if(need&&!TOKEN){e.preventDefault();openDlg();return}
+  const rm=e.target.closest('[data-rm]');if(rm){draft.sel.delete(rm.dataset.rm);paintChips();paintRes();return}
+  const b=e.target.closest('[data-act]');if(!b)return;
+  const act=b.dataset.act,id=location.hash.split('/')[2];
+  if(act==='token')openDlg();
+  else if(act==='usedate'){const ds=[...draft.sel.values()].map(x=>x.d).filter(Boolean).sort();if(!ds.length)return toast('Escolha ao menos um vídeo primeiro.',true);draft.launch=ds[0];$('#f-date').value=ds[0]}
+  else if(act==='save'){
+    const name=draft.name.trim();
+    if(!name)return toast('Dê um nome ao projeto.',true);
+    if(!/^\d{4}-\d{2}-\d{2}$/.test(draft.launch))return toast('Escolha a data de lançamento.',true);
+    if(!draft.sel.size)return toast('Escolha ao menos um vídeo.',true);
+    const rec={id:draft.id||'p'+Date.now().toString(36),artist:draft.artist,name,launch:draft.launch,videos:[...draft.sel.values()].map(x=>({id:x.id,t:x.t,c:x.c,d:x.d}))};
+    b.disabled=true;
+    try{await mutate(d=>{const old=d.projects.find(p=>p.id===rec.id);if(old){rec.manual=old.manual;Object.assign(old,rec)}else d.projects.push(rec);return d},(draft.id?'Edita':'Cria')+' projeto '+name);
+      toast('Projeto salvo ✔');location.hash='#/p/'+rec.id}
+    catch(err){toast(err.message,true);b.disabled=false}
+  }
+  else if(act==='del'){
+    const p=PRJ.projects.find(x=>x.id===id);if(!p||!confirm(`Excluir o projeto "${p.name}"? Isso não apaga os vídeos, só o acompanhamento.`))return;
+    try{await mutate(d=>{d.projects=d.projects.filter(x=>x.id!==id);return d},'Exclui projeto '+p.name);toast('Projeto excluído');location.hash='#/'}
+    catch(err){toast(err.message,true)}
+  }
+  else if(act==='saveman'){
+    const n=b.dataset.n,inp=app.querySelector(`[data-man="${n}"]`),raw=inp.value.trim();
+    if(raw!==''&&!(Number(raw)>=0))return toast('Digite só números.',true);
+    b.disabled=true;
+    try{await mutate(d=>{const p=d.projects.find(x=>x.id===id);if(!p)throw new Error('Projeto não existe mais.');p.manual??={};if(raw==='')delete p.manual[n];else p.manual[n]=Math.round(Number(raw));return d},`Marco de ${n} dias`);
+      toast('Salvo ✔');route()}
+    catch(err){toast(err.message,true);b.disabled=false}
+  }
+});
+app.addEventListener('input',e=>{
+  const t=e.target;
+  if(t.id==='f-q'||t.id==='f-ch')paintRes();
+  else if(t.id==='f-name')draft.name=t.value;
+  else if(t.id==='f-date')draft.launch=t.value;
+  else if(t.id==='f-art'){draft.artist=t.value;$('#edp').style.setProperty('--c',colorOf(t.value));$('#edm').textContent=initials(t.value)}
+});
+app.addEventListener('change',e=>{
+  const t=e.target;if(!t.dataset.vid)return;
+  if(t.checked){const v=byId.get(t.dataset.vid);draft.sel.set(v.id,{id:v.id,t:v.title,c:v.channel,d:brDay(v.publishedAt)})}
+  else draft.sel.delete(t.dataset.vid);
+  paintChips();
+});
+addEventListener('hashchange',route);
+
+/* ===== chave do GitHub ===== */
+const dlg=$('#dlg');
+function paintTk(){$('#tk').textContent=TOKEN?'🔑 GitHub conectado':'🔑 Conectar GitHub'}
+function openDlg(){$('#tk-in').value='';dlg.showModal()}
+$('#tk').onclick=openDlg;$('#tk-close').onclick=()=>dlg.close();
+$('#tk-del').onclick=async()=>{TOKEN='';try{localStorage.removeItem('ghtoken')}catch(e){}paintTk();dlg.close();toast('Chave removida deste navegador');await loadProjects();route()};
+$('#tk-save').onclick=async()=>{
+  const v=$('#tk-in').value.trim();if(!v)return;
+  const old=TOKEN;TOKEN=v;
+  try{
+    const r=await fetch(`https://api.github.com/repos/${OWNER}/${REPO}`,{headers:hdr()});
+    if(!r.ok)throw new Error(r.status===401?'Chave inválida ou vencida.':'Não consegui acessar o repositório ('+r.status+').');
+    const j=await r.json();if(j.permissions&&j.permissions.push===false)throw new Error('Essa chave não tem permissão de escrita. Use "Contents: Read and write".');
+    try{localStorage.setItem('ghtoken',v)}catch(e){}
+    paintTk();dlg.close();toast('GitHub conectado ✔');await loadProjects();route();
+  }catch(err){TOKEN=old;toast(err.message,true)}
+};
+
+/* ===== início ===== */
+(async()=>{
+  paintTk();
+  try{D=await(await fetch('data.json?'+Date.now())).json()}catch(e){app.textContent='Não consegui carregar data.json';return}
+  byId=new Map(D.videos.map(v=>[v.id,v]));
+  chans=[...new Set(D.videos.map(v=>v.channel))].sort((a,b)=>a.localeCompare(b,'pt-BR'));
+  $('#spine').innerHTML=chans.map(c=>`<i style="background:${colorOf(c)}"></i>`).join('');
+  try{const r=await fetch('history.json?'+Date.now());if(r.ok)H=await r.json()}catch(e){}
+  await loadProjects();route();
+})();
+</script>
+</body>
+</html>
