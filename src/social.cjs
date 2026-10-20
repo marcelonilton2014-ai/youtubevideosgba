@@ -1,341 +1,231 @@
-<!doctype html>
-<html lang="pt-BR">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>REDES SOCIAIS · GBA MUSIC</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<style>
-:root{
-  --bg:#e4e4e1;--shell:#f4f4f2;--pn:#fff;--soft:#f1f1ee;--tx:#17171a;--mut:#8b8b92;--bd:#ebebe8;
-  --ac:#c14428;--ac2:#e59632;--ac3:#ecb87a;--ink:#121214;--inktx:#fff;--ok:#17916a;--bad:#b3261e;
-  --f:'Hanken Grotesk',system-ui,-apple-system,sans-serif;
-  --sh:0 1px 2px rgba(20,20,25,.04),0 8px 24px rgba(20,20,25,.05);
-}
-@media(prefers-color-scheme:dark){:root{--bg:#08080a;--shell:#121214;--pn:#1b1b1f;--soft:#26262b;--tx:#f4f4f5;--mut:#9b9ba3;--bd:#2b2b31;--ac:#e2623e;--ac2:#eda44f;--ac3:#f0bf86;--ink:#f4f4f5;--inktx:#111;--ok:#4fd3a1;--bad:#ff8a80;--sh:none}}
-*{box-sizing:border-box}
-html{zoom:.82}
-@media(max-width:640px){html{zoom:.92}}
-body{margin:0;background:var(--bg);color:var(--tx);font:15px/1.5 var(--f);-webkit-font-smoothing:antialiased;padding:14px}
-a{color:inherit}button{font-family:inherit;cursor:pointer}
-.mut{color:var(--mut)}
-.shell{max-width:1640px;margin:0 auto;background:var(--shell);border-radius:38px;padding:18px 18px 30px}
+// Robô das redes sociais (Instagram agora; TikTok depois).
+// Lê a variável SOCIAL_ACCOUNTS (secret do GitHub) e grava docs/social.json e docs/social-history.json.
+const fs = require('fs');
+const path = require('path');
 
-.topbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;background:var(--pn);border-radius:99px;padding:8px 10px;box-shadow:var(--sh)}
-.brand{display:flex;align-items:center;gap:12px;padding-right:10px}
-.logo{width:46px;height:46px;border-radius:50%;background:var(--ink);color:var(--inktx);display:grid;place-items:center;font:700 14px var(--f)}
-.brand span{font:500 20px/1 var(--f);letter-spacing:-.02em;white-space:nowrap}
-.navchips{display:flex;gap:8px;flex-wrap:wrap}
-.nchip{background:var(--soft);border-radius:99px;padding:11px 20px;font-size:15px;text-decoration:none;white-space:nowrap}
-.nchip.on{background:var(--ink);color:var(--inktx)}
-a.nchip:hover{background:color-mix(in srgb,var(--ac3) 45%,var(--soft))}
-.spacer{flex:1}
-.upd{font-size:13.5px;color:var(--mut);padding-right:14px}
+let GRAPH = 'https://graph.facebook.com/v23.0'; // muda para graph.instagram.com nas contas com "api":"instagram"
+const TZ = 'America/Sao_Paulo';
+const ROOT = path.join(__dirname, '..');
+const OUT = path.join(ROOT, 'docs', 'social.json');
+const HIST = path.join(ROOT, 'docs', 'social-history.json');
+const MAX_POSTS = 150;      // quantos posts recentes acompanhar por conta
+const HIST_DAYS = 120;      // guarda histórico diário dos posts com até 120 dias
 
-main{padding:22px 6px 10px}
-.nets{display:flex;gap:8px;margin-bottom:18px}
-.net{border:none;background:var(--pn);border-radius:99px;padding:10px 20px;font-size:14.5px;color:var(--tx);box-shadow:var(--sh)}
-.net.on{background:var(--ink);color:var(--inktx)}
-.net[disabled]{opacity:.5;cursor:default}
+const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+const today = () => new Date().toLocaleDateString('en-CA', { timeZone: TZ });
+const readJson = (f, d) => { try { return JSON.parse(fs.readFileSync(f, 'utf8')); } catch { return d; } };
+const dayBefore = (d) => new Date(Date.parse(d + 'T00:00:00Z') - 864e5).toISOString().slice(0, 10);
 
-.rail{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:22px}
-.rb{border:none;background:none;display:flex;flex-direction:column;align-items:center;gap:6px;color:var(--tx);padding:0}
-.av{width:62px;height:62px;border-radius:50%;background:var(--soft);display:grid;place-items:center;font-weight:700;overflow:hidden;border:3px solid transparent;position:relative}
-.av img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
-.rb.on .av{border-color:var(--ac)}
-.rb .nm{font-size:11.5px;max-width:80px;text-align:center;line-height:1.15}
-
-h1{font:400 40px/1.1 var(--f);letter-spacing:-.03em;margin:0 0 4px}
-h1 b{font-weight:600}
-.lead{color:var(--mut);margin:0 0 22px}
-.err{background:color-mix(in srgb,var(--bad) 12%,var(--pn));color:var(--bad);border-radius:18px;padding:12px 16px;margin:0 0 18px;font-size:14px}
-
-.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:14px}
-.card{background:var(--pn);border-radius:28px;padding:22px 24px;box-shadow:var(--sh)}
-.stat .l{color:var(--mut);font-size:14.5px}
-.stat b{display:block;font:400 38px/1.15 var(--f);letter-spacing:-.03em;margin-top:6px}
-.stat .d{font-size:13px;margin-top:4px;color:var(--mut)}
-.up{color:var(--ok);font-weight:600}.down{color:var(--bad);font-weight:600}
-
-.charts{display:grid;grid-template-columns:1.4fr 1fr;gap:14px;margin-bottom:26px}
-.card h3{margin:0 0 12px;font:500 17px var(--f)}
-.card svg{width:100%;height:auto;display:block}
-.note{font-size:13px;color:var(--mut);margin:8px 0 0}
-
-.shead{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:0 4px 14px}
-.shead h2{font:500 22px var(--f);margin:0;letter-spacing:-.02em}
-.pills{display:flex;gap:6px;flex-wrap:wrap}
-.pill{border:none;background:var(--soft);border-radius:99px;padding:8px 16px;font-size:14px;color:var(--tx)}
-.pill.on{background:var(--ink);color:var(--inktx)}
-.shead .sp{flex:1}
-
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:14px}
-.pc{background:var(--pn);border-radius:26px;overflow:hidden;box-shadow:var(--sh);display:flex;flex-direction:column;text-decoration:none}
-.pc .th{position:relative;aspect-ratio:4/5;background:var(--soft)}
-.pc .th img{width:100%;height:100%;object-fit:cover;display:block}
-.tag{position:absolute;left:12px;top:12px;background:var(--ink);color:var(--inktx);font-size:12px;font-weight:600;padding:4px 12px;border-radius:99px}
-.dt{position:absolute;right:12px;top:12px;background:rgba(0,0,0,.55);color:#fff;font-size:12px;padding:4px 10px;border-radius:99px}
-.pc .bd{padding:14px 16px 16px;display:flex;flex-direction:column;gap:10px}
-.cap{font-size:13.5px;line-height:1.35;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;min-height:36px}
-.m{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
-.m div{background:var(--soft);border-radius:14px;padding:8px 10px}
-.m span{display:block;font-size:11.5px;color:var(--mut)}
-.m b{font-size:16px;font-weight:600;letter-spacing:-.01em}
-.m .big{grid-column:span 3;background:var(--ink);color:var(--inktx)}
-.m .big span{color:inherit;opacity:.7}.m .big b{font-size:22px}
-.empty{background:var(--pn);border-radius:28px;padding:30px;box-shadow:var(--sh)}
-.empty ol{padding-left:20px;color:var(--mut)}
-
-
-.charts{grid-template-columns:1.5fr 1fr}
-.charts+.charts{margin-top:-12px}
-.leg{display:flex;gap:14px;flex-wrap:wrap;font-size:12.5px;color:var(--mut);margin-top:8px}
-.leg i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:6px;vertical-align:-1px}
-.heat{display:grid;grid-template-columns:44px repeat(4,1fr);gap:5px;font-size:12px}
-.heat .h{color:var(--mut);text-align:center;align-self:end;padding-bottom:2px}
-.heat .r{color:var(--mut);align-self:center}
-.heat .c{border-radius:10px;padding:8px 4px;text-align:center;background:var(--soft);line-height:1.25}
-.heat .c b{display:block;font-size:13px}
-.heat .c span{font-size:11px;color:var(--mut)}
-.heat .c.best{outline:2px solid var(--ac)}
-.grid{grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:12px}
-.pc{cursor:pointer;border:none;padding:0;text-align:left;color:var(--tx);font:inherit}
-.pc .th{aspect-ratio:1/1}
-.pc .bd{padding:12px 14px 14px;gap:8px}
-.pc .big2{display:flex;justify-content:space-between;align-items:baseline}
-.pc .big2 b{font-size:20px;letter-spacing:-.02em}
-.pc .big2 span{font-size:12.5px;color:var(--mut)}
-.pc .sm{display:flex;gap:12px;font-size:12.5px;color:var(--mut);flex-wrap:wrap}
-.pc .sm b{color:var(--tx);font-weight:600}
-dialog{border:none;border-radius:30px;background:var(--pn);color:var(--tx);width:min(720px,94vw);padding:0;box-shadow:0 20px 60px rgba(0,0,0,.35);max-height:92vh;overflow:auto}
-dialog::backdrop{background:rgba(0,0,0,.45)}
-.dh{display:flex;gap:16px;padding:22px 24px 8px}
-.dh img{width:96px;height:96px;border-radius:18px;object-fit:cover;background:var(--soft);flex:none}
-.dh h3{margin:0 0 4px;font:500 17px/1.3 var(--f)}
-.db{padding:8px 24px 24px}
-.dm{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:10px 0 16px}
-.dm div{background:var(--soft);border-radius:14px;padding:9px 11px}
-.dm span{display:block;font-size:11.5px;color:var(--mut)}.dm b{font-size:17px;font-weight:600}
-.x{margin-left:auto;border:none;background:var(--soft);border-radius:99px;width:36px;height:36px;font-size:18px;color:var(--tx);flex:none}
-@media(max-width:640px){.dm{grid-template-columns:repeat(2,1fr)}}
-@media(max-width:1100px){.stats{grid-template-columns:repeat(2,1fr)}.charts{grid-template-columns:1fr}}
-@media(max-width:640px){.shell{border-radius:28px;padding:12px 12px 22px}.topbar{border-radius:30px}h1{font-size:30px}}
-</style>
-</head>
-<body>
-<div class="shell">
-<header class="topbar">
-  <div class="brand"><div class="logo">GBA</div><span>YOUTUBE ARTISTAS GBA MUSIC</span></div>
-  <nav class="navchips"><a class="nchip" href="index.html">Dashboard</a><a class="nchip" href="acompanhamento.html">Acompanhamento</a><span class="nchip on">Redes sociais</span></nav>
-  <span class="spacer"></span>
-  <span class="upd" id="upd"></span>
-</header>
-<main id="app">Carregando…</main>
-</div>
-
-<script>
-const $=(s,r=document)=>r.querySelector(s);
-const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const fmt=n=>n==null?'—':n>=1e6?(n/1e6).toFixed(1).replace('.',',')+' mi':n>=1e4?Math.round(n/1e3)+' mil':n.toLocaleString('pt-BR');
-const pct=n=>n==null?'—':n.toFixed(1).replace('.',',')+'%';
-const TYPES={reel:'Reel',foto:'Foto',carrossel:'Carrossel',video:'Vídeo'};
-let S=null,H=null,cur=null,f={type:'all',period:'all',sort:'date'};
-
-const eng=p=>{
-  const inter=(p.likes||0)+(p.comments||0)+(p.saved||0)+(p.shares||0);
-  const base=p.reach||p.views;
-  return base>0?inter/base*100:null;
-};
-const dayStr=d=>new Date(d).toLocaleDateString('pt-BR',{day:'2-digit',month:'short',timeZone:'America/Sao_Paulo'}).replace('.','');
-
-async function load(){
-  try{
-    const [a,b]=await Promise.all([
-      fetch('social.json?t='+Date.now()).then(r=>r.ok?r.json():null),
-      fetch('social-history.json?t='+Date.now()).then(r=>r.ok?r.json():null).catch(()=>null)
-    ]);
-    S=a;H=b;
-  }catch{S=null}
-  if(!S||!S.accounts?.length){empty();return}
-  cur=S.accounts[0].key;
-  $('#upd').textContent='Atualizado em '+new Date(S.updatedAt).toLocaleString('pt-BR',{timeZone:'America/Sao_Paulo',day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'});
-  render();
-}
-
-function empty(){
-  $('#app').innerHTML=`<div class="empty"><h1>Redes <b>sociais</b></h1>
-  <p class="mut">Ainda não há dados. Falta configurar o robô do Instagram:</p>
-  <ol><li>Guarde o segredo <b>SOCIAL_ACCOUNTS</b> no GitHub (Settings → Secrets and variables → Actions).</li>
-  <li>Coloque o arquivo <b>src/social.cjs</b> e o workflow <b>redes-sociais.yml</b> no repositório.</li>
-  <li>Em Actions, rode <b>Redes sociais</b> uma vez (Run workflow). Quando terminar, recarregue esta página.</li></ol></div>`;
-}
-
-
-const BRT='America/Sao_Paulo';
-const N=n=>n==null?'—':Number(n).toLocaleString('pt-BR');
-function line(pts,w=640,h=230){
-  if(pts.length<2)return null;
-  const P={l:62,r:14,t:12,b:26},vs=pts.map(p=>p.v);
-  let mn=Math.min(...vs),mx=Math.max(...vs);if(mn===mx){mn-=1;mx+=1}
-  const pad=(mx-mn)*.1;mn-=pad;mx+=pad;
-  const X=i=>P.l+(w-P.l-P.r)*i/(pts.length-1),Y=v=>P.t+(h-P.t-P.b)*(1-(v-mn)/(mx-mn));
-  const d=pts.map((p,i)=>(i?'L':'M')+X(i).toFixed(1)+' '+Y(p.v).toFixed(1)).join(' ');
-  const ticks=[0,.5,1].map(t=>{const v=mn+(mx-mn)*t;return `<line x1="${P.l}" x2="${w-P.r}" y1="${Y(v)}" y2="${Y(v)}" stroke="var(--bd)"/><text x="${P.l-8}" y="${Y(v)+4}" text-anchor="end" font-size="11" fill="var(--mut)">${N(Math.round(v))}</text>`}).join('');
-  const lab=[0,Math.floor((pts.length-1)/2),pts.length-1].map(i=>`<text x="${X(i)}" y="${h-6}" text-anchor="${i===0?'start':i===pts.length-1?'end':'middle'}" font-size="11" fill="var(--mut)">${dayStr(pts[i].d+'T12:00:00')}</text>`).join('');
-  return `<svg viewBox="0 0 ${w} ${h}">${ticks}<path d="${d}" fill="none" stroke="var(--ac)" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/><circle cx="${X(pts.length-1)}" cy="${Y(pts[pts.length-1].v)}" r="4.5" fill="var(--ac)"/>${lab}</svg>`;
-}
-
-// ganhos (para cima) e perdas (para baixo) por dia + marcas dos dias com publicação
-function flowChart(a,w=760,h=260){
-  let rows=a.flow||[],mode='flow';
-  if(!rows.length){rows=(a.gains||[]).map(x=>[x[0],Math.max(0,x[1]),Math.max(0,-x[1])]);mode='net'}
-  if(!rows.length)return null;
-  const P={l:36,r:8,t:14,b:40},n=rows.length;
-  const up=Math.max(1,...rows.map(r=>r[1])),dn=Math.max(0,...rows.map(r=>r[2]));
-  const tot=up+dn,Y0=P.t+(h-P.t-P.b)*up/tot,sc=(h-P.t-P.b)/tot,bw=(w-P.l-P.r)/n;
-  const posted={};for(const p of a.posts){const k=new Date(p.date).toLocaleDateString('en-CA',{timeZone:BRT});(posted[k]??=[]).push(p)}
-  const bars=rows.map((r,i)=>{
-    const x=P.l+i*bw+bw*.14,ww=bw*.72,net=r[1]-r[2];
-    const t=`${dayStr(r[0]+'T12:00:00')}: +${r[1]} / −${r[2]} (saldo ${net>=0?'+':''}${net})`;
-    return `<g><title>${t}</title><rect x="${x}" y="${Y0-r[1]*sc}" width="${ww}" height="${Math.max(r[1]?1:0,r[1]*sc)}" rx="2" fill="var(--ok)"/><rect x="${x}" y="${Y0}" width="${ww}" height="${r[2]*sc}" rx="2" fill="var(--bad)"/></g>`;
-  }).join('');
-  const marks=rows.map((r,i)=>{const ps=posted[r[0]];return ps?`<g><title>${ps.length} post(s) em ${dayStr(r[0]+'T12:00:00')}: ${ps.map(p=>TYPES[p.type]).join(', ')}</title><circle cx="${P.l+i*bw+bw/2}" cy="${h-22}" r="4" fill="var(--ac)"/></g>`:''}).join('');
-  return `<svg viewBox="0 0 ${w} ${h}"><line x1="${P.l}" x2="${w-P.r}" y1="${Y0}" y2="${Y0}" stroke="var(--bd)"/><text x="${P.l-6}" y="${P.t+8}" text-anchor="end" font-size="11" fill="var(--mut)">+${up}</text><text x="${P.l-6}" y="${Y0+4}" text-anchor="end" font-size="11" fill="var(--mut)">0</text>${dn?`<text x="${P.l-6}" y="${h-P.b}" text-anchor="end" font-size="11" fill="var(--mut)">−${dn}</text>`:''}${bars}${marks}<text x="${P.l}" y="${h-4}" font-size="11" fill="var(--mut)">${dayStr(rows[0][0]+'T12:00:00')}</text><text x="${w-P.r}" y="${h-4}" text-anchor="end" font-size="11" fill="var(--mut)">${dayStr(rows[n-1][0]+'T12:00:00')}</text></svg><div class="leg"><span><i style="background:var(--ok)"></i>Ganhos</span><span><i style="background:var(--bad)"></i>Perdas</span><span><i style="background:var(--ac)"></i>Dia com publicação</span>${mode==='net'?'<span>(mostrando só o saldo diário)</span>':''}</div>`;
-}
-
-const TCOL={reel:'var(--ac)',foto:'var(--ac2)',carrossel:'var(--ac3)',video:'var(--ink)'};
-function postBars(a,w=640,h=230){
-  const ps=a.posts.filter(p=>p.views!=null).sort((x,y)=>Date.parse(x.date)-Date.parse(y.date)).slice(-24);
-  if(!ps.length)return null;
-  const P={l:46,r:8,t:12,b:26},mx=Math.max(1,...ps.map(p=>p.views)),bw=(w-P.l-P.r)/ps.length,Y=v=>P.t+(h-P.t-P.b)*(1-v/mx);
-  const rects=ps.map((p,i)=>`<rect data-open="${esc(p.id)}" style="cursor:pointer" x="${P.l+i*bw+bw*.12}" width="${bw*.76}" y="${Y(p.views)}" height="${Math.max(1,h-P.b-Y(p.views))}" rx="3" fill="${TCOL[p.type]||'var(--ac)'}"><title>${dayStr(p.date)} · ${TYPES[p.type]}: ${N(p.views)} views</title></rect>`).join('');
-  const med=[...ps.map(p=>p.views)].sort((x,y)=>x-y)[Math.floor(ps.length/2)];
-  return `<svg viewBox="0 0 ${w} ${h}"><line x1="${P.l}" x2="${w-P.r}" y1="${Y(mx)}" y2="${Y(mx)}" stroke="var(--bd)"/><text x="${P.l-6}" y="${Y(mx)+4}" text-anchor="end" font-size="11" fill="var(--mut)">${fmt(mx)}</text><text x="${P.l-6}" y="${h-P.b+4}" text-anchor="end" font-size="11" fill="var(--mut)">0</text><line x1="${P.l}" x2="${w-P.r}" y1="${Y(med)}" y2="${Y(med)}" stroke="var(--mut)" stroke-dasharray="4 4"/>${rects}<text x="${P.l}" y="${h-6}" font-size="11" fill="var(--mut)">${dayStr(ps[0].date)}</text><text x="${w-P.r}" y="${h-6}" text-anchor="end" font-size="11" fill="var(--mut)">${dayStr(ps[ps.length-1].date)}</text></svg><div class="leg"><span><i style="background:var(--ac)"></i>Reel</span><span><i style="background:var(--ac2)"></i>Foto</span><span><i style="background:var(--ac3)"></i>Carrossel</span><span>Linha tracejada: mediana (${fmt(med)})</span></div>`;
-}
-
-function heat(a){
-  const DAYS=['Seg','Ter','Qua','Qui','Sex','Sáb','Dom'],MAP={Mon:0,Tue:1,Wed:2,Thu:3,Fri:4,Sat:5,Sun:6},PER=['0–6h','6–12h','12–18h','18–24h'];
-  const cell=Array.from({length:7},()=>Array.from({length:4},()=>[]));
-  for(const p of a.posts){if(p.views==null)continue;
-    const parts=Object.fromEntries(new Intl.DateTimeFormat('en-US',{timeZone:BRT,weekday:'short',hour:'numeric',hourCycle:'h23'}).formatToParts(new Date(p.date)).map(x=>[x.type,x.value]));
-    cell[MAP[parts.weekday]][Math.floor(+parts.hour/6)].push(p.views)}
-  const avg=c=>c.length?c.reduce((s,x)=>s+x,0)/c.length:null;
-  const all=cell.flat().map(avg).filter(x=>x!=null);if(!all.length)return null;
-  const mx=Math.max(...all);let best=null;
-  cell.forEach((r,i)=>r.forEach((c,j)=>{const v=avg(c);if(v===mx&&c.length>=1&&!best)best=[i,j]}));
-  let out='<div class="heat"><span></span>'+PER.map(x=>`<span class="h">${x}</span>`).join('');
-  cell.forEach((r,i)=>{out+=`<span class="r">${DAYS[i]}</span>`+r.map((c,j)=>{const v=avg(c);
-    if(v==null)return '<div class="c"><span>—</span></div>';
-    const pc=Math.round(v/mx*80);
-    return `<div class="c ${best&&best[0]===i&&best[1]===j?'best':''}" style="background:color-mix(in srgb,var(--ac) ${pc}%,var(--soft));${pc>55?'color:#fff':''}"><b>${fmt(Math.round(v))}</b><span style="${pc>55?'color:#fff;opacity:.8':''}">${c.length} post${c.length>1?'s':''}</span></div>`}).join('')});
-  out+='</div>';
-  const bt=best?`<p class="note">Melhor combinação até agora: <b>${DAYS[best[0]]}, ${PER[best[1]]}</b> (média de views por post). Horário de Brasília. Com poucos posts por célula, trate como indício, não como regra.</p>`:'';
-  return out+bt;
-}
-
-function delta(a,days){
-  const h=H?.accounts?.[a.key]?.followers||{},ds=Object.keys(h).sort();
-  if(ds.length>=2){
-    const last=ds[ds.length-1],t=Date.parse(last)-days*864e5;
-    const old=ds.filter(d=>Date.parse(d)<=t).pop()||ds[0];
-    if(old!==last)return {n:h[last]-h[old],exact:Date.parse(old)<=t};
+async function api(p, token, params = {}) {
+  const u = new URL(p.startsWith('http') ? p : GRAPH + p);
+  for (const [k, v] of Object.entries(params)) u.searchParams.set(k, v);
+  u.searchParams.set('access_token', token);
+  let last;
+  for (let i = 0; i < 3; i++) {
+    try {
+      const r = await fetch(u);
+      const j = await r.json().catch(() => ({}));
+      if (!r.ok || j.error) {
+        const e = new Error(j.error?.message || 'HTTP ' + r.status);
+        e.code = j.error?.code;
+        e.noRetry = !(r.status >= 500 || [1, 2, 4, 17, 32, 613].includes(e.code));
+        throw e;
+      }
+      return j;
+    } catch (e) {
+      last = e;
+      if (e.noRetry) break;
+      await sleep(1500 * (i + 1));
+    }
   }
-  const g=a.gains||[];
-  if(g.length){const s=g.slice(-days).reduce((x,y)=>x+y[1],0);return {n:s,exact:g.length>=days}}
-  return null;
-}
-const dl=(x,l)=>x?`<span class="${x.n>=0?'up':'down'}">${x.n>=0?'+':''}${fmt(x.n)}</span> ${l}${x.exact?'':' <span class="mut">(parcial)</span>'}`:'';
-
-function filtered(a){
-  const lim=f.period==='all'?0:Date.now()-(+f.period)*864e5;
-  const ps=a.posts.filter(p=>(f.type==='all'||p.type===f.type)&&Date.parse(p.date)>=lim);
-  const key={date:p=>Date.parse(p.date),views:p=>p.views??-1,likes:p=>p.likes??-1,eng:p=>eng(p)??-1}[f.sort];
-  return ps.sort((x,y)=>key(y)-key(x));
+  throw last;
 }
 
-function render(){
-  const a=S.accounts.find(x=>x.key===cur)||S.accounts[0];
-  const ps30=a.posts.filter(p=>Date.parse(p.date)>=Date.now()-30*864e5);
-  const sum=k=>ps30.reduce((s,p)=>s+(p[k]||0),0);
-  const engs=ps30.map(eng).filter(x=>x!=null),engAvg=engs.length?engs.reduce((s,x)=>s+x,0)/engs.length:null;
-  const d7=delta(a,7),d30=delta(a,30);
-  const hist=H?.accounts?.[a.key]?.followers||{};
-  const pts=Object.keys(hist).sort().map(d=>({d,v:hist[d]}));
-  const fl=a.flow||[],gTot=fl.reduce((s,r)=>s+r[1],0),lTot=fl.reduce((s,r)=>s+r[2],0);
-  const list=filtered(a);
-  const types=[['all','Todos'],...Object.entries(TYPES).filter(([k])=>a.posts.some(p=>p.type===k))];
-  const seg=(name,arr)=>arr.map(([k,l])=>`<button class="pill ${String(f[name])===String(k)?'on':''}" data-f="${name}" data-v="${k}">${l}</button>`).join('');
-
-  $('#app').innerHTML=`
-  <div class="nets"><button class="net on">Instagram</button><button class="net" disabled title="Em breve">TikTok · em breve</button></div>
-  <div class="rail">${S.accounts.map(x=>`<button class="rb ${x.key===a.key?'on':''}" data-acc="${esc(x.key)}"><span class="av">${esc((x.name||'?').slice(0,2).toUpperCase())}${x.avatar?`<img src="${esc(x.avatar)}" alt="" referrerpolicy="no-referrer" onerror="this.remove()">`:''}</span><span class="nm">${esc(x.name)}</span></button>`).join('')}</div>
-  <h1>${esc(a.name)} <b>@${esc(a.username||'')}</b></h1>
-  <p class="lead">${fmt(a.mediaCount)} publicações · seguindo ${fmt(a.following)}</p>
-  ${a.error?`<div class="err">Não consegui atualizar esta conta agora (${esc(a.error)}). Os números abaixo são da última vez que funcionou.</div>`:''}
-  <div class="stats">
-    <div class="card stat"><div class="l">Seguidores</div><b>${fmt(a.followers)}</b><div class="d">${dl(d7,'em 7 dias')||'&nbsp;'}</div><div class="d">${dl(d30,'em 30 dias')}</div></div>
-    <div class="card stat"><div class="l">Ganhos e perdas (30 dias)</div><b>${fl.length?`<span class="up">+${N(gTot)}</span> <span class="down" style="font-size:.7em">−${N(lTot)}</span>`:'—'}</b><div class="d">${fl.length?`saldo ${gTot-lTot>=0?'+':''}${N(gTot-lTot)}`:'indisponível nesta conta'}</div></div>
-    <div class="card stat"><div class="l">Views (posts dos últimos 30 dias)</div><b>${fmt(sum('views'))}</b><div class="d">${ps30.length} posts · ${fmt(sum('likes'))} curtidas</div></div>
-    <div class="card stat"><div class="l">Engajamento médio</div><b>${pct(engAvg)}</b><div class="d">curtidas + coment. + salvos + compart. ÷ alcance</div></div>
-  </div>
-  <div class="charts">
-    <div class="card"><h3>Seguidores ganhos e perdidos por dia</h3>${flowChart(a)||'<p class="mut">Sem dados de seguidores por dia.</p>'}<p class="note">Passe o mouse em cada dia para ver ganhos, perdas e saldo. O Instagram informa o total do dia: não diz quem deixou de seguir, de onde, nem em qual post isso aconteceu.${a.flowError?' <b>Perdas indisponíveis:</b> '+esc(a.flowError):''}</p></div>
-    <div class="card"><h3>Total de seguidores</h3>${line(pts)||'<p class="mut">O gráfico aparece a partir do segundo dia de coleta do robô.</p>'}</div>
-  </div>
-  <div class="charts">
-    <div class="card"><h3>Views por publicação (últimas 24)</h3>${postBars(a)||'<p class="mut">Sem dados.</p>'}<p class="note">Clique numa barra para ver o post e a curva de crescimento dele.</p></div>
-    <div class="card"><h3>Melhor dia e horário para postar</h3>${heat(a)||'<p class="mut">Sem dados.</p>'}</div>
-  </div>
-  <div class="shead"><h2>Publicações</h2><span class="mut">${list.length} de ${a.posts.length}</span><span class="sp"></span>
-    <div class="pills">${seg('type',types)}</div>
-    <div class="pills">${seg('period',[['all','Tudo'],['7','7 dias'],['30','30 dias'],['90','90 dias']])}</div>
-    <div class="pills">${seg('sort',[['date','Recentes'],['views','Views'],['likes','Curtidas'],['eng','Engajamento']])}</div>
-  </div>
-  <div class="grid">${list.map(card).join('')||'<div class="empty">Nenhuma publicação nesse filtro.</div>'}</div>
-  <dialog id="dlg"></dialog>`;
+async function insights(id, token, type) {
+  const want = type === 'reel'
+    ? ['views', 'reach', 'saved', 'shares', 'total_interactions', 'ig_reels_avg_watch_time']
+    : ['views', 'reach', 'saved', 'shares', 'total_interactions', 'follows', 'profile_visits'];
+  const out = {};
+  const parse = (j) => {
+    for (const m of j.data || []) {
+      const v = m.total_value?.value ?? m.values?.[0]?.value;
+      if (typeof v === 'number') out[m.name] = v;
+    }
+  };
+  try {
+    parse(await api(`/${id}/insights`, token, { metric: want.join(',') }));
+  } catch {
+    if (type === 'carrossel') return out; // carrosséis costumam não ter insights
+    // alguma métrica não vale para este tipo de post: tenta uma por uma
+    for (const m of want) {
+      try { parse(await api(`/${id}/insights`, token, { metric: m })); } catch {}
+    }
+  }
+  return out;
 }
 
-function card(p){
-  return `<button class="pc" data-open="${esc(p.id)}" type="button">
-    <div class="th">${p.thumb?`<img loading="lazy" src="${esc(p.thumb)}" alt="" referrerpolicy="no-referrer" onerror="this.remove()">`:''}<span class="tag">${TYPES[p.type]||p.type}</span><span class="dt">${dayStr(p.date)}</span></div>
-    <div class="bd"><div class="big2"><b>${fmt(p.views)}</b><span>views</span></div>
-    <div class="sm"><span><b>${fmt(p.likes)}</b> curtidas</span><span><b>${fmt(p.comments)}</b> coment.</span>${p.follows!=null?`<span><b>+${fmt(p.follows)}</b> seguidores</span>`:''}</div></div></button>`;
+function kind(m) {
+  if (m.media_product_type === 'REELS') return 'reel';
+  if (m.media_type === 'CAROUSEL_ALBUM') return 'carrossel';
+  if (m.media_type === 'VIDEO') return 'video';
+  return 'foto';
 }
 
-function curve(a,p){
-  const h=H?.accounts?.[a.key]?.posts?.[p.id]||{},ds=Object.keys(h).sort();
-  let max=0;const pts=ds.filter(d=>h[d][0]!=null).map(d=>({d,v:(max=Math.max(max,h[d][0]))}));
-  if(pts.length<2)return '<p class="mut">A curva de crescimento aparece a partir do segundo dia de coleta. O Instagram não entrega o passado, então ela começa no dia em que o robô viu o post pela primeira vez.</p>';
-  return line(pts,640,200)+`<p class="note">Views acumuladas por dia, desde ${dayStr(pts[0].d+'T12:00:00')} (primeiro dia de coleta).</p>`;
+const dayShift = (d, n) => new Date(Date.parse(d + 'T12:00:00Z') + n * 864e5).toISOString().slice(0, 10);
+
+// Ganhos e perdas de seguidores por dia (métrica follows_and_unfollows, dia a dia).
+async function followFlow(userId, token, h, d, gains) {
+  h.fu ??= {};
+  const days = [];
+  for (let i = 30; i >= 1; i--) days.push(dayShift(d, -i));
+  const todo = days.filter((x) => !h.fu[x] || x >= dayShift(d, -3));
+  for (let i = 0; i < todo.length; i += 5) {
+    await Promise.all(todo.slice(i, i + 5).map(async (day) => {
+      const since = Math.floor(Date.parse(day + 'T00:00:00-03:00') / 1000);
+      const j = await api(`/${userId}/insights`, token, {
+        metric: 'follows_and_unfollows', metric_type: 'total_value', breakdown: 'follow_type',
+        period: 'day', since, until: since + 86399
+      });
+      const tv = j.data?.[0]?.total_value;
+      const o = {};
+      for (const r of tv?.breakdowns?.[0]?.results || []) o[r.dimension_values?.[0]] = r.value;
+      if (Object.keys(o).length) h.fu[day] = o;
+    }));
+  }
+  const rows = days.filter((x) => h.fu[x]);
+  if (!rows.length) return { flow: [], map: null };
+  // A API não diz qual lado é ganho e qual é perda; descobrimos comparando com o saldo diário (follower_count)
+  const net = Object.fromEntries(gains);
+  let a = 0, b = 0;
+  for (const x of rows) { a += (h.fu[x].FOLLOWER || 0) - (h.fu[x].NON_FOLLOWER || 0); b += net[x] || 0; }
+  const gainKey = a * b < 0 ? 'NON_FOLLOWER' : 'FOLLOWER';
+  const lossKey = gainKey === 'FOLLOWER' ? 'NON_FOLLOWER' : 'FOLLOWER';
+  return { flow: rows.map((x) => [x, h.fu[x][gainKey] || 0, h.fu[x][lossKey] || 0]), map: gainKey };
 }
 
-function openPost(id){
-  const a=S.accounts.find(x=>x.key===cur),p=a.posts.find(x=>x.id===id);if(!p)return;
-  const dlg=$('#dlg');
-  dlg.innerHTML=`<div class="dh">${p.thumb?`<img src="${esc(p.thumb)}" alt="" referrerpolicy="no-referrer" onerror="this.remove()">`:''}<div><h3>${esc(p.caption)||'Sem legenda'}</h3><span class="mut">${TYPES[p.type]} · ${new Date(p.date).toLocaleDateString('pt-BR',{timeZone:BRT,day:'2-digit',month:'long',year:'numeric'})}</span></div><button class="x" data-close type="button" aria-label="Fechar">×</button></div>
-  <div class="db"><div class="dm">
-    <div><span>Views</span><b>${N(p.views)}</b></div><div><span>Alcance</span><b>${N(p.reach)}</b></div>
-    <div><span>Curtidas</span><b>${N(p.likes)}</b></div><div><span>Comentários</span><b>${N(p.comments)}</b></div>
-    <div><span>Salvos</span><b>${N(p.saved)}</b></div><div><span>Compartilhamentos</span><b>${N(p.shares)}</b></div>
-    <div><span>Engajamento</span><b>${pct(eng(p))}</b></div>
-    <div><span>${p.type==='reel'?'Tempo médio assistido':'Visitas ao perfil'}</span><b>${p.type==='reel'?(p.watch!=null?p.watch.toString().replace('.',',')+' s':'—'):N(p.visits)}</b></div>
-    ${p.type==='reel'?'':`<div><span>Seguidores ganhos</span><b>${p.follows!=null?'+'+N(p.follows):'—'}</b></div>`}
-  </div>
-  ${p.type==='reel'?'<p class="note" style="margin:-6px 0 12px">O Instagram não informa quantos seguidores vieram de um Reel. Para Reels, compare os dias de publicação no gráfico de ganhos por dia.</p>':''}
-  <h3 style="font:500 16px var(--f);margin:6px 0 8px">Crescimento de views</h3>${curve(a,p)}
-  <p style="margin:16px 0 0"><a class="nchip" style="display:inline-block" href="${esc(p.url)}" target="_blank" rel="noopener">Abrir no Instagram</a></p></div>`;
-  dlg.showModal();
+async function instagram(acc, hist, d) {
+  const { token } = acc;
+  const userId = acc.userId || 'me';
+  const prof = await api(`/${userId}`, token, {
+    fields: 'username,name,followers_count,follows_count,media_count,profile_picture_url'
+  });
+
+  // posts (paginado)
+  const media = [];
+  let page = await api(`/${userId}/media`, token, {
+    fields: 'id,caption,media_type,media_product_type,permalink,timestamp,like_count,comments_count,thumbnail_url,media_url',
+    limit: 50
+  });
+  while (page) {
+    media.push(...(page.data || []));
+    if (media.length >= MAX_POSTS || !page.paging?.next) break;
+    page = await api(page.paging.next, token);
+  }
+  media.length = Math.min(media.length, MAX_POSTS);
+
+  // métricas de cada post (em lotes de 5)
+  const posts = [];
+  for (let i = 0; i < media.length; i += 5) {
+    const batch = media.slice(i, i + 5);
+    const res = await Promise.all(batch.map((m) => insights(m.id, token, kind(m))));
+    batch.forEach((m, k) => {
+      const x = res[k];
+      posts.push({
+        id: m.id,
+        type: kind(m),
+        caption: (m.caption || '').slice(0, 140),
+        url: m.permalink,
+        thumb: m.thumbnail_url || m.media_url || null,
+        date: m.timestamp,
+        likes: m.like_count ?? null,
+        comments: m.comments_count ?? null,
+        views: x.views ?? null,
+        reach: x.reach ?? null,
+        saved: x.saved ?? null,
+        shares: x.shares ?? null,
+        follows: x.follows ?? null,
+        visits: x.profile_visits ?? null,
+        watch: x.ig_reels_avg_watch_time != null ? Math.round(x.ig_reels_avg_watch_time / 100) / 10 : null,
+        interactions: x.total_interactions ?? null
+      });
+    });
+  }
+
+  // ganho diário de seguidores (a API entrega os últimos 30 dias)
+  let gains = [];
+  try {
+    const until = Math.floor(Date.now() / 1000);
+    const j = await api(`/${userId}/insights`, token, {
+      metric: 'follower_count', period: 'day', since: until - 29 * 86400, until
+    });
+    gains = (j.data?.[0]?.values || [])
+      .filter((v) => v.end_time)
+      .map((v) => [dayBefore(v.end_time.slice(0, 10)), v.value]);
+  } catch {}
+
+  let flow = [], flowMap = null, flowError = null;
+  try {
+    const hh = (hist.accounts[acc.key] ??= { followers: {}, posts: {} });
+    ({ flow, map: flowMap } = await followFlow(userId, token, hh, d, gains));
+  } catch (e) { flowError = e.message; console.error('perdas de seguidores indisponíveis:', e.message); }
+
+  // histórico diário (a API não devolve o passado, então o robô guarda dia a dia)
+  const h = (hist.accounts[acc.key] ??= { followers: {}, posts: {} });
+  h.followers[d] = prof.followers_count;
+  const limit = Date.now() - HIST_DAYS * 864e5;
+  for (const p of posts) {
+    if (Date.parse(p.date) < limit) continue;
+    (h.posts[p.id] ??= {})[d] = [p.views, p.likes];
+  }
+  for (const id of Object.keys(h.posts)) {
+    if (!posts.find((p) => p.id === id)) delete h.posts[id];
+  }
+
+  return {
+    key: acc.key,
+    platform: 'instagram',
+    name: acc.name || prof.name || prof.username,
+    username: prof.username,
+    avatar: prof.profile_picture_url || null,
+    followers: prof.followers_count,
+    following: prof.follows_count,
+    mediaCount: prof.media_count,
+    gains,
+    flow,
+    flowMap,
+    flowError,
+    posts
+  };
 }
 
-document.addEventListener('click',e=>{
-  const o=e.target.closest('[data-open]');if(o){openPost(o.dataset.open);return}
-  if(e.target.closest('[data-close]')||e.target.id==='dlg'){$('#dlg').close();return}
-  const a=e.target.closest('[data-acc]');if(a){cur=a.dataset.acc;render();return}
-  const b=e.target.closest('[data-f]');if(b){f[b.dataset.f]=b.dataset.v;render()}
-});
-load();
-</script>
-</body>
-</html>
+(async () => {
+  let accounts;
+  try { accounts = JSON.parse(process.env.SOCIAL_ACCOUNTS || '[]'); }
+  catch { console.error('SOCIAL_ACCOUNTS não é um JSON válido.'); process.exit(1); }
+  if (!accounts.length) { console.log('Nenhuma conta configurada em SOCIAL_ACCOUNTS. Nada a fazer.'); return; }
+
+  const prev = readJson(OUT, { accounts: [] });
+  const hist = readJson(HIST, { accounts: {} });
+  hist.accounts ??= {};
+  const d = today();
+  const out = [];
+  let ok = 0;
+
+  for (const acc of accounts) {
+    try {
+      GRAPH = acc.api === 'instagram' ? 'https://graph.instagram.com/v23.0' : 'https://graph.facebook.com/v23.0';
+      if (acc.platform !== 'instagram') throw new Error('plataforma ainda não suportada: ' + acc.platform);
+      out.push(await instagram(acc, hist, d));
+      ok++;
+      console.log('OK', acc.key);
+    } catch (e) {
+      console.error('FALHOU', acc.key, '-', e.message);
+      const old = prev.accounts.find((a) => a.key === acc.key);
+      out.push({ ...(old || { key: acc.key, platform: acc.platform, name: acc.name, posts: [], gains: [] }), error: e.message });
+    }
+  }
+
+  fs.writeFileSync(OUT, JSON.stringify({ updatedAt: new Date().toISOString(), accounts: out }));
+  fs.writeFileSync(HIST, JSON.stringify(hist));
+  if (!ok) process.exit(1);
+})();
