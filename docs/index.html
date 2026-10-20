@@ -24,7 +24,12 @@ a{color:inherit}button{font-family:inherit}
 .logo{width:40px;height:40px;border-radius:11px;background:var(--tx);color:var(--pn);display:grid;place-items:center;font:800 14px var(--f);letter-spacing:-.3px;flex:none}
 .top h1{font:800 clamp(17px,3.4vw,22px)/1.1 var(--f);letter-spacing:-.02em;margin:0}
 .top .sub{font-size:12.5px;color:var(--mut);margin-top:3px}
-.navlink{margin-left:auto;display:inline-flex;align-items:center;gap:6px;background:var(--tx);color:var(--pn);font-weight:600;font-size:13px;text-decoration:none;padding:9px 16px;border-radius:99px;transition:opacity .15s}
+.hact{margin-left:auto;display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.rbtn{display:inline-flex;align-items:center;gap:6px;background:var(--pn);color:var(--tx);border:1px solid var(--bd);font-weight:600;font-size:13px;padding:8px 15px;border-radius:99px;cursor:pointer;transition:all .15s}
+.rbtn:hover{border-color:var(--tx)}.rbtn[disabled]{opacity:.7;cursor:progress}
+#msg{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);background:var(--tx);color:var(--pn);padding:11px 18px;border-radius:12px;font-size:13.5px;max-width:min(92vw,520px);box-shadow:0 8px 30px rgba(0,0,0,.25);opacity:0;pointer-events:none;transition:opacity .2s;z-index:9}
+#msg.on{opacity:1}
+.navlink{display:inline-flex;align-items:center;gap:6px;background:var(--tx);color:var(--pn);font-weight:600;font-size:13px;text-decoration:none;padding:9px 16px;border-radius:99px;transition:opacity .15s}
 .navlink:hover{opacity:.85}
 .spine{display:flex;height:3px}.spine i{flex:1}
 
@@ -122,7 +127,7 @@ td a{text-decoration:none;font-weight:500}td a:hover{text-decoration:underline}
 td .pct{display:inline-block;min-width:34px;font-weight:700;color:var(--c)}
 .empty{padding:20px;color:var(--mut);background:var(--card);border-radius:14px;grid-column:1/-1;font-size:13.5px}
 
-@media(max-width:560px){.panel{padding:18px 14px 24px;border-radius:16px}.navlink{margin-left:0}}
+@media(max-width:560px){.panel{padding:18px 14px 24px;border-radius:16px}.hact{margin-left:0}}
 @media(prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
 </head>
@@ -134,7 +139,7 @@ td .pct{display:inline-block;min-width:34px;font-weight:700;color:var(--c)}
       <h1>YOUTUBE ARTISTAS GBA MUSIC</h1>
       <div class="sub" id="upd">Carregando…</div>
     </div>
-    <a class="navlink" href="acompanhamento.html">📈 Acompanhamento de projetos</a>
+    <div class="hact"><button class="rbtn" id="refresh" type="button">🔄 Atualizar agora</button><a class="navlink" href="acompanhamento.html">📈 Acompanhamento de projetos</a></div>
   </div>
   <div class="spine" id="spine"></div>
 </header>
@@ -176,6 +181,7 @@ td .pct{display:inline-block;min-width:34px;font-weight:700;color:var(--c)}
     <div class="tw"><table><thead><tr><th></th><th>Vídeo</th><th>Canal</th><th>Views</th><th>Próxima meta</th><th>Faltam</th><th>Previsão</th></tr></thead><tbody id="rows"></tbody></table></div>
   </section>
 </main>
+<div id="msg" role="status" aria-live="polite"></div>
 
 <script>
 const $=s=>document.querySelector(s), fmt=n=>n.toLocaleString('pt-BR');
@@ -221,18 +227,62 @@ function card(v){
      <div class="row"><span>faltam ${fmt(v.remaining)}</span><span>${v.etaDays!=null?'previsão '+eta(v.etaDays):''}</span></div></div></div>`;
 }
 
-function init(){
+function applyData(){
   $('#upd').textContent=D.updatedAt?'Atualizado em '+new Date(D.updatedAt).toLocaleString('pt-BR'):'Ainda sem dados: rode o workflow no GitHub Actions.';
   $('#nearsub').textContent='a '+Math.round(D.nearRatio*100)+'% ou mais da próxima meta';
   chans=[...new Set(D.videos.map(v=>v.channel))].sort((a,b)=>a.localeCompare(b,'pt-BR'));
   $('#spine').innerHTML=chans.map(c=>`<i style="background:${colorOf(c)}"></i>`).join('');
-  chans.forEach(c=>$('#ch').insertAdjacentHTML('beforeend',`<option>${esc(c)}</option>`));
+  $('#ch').innerHTML='<option value="">Todos os canais</option>'+chans.map(c=>`<option>${esc(c)}</option>`).join('');
+  readHash();
+}
+
+function init(){
   $('#hit').onchange=e=>{if(e.target.dataset.k){posted[e.target.dataset.k]=e.target.checked;savePosted();render()}};
   const go=e=>{const b=e.target.closest('[data-c]');if(b)location.hash=b.dataset.c?encodeURIComponent(b.dataset.c):''};
   $('#tabs').onclick=go;$('#artists').onclick=go;
   ['q','ch','so'].forEach(i=>$('#'+i).oninput=table);
   addEventListener('hashchange',readHash);
-  readHash();
+  $('#refresh').onclick=refresh;
+  applyData();
+}
+
+/* ===== botão Atualizar agora ===== */
+const OWNER='marcelonilton2014-ai',REPO='youtubevideosgba',BRANCH='main';
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+let msgT;const say=(t,ms=6500)=>{const m=$('#msg');m.textContent=t;m.classList.add('on');clearTimeout(msgT);msgT=setTimeout(()=>m.classList.remove('on'),ms)};
+const getToken=()=>{try{return localStorage.getItem('ghtoken')||''}catch(e){return''}};
+const loadData=()=>fetch('data.json?'+Date.now(),{cache:'no-store'}).then(r=>r.json());
+let busy=false;
+async function refresh(){
+  if(busy)return;busy=true;
+  const btn=$('#refresh'),label='🔄 Atualizar agora',t0=D.updatedAt;btn.disabled=true;
+  try{
+    const T=getToken();
+    if(!T){
+      btn.textContent='⏳ Recarregando…';
+      const n=await loadData();const novo=n.updatedAt!==t0;D=n;applyData();
+      say(novo?'Dados novos carregados.':'Os dados já estão atualizados. Para rodar o robô agora, conecte o GitHub na página de Acompanhamento (token com permissão Actions).',novo?4000:9000);
+      return;
+    }
+    btn.textContent='⏳ Iniciando robô…';
+    const H={Authorization:'Bearer '+T,Accept:'application/vnd.github+json','X-GitHub-Api-Version':'2022-11-28'};
+    const api=`https://api.github.com/repos/${OWNER}/${REPO}/actions/workflows`;
+    const r=await fetch(api,{headers:H});
+    if(r.status===401||r.status===403||r.status===404)throw new Error('Seu token não tem permissão de Actions. No GitHub, edite o token e coloque "Actions: Read and write".');
+    if(!r.ok)throw new Error('Não consegui falar com o GitHub agora. Tente de novo em instantes.');
+    const wf=(await r.json()).workflows||[];const w=wf.find(x=>/atualizar/i.test(x.name))||wf[0];
+    if(!w)throw new Error('Não encontrei o workflow do robô no repositório.');
+    const d=await fetch(`${api}/${w.id}/dispatches`,{method:'POST',headers:{...H,'Content-Type':'application/json'},body:JSON.stringify({ref:BRANCH})});
+    if(d.status!==204)throw new Error(d.status===403||d.status===404?'Seu token não tem permissão para rodar o robô (Actions: Read and write).':'O GitHub não aceitou iniciar o robô. Veja se o workflow está ativo em Actions.');
+    btn.textContent='⏳ Atualizando…';say('Robô iniciado. Leva de 1 a 3 minutos; a página atualiza sozinha.',7000);
+    for(let i=0;i<32;i++){
+      await sleep(15000);
+      let n;try{n=await loadData()}catch(e){continue}
+      if(n.updatedAt!==t0){D=n;applyData();say('Atualizado ✔',4000);return}
+    }
+    say('O robô ainda está processando. Recarregue a página em alguns minutos.',9000);
+  }catch(e){say(e.message,9000)}
+  finally{busy=false;btn.disabled=false;btn.textContent=label}
 }
 
 function readHash(){
