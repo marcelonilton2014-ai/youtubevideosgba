@@ -120,6 +120,10 @@ dialog::backdrop{background:rgba(0,0,0,.45)}
 .dm span{display:block;font-size:11.5px;color:var(--mut)}.dm b{font-size:17px;font-weight:600}
 .x{margin-left:auto;border:none;background:var(--soft);border-radius:99px;width:36px;height:36px;font-size:18px;color:var(--tx);flex:none}
 @media(max-width:640px){.dm{grid-template-columns:repeat(2,1fr)}}
+.srch{border:1px solid var(--bd);background:var(--pn);color:var(--tx);border-radius:99px;padding:9px 16px;font:inherit;font-size:14px;width:200px}
+.pager{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin:18px 4px 0}
+.pager .sp{flex:1}.pager .pill[disabled]{opacity:.4;cursor:default}
+.pager select{background:var(--soft);color:var(--tx);border:none;border-radius:99px;padding:7px 12px;font:inherit;font-size:14px}
 @media(max-width:1100px){.stats{grid-template-columns:repeat(2,1fr)}.charts{grid-template-columns:1fr}}
 @media(max-width:640px){.shell{border-radius:28px;padding:12px 12px 22px}.topbar{border-radius:30px}h1{font-size:30px}}
 </style>
@@ -141,7 +145,7 @@ const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&
 const fmt=n=>n==null?'—':n>=1e6?(n/1e6).toFixed(1).replace('.',',')+' mi':n>=1e4?Math.round(n/1e3)+' mil':n.toLocaleString('pt-BR');
 const pct=n=>n==null?'—':n.toFixed(1).replace('.',',')+'%';
 const TYPES={reel:'Reel',foto:'Foto',carrossel:'Carrossel',video:'Vídeo'};
-let S=null,H=null,cur=null,f={type:'all',period:'all',sort:'date'};
+let S=null,H=null,cur=null,f={type:'all',period:'all',sort:'date',q:'',page:1,size:12};
 
 const eng=p=>{
   const inter=(p.likes||0)+(p.comments||0)+(p.saved||0)+(p.shares||0);
@@ -250,7 +254,8 @@ const dl=(x,l)=>x?`<span class="${x.n>=0?'up':'down'}">${x.n>=0?'+':''}${fmt(x.n
 
 function filtered(a){
   const lim=f.period==='all'?0:Date.now()-(+f.period)*864e5;
-  const ps=a.posts.filter(p=>(f.type==='all'||p.type===f.type)&&Date.parse(p.date)>=lim);
+  const q=f.q.trim().toLowerCase();
+  const ps=a.posts.filter(p=>(f.type==='all'||p.type===f.type)&&Date.parse(p.date)>=lim&&(!q||(p.caption||'').toLowerCase().includes(q)));
   const key={date:p=>Date.parse(p.date),views:p=>p.views??-1,likes:p=>p.likes??-1,eng:p=>eng(p)??-1}[f.sort];
   return ps.sort((x,y)=>key(y)-key(x));
 }
@@ -264,7 +269,6 @@ function render(){
   const hist=H?.accounts?.[a.key]?.followers||{};
   const pts=Object.keys(hist).sort().map(d=>({d,v:hist[d]}));
   const fl=a.flow||[],gTot=fl.reduce((s,r)=>s+r[1],0),lTot=fl.reduce((s,r)=>s+r[2],0);
-  const list=filtered(a);
   const types=[['all','Todos'],...Object.entries(TYPES).filter(([k])=>a.posts.some(p=>p.type===k))];
   const seg=(name,arr)=>arr.map(([k,l])=>`<button class="pill ${String(f[name])===String(k)?'on':''}" data-f="${name}" data-v="${k}">${l}</button>`).join('');
 
@@ -288,13 +292,27 @@ function render(){
     <div class="card"><h3>Views por publicação (últimas 24)</h3>${postBars(a)||'<p class="mut">Sem dados.</p>'}<p class="note">Clique numa barra para ver o post e a curva de crescimento dele.</p></div>
     <div class="card"><h3>Melhor dia e horário para postar</h3>${heat(a)||'<p class="mut">Sem dados.</p>'}</div>
   </div>
-  <div class="shead"><h2>Publicações</h2><span class="mut">${list.length} de ${a.posts.length}</span><span class="sp"></span>
+  <div class="shead"><h2>Publicações</h2><span class="mut" id="pcount"></span><span class="sp"></span>
+    <input id="q" class="srch" type="search" placeholder="Buscar na legenda…" value="${esc(f.q)}">
     <div class="pills">${seg('type',types)}</div>
     <div class="pills">${seg('period',[['all','Tudo'],['7','7 dias'],['30','30 dias'],['90','90 dias']])}</div>
     <div class="pills">${seg('sort',[['date','Recentes'],['views','Views'],['likes','Curtidas'],['eng','Engajamento']])}</div>
   </div>
-  <div class="grid">${list.map(card).join('')||'<div class="empty">Nenhuma publicação nesse filtro.</div>'}</div>
+  <div class="grid" id="plist"></div>
+  <div class="pager" id="pager"></div>
   <dialog id="dlg"></dialog>`;
+  renderList();
+}
+
+function renderList(){
+  const a=S.accounts.find(x=>x.key===cur)||S.accounts[0];
+  const list=filtered(a),pages=Math.max(1,Math.ceil(list.length/f.size));
+  if(f.page>pages)f.page=pages;
+  const from=(f.page-1)*f.size,slice=list.slice(from,from+f.size);
+  $('#pcount').textContent=list.length===a.posts.length?`${a.posts.length} publicações`:`${list.length} de ${a.posts.length}`;
+  $('#plist').innerHTML=slice.map(card).join('')||'<div class="empty">Nenhuma publicação nesse filtro.</div>';
+  const nums=[];for(let i=1;i<=pages;i++)if(i===1||i===pages||Math.abs(i-f.page)<=1)nums.push(i);else if(nums[nums.length-1]!=='…')nums.push('…');
+  $('#pager').innerHTML=pages<=1&&list.length<=f.size?'':`<button class="pill" data-pg="${f.page-1}" ${f.page<=1?'disabled':''}>‹ Anterior</button>${nums.map(n=>n==='…'?'<span class="mut">…</span>':`<button class="pill ${n===f.page?'on':''}" data-pg="${n}">${n}</button>`).join('')}<button class="pill" data-pg="${f.page+1}" ${f.page>=pages?'disabled':''}>Próxima ›</button><span class="sp"></span><label class="mut">Por página <select id="psize">${[12,24,48,96].map(n=>`<option ${n===f.size?'selected':''}>${n}</option>`).join('')}</select></label>`;
 }
 
 function card(p){
@@ -332,9 +350,12 @@ function openPost(id){
 document.addEventListener('click',e=>{
   const o=e.target.closest('[data-open]');if(o){openPost(o.dataset.open);return}
   if(e.target.closest('[data-close]')||e.target.id==='dlg'){$('#dlg').close();return}
-  const a=e.target.closest('[data-acc]');if(a){cur=a.dataset.acc;render();return}
-  const b=e.target.closest('[data-f]');if(b){f[b.dataset.f]=b.dataset.v;render()}
+  const a=e.target.closest('[data-acc]');if(a){cur=a.dataset.acc;f.page=1;render();return}
+  const g=e.target.closest('[data-pg]');if(g&&!g.disabled){f.page=+g.dataset.pg;renderList();$('#plist').scrollIntoView({block:'start',behavior:'smooth'});return}
+  const b=e.target.closest('[data-f]');if(b){f[b.dataset.f]=b.dataset.v;f.page=1;render()}
 });
+document.addEventListener('input',e=>{if(e.target.id==='q'){f.q=e.target.value;f.page=1;renderList()}});
+document.addEventListener('change',e=>{if(e.target.id==='psize'){f.size=+e.target.value;f.page=1;renderList()}});
 load();
 </script>
 </body>
