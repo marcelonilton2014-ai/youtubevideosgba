@@ -1,5 +1,5 @@
 {
- "rev": 11,
+ "rev": 12,
  "projects": [
   {
    "id": "pmvgrcjil",
@@ -77,6 +77,9 @@
     },
     "AwpejSqXg94": {
      "7": 12000
+    },
+    "drB0yVc4xlM": {
+     "7": 4800
     }
    }
   },
