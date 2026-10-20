@@ -88,6 +88,7 @@ input:focus-visible,select:focus-visible,.btn:focus-visible,summary:focus-visibl
 .chart{width:100%;height:auto;display:block;background:var(--card);border-radius:14px}
 .chart text{fill:var(--mut);font:12px var(--bd-f)}.chart .lbl{fill:var(--tx);font-weight:700}
 .chart .gl{stroke:var(--bd)}
+.vgr td{padding:0;background:var(--card)}.vgb{padding:14px 12px 16px}.vgs{display:flex;gap:18px;flex-wrap:wrap;font-size:13px;color:var(--mut);margin-bottom:8px}.vgs b{color:var(--tx)}
 .hint{font-size:13px;color:var(--mut);margin:8px 2px 0}
 
 .chbars{display:flex;flex-direction:column;gap:10px}
@@ -226,7 +227,7 @@ async function mutate(fn,msg){
 }
 
 /* ===== cálculos ===== */
-const vinfo=x=>{const v=byId.get(x.id);return{id:x.id,t:v?v.title:x.t,c:v?v.channel:x.c,d:v?brDay(v.publishedAt):(x.d||'0000-00-00'),views:v?v.views:null}};
+const vinfo=x=>{const v=byId.get(x.id);return{id:x.id,t:v?v.title:x.t,c:v?v.channel:x.c,d:v?brDay(v.publishedAt):(x.d||'0000-00-00'),views:v?v.views:null,likes:v&&v.likes!=null?v.likes:null}};
 const nowTotal=p=>p.videos.reduce((s,x)=>s+(byId.get(x.id)?.views||0),0);
 function viewsOn(x,date){
   if(x.d>date)return{v:0};                       // vídeo ainda nem existia
@@ -300,6 +301,25 @@ function chart(p,ms,infos,c){
   return s+'</svg>'+(arr.length<=2?`<div class="hint">Ainda não há dados diários suficientes para desenhar a curva. Preencha os marcos já passados (campos abaixo) ou espere o robô acumular mais dias.</div>`:'');
 }
 
+function vchart(x,p,c){
+  const today=todayStr(),days=Math.max(diffDays(p.launch,today),1),total=Math.max(days,7),pts=new Map();
+  for(let i=0;i<=Math.min(days,800);i++){const r=viewsOn(x,addDays(p.launch,i));if(r)pts.set(i,r.v)}
+  if(x.views!=null)pts.set(days,x.views);
+  const arr=[...pts.entries()].sort((a,b)=>a[0]-b[0]);
+  const last7=(()=>{const r=viewsOn(x,addDays(today,-7));return r&&x.views!=null?x.views-r.v:null})();
+  let h=`<div class="vgs"><span>Views hoje: <b>${x.views==null?'—':fmt(x.views)}</b></span><span>Curtidas hoje: <b>${x.likes==null?'—':fmt(x.likes)}</b></span>${last7!=null?`<span>Últimos 7 dias: <b>+${fmt(Math.max(0,last7))}</b></span>`:''}<span>Publicado em <b>${dmy(x.d)}</b></span></div>`;
+  if(arr.length<2)return h+'<div class="hint">Ainda não há dias suficientes no histórico para desenhar a curva deste vídeo. O robô acrescenta um ponto por dia.</div>';
+  const W=720,Hh=230,L=58,R=22,T=22,B=32,X=i=>L+(W-L-R)*(i/total),mx=Math.max(...arr.map(a=>a[1]),1)*1.12,Y=v=>T+(Hh-T-B)*(1-v/mx);
+  let s=`<svg class="chart" viewBox="0 0 ${W} ${Hh}" role="img" aria-label="Views do vídeo ao longo do tempo">`;
+  for(let k=0;k<=4;k++){const v=mx*k/4,y=Y(v);s+=`<line class="gl" x1="${L}" x2="${W-R}" y1="${y}" y2="${y}"/><text x="${L-8}" y="${y+4}" text-anchor="end">${cmp.format(v)}</text>`}
+  new Set([0,total,...MARCOS.filter(n=>n<=total)]).forEach(i=>{s+=`<text x="${X(i)}" y="${Hh-10}" text-anchor="middle">${i===0?'lançamento':i+'d'}</text>`});
+  const line=arr.map(([i,v],j)=>`${j?'L':'M'}${X(i).toFixed(1)} ${Y(v).toFixed(1)}`).join(' '),base=Y(0);
+  s+=`<path d="${line} L${X(arr[arr.length-1][0])} ${base} L${X(arr[0][0])} ${base} Z" fill="${c}" opacity=".13"/><path d="${line}" fill="none" stroke="${c}" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/>`;
+  const lab=[...MARCOS.filter(n=>pts.has(n)&&n<days),days].map(n=>[n,pts.get(n)]);
+  lab.forEach(([i,v])=>{const px=X(i),py=Y(v),end=px>W-80;s+=`<circle cx="${px}" cy="${py}" r="5" fill="${c}" stroke="var(--card)" stroke-width="2.5"/><text class="lbl" x="${px}" y="${py-10}" text-anchor="${end?'end':'middle'}">${i===days?'hoje':i+'d'} · ${cmp.format(v)}</text>`});
+  return h+s+'</svg>';
+}
+
 function projectView(id){
   const p=PRJ.projects.find(x=>x.id===id);
   if(!p)return`<div class="back"><a href="#/">← Todos os projetos</a></div><div class="empty">Projeto não encontrado. Se acabou de criar, aguarde um instante e recarregue.</div>`;
@@ -321,8 +341,8 @@ function projectView(id){
   const by={};infos.forEach(x=>{const k=x.c||'—';by[k]=(by[k]||0)+(x.views||0)});
   const rows=Object.entries(by).sort((a,b)=>b[1]-a[1]),mxv=Math.max(...rows.map(r=>r[1]),1);
   h+=`<div class="sec"><h3>Por canal</h3><span>onde as views estão</span></div><div class="chbars">${rows.map(([k,v])=>`<div class="cb" style="--c:${colorOf(k)}"><span>${esc(k)}</span><div class="bar"><i style="width:${v/mxv*100}%"></i></div><b>${cmp.format(v)}</b></div>`).join('')}</div>`;
-  h+=`<div class="sec"><h3>Vídeos</h3><span>views automáticas por marco, quando o histórico cobre o dia</span></div><div class="tw"><table><thead><tr><th>Vídeo</th><th>Canal</th><th>Publicado</th><th>Hoje</th>${MARCOS.map(n=>`<th>${n}d</th>`).join('')}</tr></thead><tbody>`;
-  h+=[...infos].sort((a,b)=>(b.views||0)-(a.views||0)).map(x=>`<tr><td class="t"><div class="vt"><img src="https://i.ytimg.com/vi/${esc(x.id)}/default.jpg" width="56" loading="lazy" alt=""><a href="https://youtu.be/${esc(x.id)}" target="_blank" rel="noopener">${esc(x.t)}</a></div></td><td>${esc(x.c)}</td><td>${dmy(x.d)}</td><td><b>${x.views==null?'—':fmt(x.views)}</b></td>${ms.map(m=>{if(m.future)return'<td class="mut">—</td>';const r=viewsOn(x,m.date);return`<td>${r?fmt(r.v):'<span class="mut">—</span>'}</td>`}).join('')}</tr>`).join('');
+  h+=`<div class="sec"><h3>Vídeos</h3><span>views automáticas por marco, quando o histórico cobre o dia</span></div><div class="tw"><table><thead><tr><th>Vídeo</th><th>Canal</th><th>Publicado</th><th>Hoje</th><th>Curtidas</th>${MARCOS.map(n=>`<th>${n}d</th>`).join('')}<th>Gráfico</th></tr></thead><tbody>`;
+  h+=[...infos].sort((a,b)=>(b.views||0)-(a.views||0)).map(x=>`<tr><td class="t"><div class="vt"><img src="https://i.ytimg.com/vi/${esc(x.id)}/default.jpg" width="56" loading="lazy" alt=""><a href="https://youtu.be/${esc(x.id)}" target="_blank" rel="noopener">${esc(x.t)}</a></div></td><td>${esc(x.c)}</td><td>${dmy(x.d)}</td><td><b>${x.views==null?'—':fmt(x.views)}</b></td><td>${x.likes==null?'<span class="mut">—</span>':fmt(x.likes)}</td>${ms.map(m=>{if(m.future)return'<td class="mut">—</td>';const r=viewsOn(x,m.date);return`<td>${r?fmt(r.v):'<span class="mut">—</span>'}</td>`}).join('')}<td><button class="btn sm ghost" data-act="vgraph" data-id="${esc(x.id)}" aria-expanded="false">📈 Ver</button></td></tr><tr class="vgr" id="vg-${esc(x.id)}" hidden><td colspan="${6+MARCOS.length}"><div class="vgb"></div></td></tr>`).join('');
   return h+'</tbody></table></div></section>';
 }
 
@@ -382,6 +402,11 @@ app.addEventListener('click',async e=>{
   const b=e.target.closest('[data-act]');if(!b)return;
   const act=b.dataset.act,id=location.hash.split('/')[2];
   if(act==='token')openDlg();
+  else if(act==='vgraph'){
+    const row=document.getElementById('vg-'+b.dataset.id);if(!row)return;
+    const open=row.hidden;row.hidden=!open;b.setAttribute('aria-expanded',open);b.textContent=open?'✕ Fechar':'📈 Ver';
+    if(open&&!row.dataset.done){const pr=PRJ.projects.find(q=>q.id===id);if(pr){const x=pr.videos.map(vinfo).find(q=>q.id===b.dataset.id);row.querySelector('.vgb').innerHTML=vchart(x,pr,colorOf(pr.artist));row.dataset.done=1}}
+  }
   else if(act==='usedate'){const ds=[...draft.sel.values()].map(x=>x.d).filter(Boolean).sort();if(!ds.length)return toast('Escolha ao menos um vídeo primeiro.',true);draft.launch=ds[0];$('#f-date').value=ds[0]}
   else if(act==='save'){
     const name=draft.name.trim();
