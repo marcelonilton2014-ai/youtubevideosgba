@@ -1,5 +1,5 @@
 {
- "rev": 18,
+ "rev": 19,
  "projects": [
   {
    "id": "pmvgrcjil",
@@ -193,6 +193,170 @@
      "90": 3000000
     }
    }
+  },
+  {
+   "id": "pmvh1dy57",
+   "artist": "GBA Music",
+   "name": "GBA WORSHIP",
+   "launch": "2025-06-05",
+   "videos": [
+    {
+     "id": "hCGd_Hb01Mg",
+     "t": "Faz Tudo Novo Aqui - GBA Worship (Video Oficial)",
+     "c": "GBA Music",
+     "d": "2026-05-28"
+    },
+    {
+     "id": "g4HdquBUwJU",
+     "t": "Derramo o Louvor - GBA Worship (Video Oficial)",
+     "c": "GBA Music",
+     "d": "2026-05-27"
+    },
+    {
+     "id": "Fmq5iETXhpE",
+     "t": "Ninguém Me Amou Como Você - GBA Worship e Fátima Souza (Video Oficial)",
+     "c": "GBA Music",
+     "d": "2026-05-26"
+    },
+    {
+     "id": "oDdzCYrYlXI",
+     "t": "Abala as Estruturas - GBA Worship (Video Oficial)",
+     "c": "GBA Music",
+     "d": "2026-05-19"
+    },
+    {
+     "id": "z4alRK2vDrk",
+     "t": "Neste Nome Há Poder  - GBA Worship, Gabriela de Sá e Davidson Silva (Video Oficial)",
+     "c": "GBA Music",
+     "d": "2026-05-18"
+    },
+    {
+     "id": "8JqqsUDAeyw",
+     "t": "Não É Pedir Demais  - GBA Worship (Video Oficial)",
+     "c": "GBA Music",
+     "d": "2026-05-15"
+    },
+    {
+     "id": "bqU05w-aWg8",
+     "t": "Onde Tu Estás (Stay)  - GBA Worship (Video Oficial)",
+     "c": "GBA Music",
+     "d": "2026-05-05"
+    },
+    {
+     "id": "bc68Fu_fwwY",
+     "t": "O Cântico de Maria  - GBA Worship (Video Oficial)",
+     "c": "GBA Music",
+     "d": "2025-11-28"
+    },
+    {
+     "id": "7TrF4E8l9YY",
+     "t": "Diante do Rei  - GBA Worship (Video Oficial)",
+     "c": "GBA Music",
+     "d": "2025-11-27"
+    },
+    {
+     "id": "t4aZW_EZEEA",
+     "t": "Cheiro de Rosas  - GBA Worship (Video Oficial)",
+     "c": "GBA Music",
+     "d": "2025-11-26"
+    },
+    {
+     "id": "vqJsCrjop34",
+     "t": "Quando o Céu Toca a Terra  - GBA Worship feat Danúbia (Video Oficial)",
+     "c": "GBA Music",
+     "d": "2025-11-24"
+    },
+    {
+     "id": "zePcAUJF_I0",
+     "t": "Deus Está Aqui  - GBA Worship feat Celines (Video Oficial)",
+     "c": "GBA Music",
+     "d": "2025-11-19"
+    },
+    {
+     "id": "5TJozcG3a7o",
+     "t": "Pai Nosso (É Teu)  - GBA Worship (Video Oficial)",
+     "c": "GBA Music",
+     "d": "2025-11-18"
+    },
+    {
+     "id": "fmqOiiwIfx4",
+     "t": "Desejado das Nações  - GBA Worship (Video Oficial)",
+     "c": "GBA Music",
+     "d": "2025-11-13"
+    },
+    {
+     "id": "5oYukAOHUqY",
+     "t": "Sede do Deus Vivo  - GBA Worship (Video Oficial)",
+     "c": "GBA Music",
+     "d": "2025-11-10"
+    },
+    {
+     "id": "ARzCLZ69MSM",
+     "t": "Enquanto Eu Te Adoro - Guilherme de Sá, GBA Worship e André Cavalcante | GBA Stage",
+     "c": "GBA Music",
+     "d": "2025-11-07"
+    },
+    {
+     "id": "YIUqq-T3Rso",
+     "t": "A Bondade do Senhor  - GBA Worship (Video Oficial)",
+     "c": "GBA Music",
+     "d": "2025-06-16"
+    },
+    {
+     "id": "A5ku3kaIM_o",
+     "t": "Rei da Gloria - GBA Worship feat Flavio Vitor Jr. (Video Oficial)",
+     "c": "GBA Music",
+     "d": "2025-06-16"
+    },
+    {
+     "id": "E2JrxVFnU6A",
+     "t": "Ruah - GBA Worship (Video Oficial)",
+     "c": "GBA Music",
+     "d": "2025-06-13"
+    },
+    {
+     "id": "f-SfkepjdVQ",
+     "t": "Como Não Me Apaixonar - GBA Worship (Video Oficial)",
+     "c": "GBA Music",
+     "d": "2025-06-13"
+    },
+    {
+     "id": "Tp92mx3aHa4",
+     "t": "Eu Navegarei - GBA Worship (Video Oficial)",
+     "c": "GBA Music",
+     "d": "2025-06-12"
+    },
+    {
+     "id": "esCBix2vYRk",
+     "t": "Grato Sou ( I Thank God )  - GBA Worship feat Thiago Brado (Video Oficial)",
+     "c": "GBA Music",
+     "d": "2025-06-12"
+    },
+    {
+     "id": "rQXRWZ_IxZo",
+     "t": "Eu Nasci Pra Isso - GBA Worship (Video Oficial)",
+     "c": "GBA Music",
+     "d": "2025-06-11"
+    },
+    {
+     "id": "oi9GByT6-qc",
+     "t": "Todo Pranto - GBA Worship feat Ramon e Rafael (Video Oficial)",
+     "c": "GBA Music",
+     "d": "2025-06-11"
+    },
+    {
+     "id": "2O3sFiain7g",
+     "t": "Ainda Bem - GBA Worship (Video Oficial)",
+     "c": "GBA Music",
+     "d": "2025-06-09"
+    },
+    {
+     "id": "IiLTbLDH5Hs",
+     "t": "Mostra a Tua Glória - GBA Worship (Video Oficial)",
+     "c": "GBA Music",
+     "d": "2025-06-05"
+    }
+   ]
   }
  ]
 }
