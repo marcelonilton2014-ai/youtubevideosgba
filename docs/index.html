@@ -27,6 +27,8 @@ button{font-family:inherit}
 .top .tot{margin-left:auto;text-align:right}
 .top .tot b{display:block;font:800 clamp(22px,4vw,30px)/1 var(--hd)}
 .top .tot span{font-size:12px;color:#aab2d0}
+.navlink{display:inline-block;margin-top:8px;background:#f2b705;color:#12172b;font-weight:700;font-size:13px;text-decoration:none;padding:5px 12px;border-radius:99px}
+.navlink:hover{filter:brightness(1.08)}
 .spine{display:flex;height:6px}.spine i{flex:1}
 
 main{max-width:1120px;margin:0 auto;padding:22px 14px 70px}
@@ -111,6 +113,7 @@ td .pct{display:inline-block;min-width:34px;font-weight:700;color:var(--c)}
     <div>
       <h1>YOUTUBE ARTISTAS GBA MUSIC</h1>
       <div class="sub" id="upd">Carregando…</div>
+      <a class="navlink" href="acompanhamento.html">📈 Acompanhamento de projetos →</a>
     </div>
     <div class="tot"><b id="gtot">–</b><span>views somadas dos artistas</span></div>
   </div>
@@ -131,7 +134,7 @@ td .pct{display:inline-block;min-width:34px;font-weight:700;color:var(--c)}
       <div class="grid" id="artists"></div>
     </div>
 
-    <div class="sec"><h3>🔥 Quase lá</h3><span>a 95% ou mais da próxima meta</span></div>
+    <div class="sec"><h3>🔥 Quase lá</h3><span id="nearsub">perto da próxima meta</span></div>
     <div class="grid" id="near"></div>
 
     <div class="sec"><h3>🎉 Bateram recentemente</h3><span>últimos 14 dias</span></div>
@@ -192,6 +195,7 @@ function init(){
   $('#spine').innerHTML=chans.map(c=>`<i style="background:${colorOf(c)}"></i>`).join('');
   $('#gtot').textContent=cmp.format(D.videos.reduce((s,v)=>s+v.views,0));
   chans.forEach(c=>$('#ch').insertAdjacentHTML('beforeend',`<option>${esc(c)}</option>`));
+  $('#nearsub').textContent='a '+Math.round(D.nearRatio*100)+'% ou mais da próxima meta';
   $('#hit').onchange=e=>{if(e.target.dataset.k){posted[e.target.dataset.k]=e.target.checked;savePosted()}};
   const go=e=>{const b=e.target.closest('[data-c]');if(b)location.hash=b.dataset.c?encodeURIComponent(b.dataset.c):''};
   $('#tabs').onclick=go;$('#artists').onclick=go;
