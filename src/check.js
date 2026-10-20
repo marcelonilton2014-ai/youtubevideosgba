@@ -130,7 +130,42 @@ const milestones = [...config.milestones].sort((a, b) => a - b);
 const nearRatio = config.nearRatio ?? 0.9;
 const maxVideos = config.maxVideosPerChannel ?? 500;
 
-const today = new Date().toISOString().slice(0, 10);
+// Data de hoje no horário de Brasília (o "dia" do histórico e das metas)
+const today = new Date().toLocaleDateString('en-CA', {
+  timeZone: 'America/Sao_Paulo'
+});
+
+// MODO RÁPIDO (a cada 30 min): atualiza só o que importa.
+// MODO COMPLETO (1x por dia): varre todos os vídeos de todos os canais.
+let mode = process.env.MODE === 'quick' ? 'quick' : 'full';
+
+const prevVideos = new Map();
+const projectIds = new Set();
+
+try {
+  const pd = JSON.parse(await readFile(P('docs/data.json'), 'utf8'));
+  for (const v of pd.videos ?? []) prevVideos.set(v.id, v);
+} catch {}
+
+try {
+  const pj = JSON.parse(await readFile(P('docs/projects.json'), 'utf8'));
+  for (const p of pj.projects ?? []) {
+    for (const x of p.videos ?? []) projectIds.add(x.id);
+  }
+} catch {}
+
+if (mode === 'quick' && prevVideos.size === 0) mode = 'full';
+
+// Vídeos "quentes": perto de uma meta, meta recém-batida, lançados nos
+// últimos 60 dias ou que fazem parte de algum projeto
+const isHot = (v) =>
+  (v.next && v.progress >= nearRatio - 0.1) ||
+  (v.reachedAt && Date.now() - Date.parse(v.reachedAt) < 14 * 864e5) ||
+  Date.now() - Date.parse(v.publishedAt) < 60 * 864e5 ||
+  projectIds.has(v.id);
+
+const freshIds = new Set();
+console.log(`Modo: ${mode}`);
 
 const dayDiff = (a, b) =>
   (new Date(b) - new Date(a)) / 86400000;
@@ -153,13 +188,38 @@ for (const ch of config.channels) {
 
     const firstTime = !state.channels[info.id]?.baselined;
 
-    const videos = await getStats(
-      await listVideoIds(info.uploads, maxVideos)
-    );
-
     const who = ch.name || info.title;
 
+    let videos;
+    const carried = [];
+
+    if (mode === 'quick') {
+      const hot = [...prevVideos.values()]
+        .filter((v) => v.channel === who && isHot(v))
+        .map((v) => v.id);
+
+      // os 50 mais novos do canal (pega lançamentos recentes)
+      const newest = await listVideoIds(info.uploads, 50);
+      const ids = [...new Set([...newest, ...hot])];
+
+      videos = await getStats(ids);
+
+      // os demais vídeos do canal ficam como estavam
+      const idSet = new Set(ids);
+      for (const v of prevVideos.values()) {
+        if (v.channel === who && !idSet.has(v.id)) carried.push(v);
+      }
+    } else {
+      videos = await getStats(
+        await listVideoIds(info.uploads, maxVideos)
+      );
+    }
+
+    for (const v of carried) out.push(v);
+
     for (const v of videos) {
+      freshIds.add(v.id);
+
       const reached =
         milestones.filter((m) => v.views >= m).pop() ?? 0;
 
@@ -228,13 +288,18 @@ for (const ch of config.channels) {
       baselined: true
     };
 
-    console.log(`✔ ${who}: ${videos.length} vídeos`);
+    console.log(`✔ ${who}: ${videos.length} atualizados, ${carried.length} mantidos`);
   } catch (e) {
     console.error(
       `✖ ${ch.name || ch.channel}: ${e.message}`
     );
 
     errors.push(e.message);
+
+    // não perde os vídeos do canal se a consulta falhar
+    for (const v of prevVideos.values()) {
+      if (ch.name && v.channel === ch.name && !out.some((o) => o.id === v.id)) out.push(v);
+    }
   }
 }
 
@@ -329,7 +394,7 @@ try {
 
   // Registra as visualizações do dia
   for (const v of out) {
-    put(v.id, today, v.views);
+    if (freshIds.has(v.id)) put(v.id, today, v.views);
   }
 
   hist.updatedAt = state.lastRun;
