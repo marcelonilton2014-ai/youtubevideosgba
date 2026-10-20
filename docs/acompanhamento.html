@@ -250,24 +250,30 @@ function viewsOn(x,date){
   return null;                                   // histórico não cobre esse dia
 }
 function totalOn(infos,date){let s=0,ap=false;for(const x of infos){const r=viewsOn(x,date);if(!r)return null;s+=r.v;ap=ap||!!r.approx}return{v:s,approx:ap}}
-function vMarco(p,x,n,date,future){
-  if(future)return null;
+/* Os marcos (7/30/60/90 dias) contam a partir da publicação de CADA vídeo */
+const exactOn=(x,date)=>{if(!H)return null;const e=H.v[x.id];if(!e)return null;const i=diffDays(H.base,date)-e.s;return i>=0&&e.v[i]!=null?e.v[i]:null};
+function vMarco(p,x,n){
+  if(!x.d||x.d<'2000')return{date:'0000-00-00'};
+  const date=addDays(x.d,n);
+  if(date>todayStr())return{date,future:true};
   const m=p.mv?.[x.id]?.[n];
-  if(m!=null&&m!=='')return{v:Number(m),src:'manual'};
+  if(m!=null&&m!=='')return{date,v:Number(m),src:'manual'};
   const r=viewsOn(x,date);
-  return r?{v:r.v,src:r.approx?'aprox':'auto'}:null;
+  return r?{date,v:r.v,src:r.approx?'aprox':'auto'}:{date};
 }
 function marcos(p,infos){
   const today=todayStr();
   return MARCOS.map(n=>{
-    const date=addDays(p.launch,n),future=date>today;
-    const parts=infos.map(x=>vMarco(p,x,n,date,future)).filter(Boolean),miss=infos.length-parts.length,leg=p.manual?.[n];
+    const rs=infos.map(x=>vMarco(p,x,n));
+    const date=rs.reduce((a,r)=>r.date>a?r.date:a,'0000-00-00');   // quando o último vídeo completa o marco
+    const pend=rs.filter(r=>r.future).length,parts=rs.filter(r=>r.v!=null),miss=rs.length-parts.length-pend,leg=p.manual?.[n];
+    const future=pend>0;
     let val=null,src=null;
     if(!future){
       if(infos.length&&miss===0){val=parts.reduce((a,b)=>a+b.v,0);src=parts.some(q=>q.src==='manual')?'manual':parts.some(q=>q.src==='aprox')?'aprox':'auto'}
       else if(leg!=null&&leg!==''){val=Number(leg);src='legacy'}
     }
-    return{n,date,future,daysLeft:future?diffDays(today,date):0,val,src,miss,total:infos.length};
+    return{n,date,idx:diffDays(p.launch,date),future,daysLeft:future?diffDays(today,date):0,val,src,miss,total:infos.length};
   });
 }
 
@@ -305,13 +311,15 @@ function chart(p,ms,infos,c){
   if(days<0)return`<div class="empty">O lançamento ainda não aconteceu.</div>`;
   const total=Math.max(days,7),pts=new Map();
   for(let i=0;i<=Math.min(days,800);i++){const t=totalOn(infos,addDays(p.launch,i));if(t)pts.set(i,{v:t.v,k:'auto'})}
-  ms.forEach(m=>{if(!m.future&&m.val!=null)pts.set(m.n,{v:m.val,k:'m',n:m.n})});
+  ms.forEach(m=>{if(!m.future&&m.val!=null&&m.idx>=0&&m.idx<days)pts.set(m.idx,{v:m.val,k:'m',n:m.n})});
+  if(infos.length&&infos.every(x=>x.d>=p.launch)&&!pts.has(0))pts.set(0,{v:0,k:'auto'});
   pts.set(days,{v:nowTotal(p),k:'now'});
-  const arr=[...pts.entries()].sort((a,b)=>a[0]-b[0]);
+  let arr=[...pts.entries()].sort((a,b)=>a[0]-b[0]);
+  let top=0;arr=arr.map(([i,q])=>{top=Math.max(top,q.v);return[i,{...q,v:top}]});   // views nunca diminuem
   const W=720,Hh=270,L=58,R=22,T=26,B=34,X=i=>L+(W-L-R)*(i/total),mx=Math.max(...arr.map(a=>a[1].v),1)*1.12,Y=v=>T+(Hh-T-B)*(1-v/mx);
   let s=`<svg class="chart" viewBox="0 0 ${W} ${Hh}" role="img" aria-label="Crescimento de views desde o lançamento">`;
   for(let k=0;k<=4;k++){const v=mx*k/4,y=Y(v);s+=`<line class="gl" x1="${L}" x2="${W-R}" y1="${y}" y2="${y}"/><text x="${L-8}" y="${y+4}" text-anchor="end">${cmp.format(v)}</text>`}
-  const xt=new Set([0,total,...MARCOS.filter(n=>n<=total)]);
+  const xt=new Set([0,total,...MARCOS.filter(n=>n<=total&&total-n>total*0.07)]);
   xt.forEach(i=>{s+=`<text x="${X(i)}" y="${Hh-10}" text-anchor="middle">${i===0?'lançamento':i+'d'}</text>`});
   const line=arr.map(([i,p2],j)=>`${j?'L':'M'}${X(i).toFixed(1)} ${Y(p2.v).toFixed(1)}`).join(' ');
   const base=Y(0);
@@ -322,23 +330,26 @@ function chart(p,ms,infos,c){
 }
 
 function vchart(x,p,c){
-  const today=todayStr(),days=Math.max(diffDays(p.launch,today),1),total=Math.max(days,7),pts=new Map();
-  for(let i=0;i<=Math.min(days,800);i++){const r=viewsOn(x,addDays(p.launch,i));if(r)pts.set(i,r.v)}
-  MARCOS.forEach(n=>{const m=p.mv?.[x.id]?.[n];if(m!=null&&m!==''&&n<=days)pts.set(n,Number(m))});
-  if(x.views!=null)pts.set(days,x.views);
-  const arr=[...pts.entries()].sort((a,b)=>a[0]-b[0]);
+  const today=todayStr();
   const last7=(()=>{const r=viewsOn(x,addDays(today,-7));return r&&x.views!=null?x.views-r.v:null})();
   let h=`<div class="vgs"><span>Views hoje: <b>${x.views==null?'—':fmt(x.views)}</b></span><span>Curtidas hoje: <b>${x.likes==null?'—':fmt(x.likes)}</b></span>${last7!=null?`<span>Últimos 7 dias: <b>+${fmt(Math.max(0,last7))}</b></span>`:''}<span>Publicado em <b>${dmy(x.d)}</b></span></div>`;
-  if(arr.length<2)return h+'<div class="hint">Ainda não há dias suficientes no histórico para desenhar a curva deste vídeo. O robô acrescenta um ponto por dia.</div>';
+  if(!x.d||x.d<'2000')return h+'<div class="hint">Sem a data de publicação deste vídeo, não dá para desenhar a curva.</div>';
+  const age=Math.max(diffDays(x.d,today),1),total=Math.max(age,7),pts=new Map();
+  pts.set(0,0);                                                  // na publicação: 0 views
+  for(let i=1;i<=Math.min(age,1500);i++){const v=exactOn(x,addDays(x.d,i));if(v!=null)pts.set(i,v)}
+  MARCOS.forEach(n=>{const m=p.mv?.[x.id]?.[n];if(m!=null&&m!==''&&n<=age)pts.set(n,Number(m))});
+  if(x.views!=null)pts.set(age,x.views);
+  let arr=[...pts.entries()].sort((a,b)=>a[0]-b[0]);
+  let top=0;arr=arr.map(([i,v])=>{top=Math.max(top,v);return[i,top]});   // views nunca diminuem
   const W=720,Hh=230,L=58,R=22,T=22,B=32,X=i=>L+(W-L-R)*(i/total),mx=Math.max(...arr.map(a=>a[1]),1)*1.12,Y=v=>T+(Hh-T-B)*(1-v/mx);
-  let s=`<svg class="chart" viewBox="0 0 ${W} ${Hh}" role="img" aria-label="Views do vídeo ao longo do tempo">`;
+  let s=`<svg class="chart" viewBox="0 0 ${W} ${Hh}" role="img" aria-label="Views do vídeo desde a publicação">`;
   for(let k=0;k<=4;k++){const v=mx*k/4,y=Y(v);s+=`<line class="gl" x1="${L}" x2="${W-R}" y1="${y}" y2="${y}"/><text x="${L-8}" y="${y+4}" text-anchor="end">${cmp.format(v)}</text>`}
-  new Set([0,total,...MARCOS.filter(n=>n<=total)]).forEach(i=>{s+=`<text x="${X(i)}" y="${Hh-10}" text-anchor="middle">${i===0?'lançamento':i+'d'}</text>`});
+  new Set([0,total,...MARCOS.filter(n=>n<=total&&total-n>total*0.07)]).forEach(i=>{s+=`<text x="${X(i)}" y="${Hh-10}" text-anchor="middle">${i===0?'publicação':i+'d'}</text>`});
   const line=arr.map(([i,v],j)=>`${j?'L':'M'}${X(i).toFixed(1)} ${Y(v).toFixed(1)}`).join(' '),base=Y(0);
   s+=`<path d="${line} L${X(arr[arr.length-1][0])} ${base} L${X(arr[0][0])} ${base} Z" fill="${c}" opacity=".13"/><path d="${line}" fill="none" stroke="${c}" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/>`;
-  const lab=[...MARCOS.filter(n=>pts.has(n)&&n<days),days].map(n=>[n,pts.get(n)]);
-  lab.forEach(([i,v])=>{const px=X(i),py=Y(v),end=px>W-80;s+=`<circle cx="${px}" cy="${py}" r="5" fill="${c}" stroke="var(--card)" stroke-width="2.5"/><text class="lbl" x="${px}" y="${py-10}" text-anchor="${end?'end':'middle'}">${i===days?'hoje':i+'d'} · ${cmp.format(v)}</text>`});
-  return h+s+'</svg>';
+  const val=new Map(arr);
+  [...MARCOS.filter(n=>pts.has(n)&&n<age),age].forEach(i=>{const px=X(i),py=Y(val.get(i)),end=px>W-80;s+=`<circle cx="${px}" cy="${py}" r="5" fill="${c}" stroke="var(--card)" stroke-width="2.5"/><text class="lbl" x="${px}" y="${py-10}" text-anchor="${end?'end':'middle'}">${i===age?'hoje':i+'d'} · ${cmp.format(val.get(i))}</text>`});
+  return h+s+'</svg>'+(arr.length<=2?'<div class="hint">Ainda não há pontos intermediários: a linha liga a publicação ao valor de hoje. Preencha os marcos (modo de edição) para detalhar a curva.</div>':'');
 }
 
 function projectView(id){
@@ -354,17 +365,17 @@ function projectView(id){
   <div class="sec"><h3>Marcos</h3><span>views acumuladas desde o lançamento</span></div><div class="marcos">`;
   h+=ms.map((m,i)=>{
     const prev=ms.slice(0,i).reverse().find(x=>x.val!=null),gain=m.val!=null&&prev?m.val-prev.val:null;
-    const st=m.future?`faltam ${m.daysLeft} dia${m.daysLeft==1?'':'s'}`:m.val==null?`⚠ faltam ${m.miss} de ${m.total} vídeo${m.total==1?'':'s'} — preencha na tabela abaixo`:m.src==='legacy'?'valor manual do projeto (antigo)':m.src==='manual'?'soma dos vídeos (com valores manuais)':m.src==='aprox'?'soma dos vídeos (aproximado)':'soma automática dos vídeos';
+    const st=m.future?`faltam ${m.daysLeft} dia${m.daysLeft==1?'':'s'} (último vídeo)`:m.val==null?`⚠ faltam ${m.miss} de ${m.total} vídeo${m.total==1?'':'s'} — preencha na tabela abaixo`:m.src==='legacy'?'valor manual do projeto (antigo)':m.src==='manual'?'soma dos vídeos (com valores manuais)':m.src==='aprox'?'soma dos vídeos (aproximado)':'soma automática dos vídeos';
     return `<div class="mc ${m.val!=null?'has':!m.future?'miss':''}"><div class="mh">${m.n} dias<span>${dmy(m.date)}</span></div><div class="mv">${m.val!=null?fmt(m.val):'—'}</div><div class="ms">${st}</div>${gain!=null?`<div class="mg">+${fmt(gain)} desde ${prev.n} dias</div>`:''}</div>`}).join('');
-  h+=`</div><div class="hint">O total de cada marco é a soma dos vídeos. Para preencher ou corrigir, digite as views de 7, 30, 60 e 90 dias de cada vídeo na tabela abaixo e clique em Salvar na linha.</div>
+  h+=`</div><div class="hint">Cada marco conta a partir da <b>publicação de cada vídeo</b> (7 dias depois de publicado, 30 dias depois…). O total é a soma dos vídeos. Para preencher ou corrigir, use o modo de edição na tabela abaixo.</div>
   <div class="sec"><h3>Crescimento</h3></div>${chart(p,ms,infos,c)}`;
   const by={};infos.forEach(x=>{const k=x.c||'—';by[k]=(by[k]||0)+(x.views||0)});
   const rows=Object.entries(by).sort((a,b)=>b[1]-a[1]),mxv=Math.max(...rows.map(r=>r[1]),1);
   h+=`<div class="sec"><h3>Por canal</h3><span>onde as views estão</span></div><div class="chbars">${rows.map(([k,v])=>`<div class="cb" style="--c:${colorOf(k)}"><span>${esc(k)}</span><div class="bar"><i style="width:${v/mxv*100}%"></i></div><b>${cmp.format(v)}</b></div>`).join('')}</div>`;
-  h+=`<div class="sec"><h3>Vídeos</h3><span>${EDIT?'campo vazio = valor automático (cinza); digite para sobrescrever':'valores de 7, 30, 60 e 90 dias por vídeo (✎ = valor manual)'}</span><button type="button" class="btn sm ${EDIT?'on':'ghost'} editbar" data-act="edit">${EDIT?'✔ Concluir edição':'✎ Modo de edição'}</button></div><div class="tw"><table><thead><tr><th>Vídeo</th><th>Canal</th><th>Publicado</th><th>Hoje</th><th>Curtidas</th>${MARCOS.map(n=>`<th>${n}d</th>`).join('')}<th>Gráfico</th></tr></thead><tbody>`;
-  h+=[...infos].sort((a,b)=>(b.views||0)-(a.views||0)).map(x=>`<tr><td class="t"><div class="vt"><img src="https://i.ytimg.com/vi/${esc(x.id)}/default.jpg" width="56" loading="lazy" alt=""><a href="https://youtu.be/${esc(x.id)}" target="_blank" rel="noopener">${esc(x.t)}</a></div></td><td>${esc(x.c)}</td><td>${dmy(x.d)}</td><td><b>${x.views==null?'—':fmt(x.views)}</b></td><td>${x.likes==null?'<span class="mut">—</span>':fmt(x.likes)}</td>${ms.map(m=>{if(m.future)return'<td class="mut">—</td>';const r=vMarco(p,x,m.n,m.date,false);
-    if(!EDIT||!TOKEN)return`<td>${r?fmt(r.v)+(r.src==='manual'?' ✎':''):'<span class="mut">—</span>'}</td>`;
-    return`<td><input class="vm ${r&&r.src==='manual'?'man':''}" type="number" min="0" inputmode="numeric" data-mvid="${esc(x.id)}" data-n="${m.n}" value="${p.mv?.[x.id]?.[m.n]??''}" placeholder="${r?fmt(r.v):'—'}" aria-label="Views em ${m.n} dias"></td>`}).join('')}<td class="nw">${EDIT&&TOKEN?`<button class="btn sm" data-act="savevid" data-id="${esc(x.id)}">Salvar</button> `:''}<button class="btn sm ghost" data-act="vgraph" data-id="${esc(x.id)}" aria-expanded="false">📈 Ver</button></td></tr><tr class="vgr" id="vg-${esc(x.id)}" hidden><td colspan="${6+MARCOS.length}"><div class="vgb"></div></td></tr>`).join('');
+  h+=`<div class="sec"><h3>Vídeos</h3><span>${EDIT?'campo vazio = valor automático (cinza); digite para sobrescrever':'views 7, 30, 60 e 90 dias após a publicação de cada vídeo (✎ = valor manual)'}</span><button type="button" class="btn sm ${EDIT?'on':'ghost'} editbar" data-act="edit">${EDIT?'✔ Concluir edição':'✎ Modo de edição'}</button></div><div class="tw"><table><thead><tr><th>Vídeo</th><th>Canal</th><th>Publicado</th><th>Hoje</th><th>Curtidas</th>${MARCOS.map(n=>`<th>${n}d</th>`).join('')}<th>Gráfico</th></tr></thead><tbody>`;
+  h+=[...infos].sort((a,b)=>(b.views||0)-(a.views||0)).map(x=>`<tr><td class="t"><div class="vt"><img src="https://i.ytimg.com/vi/${esc(x.id)}/default.jpg" width="56" loading="lazy" alt=""><a href="https://youtu.be/${esc(x.id)}" target="_blank" rel="noopener">${esc(x.t)}</a></div></td><td>${esc(x.c)}</td><td>${dmy(x.d)}</td><td><b>${x.views==null?'—':fmt(x.views)}</b></td><td>${x.likes==null?'<span class="mut">—</span>':fmt(x.likes)}</td>${ms.map(m=>{const r=vMarco(p,x,m.n);if(r.future)return`<td class="mut" title="faltam ${diffDays(today,r.date)} dias">—</td>`;
+    if(!EDIT||!TOKEN)return`<td>${r.v!=null?fmt(r.v)+(r.src==='manual'?' ✎':''):'<span class="mut">—</span>'}</td>`;
+    return`<td><input class="vm ${r.src==='manual'?'man':''}" type="number" min="0" inputmode="numeric" data-mvid="${esc(x.id)}" data-n="${m.n}" value="${p.mv?.[x.id]?.[m.n]??''}" placeholder="${r.v!=null?fmt(r.v):'—'}" aria-label="Views em ${m.n} dias"></td>`}).join('')}<td class="nw">${EDIT&&TOKEN?`<button class="btn sm" data-act="savevid" data-id="${esc(x.id)}">Salvar</button> `:''}<button class="btn sm ghost" data-act="vgraph" data-id="${esc(x.id)}" aria-expanded="false">📈 Ver</button></td></tr><tr class="vgr" id="vg-${esc(x.id)}" hidden><td colspan="${6+MARCOS.length}"><div class="vgb"></div></td></tr>`).join('');
   return h+'</tbody></table></div></section>';
 }
 
