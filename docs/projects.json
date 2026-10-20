@@ -1,5 +1,5 @@
 {
- "rev": 1,
+ "rev": 2,
  "projects": [
   {
    "id": "pmvgrcjil",
@@ -66,6 +66,86 @@
      "t": "O LAMENTO DE ISRAEL — Jessica Dias | REPOUSO",
      "c": "GBA Music",
      "d": "2026-10-09"
+    }
+   ]
+  },
+  {
+   "id": "pmvgrl3t4",
+   "artist": "Flávio Vitor",
+   "name": "A GLORIA DA SEGUNDA CASA",
+   "launch": "2025-01-17",
+   "videos": [
+    {
+     "id": "9tyf32hJjoo",
+     "t": "Desperta  - Flavio Vitor Jr. (A Glória da Segunda Casa - Ao Vivo)",
+     "c": "Flávio Vitor",
+     "d": "2025-04-03"
+    },
+    {
+     "id": "6STR8enNX1I",
+     "t": "Pertença - Flavio Vitor Jr. (A Glória da Segunda Casa - Ao Vivo)",
+     "c": "Flávio Vitor",
+     "d": "2025-04-02"
+    },
+    {
+     "id": "vk2KpNPmKiA",
+     "t": "Eu Amo Quando Você Vem  - Flavio Vitor Jr. (A Glória da Segunda Casa - Ao Vivo)",
+     "c": "Flávio Vitor",
+     "d": "2025-04-01"
+    },
+    {
+     "id": "_BF7IyDA9hM",
+     "t": "Como Eu Te Amo  - Flavio Vitor Jr. (A Glória da Segunda Casa - Ao Vivo)",
+     "c": "Flávio Vitor",
+     "d": "2025-03-27"
+    },
+    {
+     "id": "vplvudx20sM",
+     "t": "Glória e Poder  - Flavio Vitor Jr. (A Glória da Segunda Casa - Ao Vivo)",
+     "c": "Flávio Vitor",
+     "d": "2025-02-25"
+    },
+    {
+     "id": "e7OuVBF0sVM",
+     "t": "Também é Pra Mim - Flavio Vitor Jr. (A Glória da Segunda Casa - Ao Vivo)",
+     "c": "Flávio Vitor",
+     "d": "2025-02-24"
+    },
+    {
+     "id": "tkS5t2ul7IU",
+     "t": "Disponível - Flavio Vitor Jr. (A Glória da Segunda Casa - Ao Vivo)",
+     "c": "Flávio Vitor",
+     "d": "2025-02-21"
+    },
+    {
+     "id": "3ynmTTyBg3w",
+     "t": "Enquanto Eu Te Adoro - Flavio Vitor Jr. (A Glória da Segunda Casa - Ao Vivo)",
+     "c": "Flávio Vitor",
+     "d": "2025-02-20"
+    },
+    {
+     "id": "9LO1J5j4ukU",
+     "t": "+ Maria + Jesus - Flavio Vitor Jr. (A Glória da Segunda Casa - Ao Vivo)",
+     "c": "Flávio Vitor",
+     "d": "2025-01-30"
+    },
+    {
+     "id": "43qf0Cktork",
+     "t": "Recompensa - Flavio Vitor Jr. (A Glória da Segunda Casa - Ao Vivo)",
+     "c": "Flávio Vitor",
+     "d": "2025-01-29"
+    },
+    {
+     "id": "X0h4Jr8Jf1Q",
+     "t": "Além da Dor  - Flavio Vitor Jr. feat Thayna Azevedo (A Glória da Segunda Casa - Ao Vivo)",
+     "c": "Flávio Vitor",
+     "d": "2025-01-28"
+    },
+    {
+     "id": "HInb5HFziZY",
+     "t": "Eu Amo Teu Fogo - Flavio Vitor Jr. (A Glória da Segunda Casa - Ao Vivo)",
+     "c": "Flávio Vitor",
+     "d": "2025-01-17"
     }
    ]
   }
