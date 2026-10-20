@@ -1,5 +1,5 @@
 {
- "rev": 21,
+ "rev": 22,
  "projects": [
   {
    "id": "pmvgrcjil",
@@ -375,6 +375,50 @@
      "t": "Ave Maria - Ramon e Rafael | O Som da Igreja 2",
      "c": "Ramone Rafael",
      "d": "2026-10-11"
+    }
+   ]
+  },
+  {
+   "id": "pmvh1iqt6",
+   "artist": "Ramone Rafael",
+   "name": "O SOM DA IGREJA VOL 1",
+   "launch": "2025-11-17",
+   "videos": [
+    {
+     "id": "uTkAbgyuFuw",
+     "t": "Acalma Minha Tempestade - Ramon e Rafael (O Som da Igreja)",
+     "c": "Ramone Rafael",
+     "d": "2025-12-10"
+    },
+    {
+     "id": "mCW_DonUlEg",
+     "t": "Mire as Estrelas - Ramon e Rafael (O Som da Igreja)",
+     "c": "Ramone Rafael",
+     "d": "2025-12-08"
+    },
+    {
+     "id": "SqnkrLpOTDs",
+     "t": "A Benção - Ramon e Rafael (O Som da Igreja)",
+     "c": "Ramone Rafael",
+     "d": "2025-12-04"
+    },
+    {
+     "id": "pvtqffpPp_8",
+     "t": "Eis-me Aqui - Ramon e Rafael (O Som da Igreja)",
+     "c": "Ramone Rafael",
+     "d": "2025-12-01"
+    },
+    {
+     "id": "smB9ycmpWSU",
+     "t": "Espirito, Enche a Minha Vida/Ao Único - Ramon e Rafael (O Som da Igreja)",
+     "c": "Ramone Rafael",
+     "d": "2025-11-20"
+    },
+    {
+     "id": "007PmayFQPw",
+     "t": "Aleluia - Ramon e Rafael (O Som da Igreja)",
+     "c": "Ramone Rafael",
+     "d": "2025-11-17"
     }
    ]
   }
