@@ -1,4 +1,3 @@
-
 import { readFile, writeFile, mkdir } from 'node:fs/promises';
 
 const API = 'https://www.googleapis.com/youtube/v3';
@@ -103,7 +102,11 @@ async function getStats(ids) {
         id: v.id,
         title: v.snippet.title,
         publishedAt: v.snippet.publishedAt,
-        views: Number(v.statistics.viewCount)
+        views: Number(v.statistics.viewCount),
+        likes:
+          v.statistics.likeCount !== undefined
+            ? Number(v.statistics.likeCount)
+            : null
       });
     }
   }
@@ -207,6 +210,7 @@ for (const ch of config.channels) {
         channel: who,
         publishedAt: v.publishedAt,
         views: v.views,
+        likes: v.likes,
         lastMilestone: reached,
         reachedAt: e.reachedAt,
         next,
