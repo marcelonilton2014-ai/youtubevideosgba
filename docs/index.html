@@ -10,16 +10,15 @@
 <style>
 :root{
   --page:#e4e4e1;--shell:#f4f4f2;--pn:#fff;--soft:#f1f1ee;--tx:#17171a;--mut:#8b8b92;--bd:#ebebe8;
-  --ac:#ec6a4d;--ink:#121214;--inktx:#fff;--warn:#b4411f;--ok:#17916a;
+  --ac:#c14428;--ac2:#e59632;--ac3:#ecb87a;--ink:#121214;--inktx:#fff;--warn:#b4411f;--ok:#17916a;
   --f:'Hanken Grotesk',system-ui,-apple-system,sans-serif;
   --sh:0 1px 2px rgba(20,20,25,.04),0 8px 24px rgba(20,20,25,.05);
 }
-@media(prefers-color-scheme:dark){:root{--page:#08080a;--shell:#121214;--pn:#1b1b1f;--soft:#26262b;--tx:#f4f4f5;--mut:#9b9ba3;--bd:#2b2b31;--ac:#f1775a;--ink:#f4f4f5;--inktx:#111;--warn:#ffa58c;--ok:#4fd3a1;--sh:none}}
+@media(prefers-color-scheme:dark){:root{--page:#08080a;--shell:#121214;--pn:#1b1b1f;--soft:#26262b;--tx:#f4f4f5;--mut:#9b9ba3;--bd:#2b2b31;--ac:#e2623e;--ac2:#eda44f;--ac3:#f0bf86;--ink:#f4f4f5;--inktx:#111;--warn:#ffa58c;--ok:#4fd3a1;--sh:none}}
 *{box-sizing:border-box}
 body{margin:0;background:var(--page);color:var(--tx);font:15px/1.5 var(--f);-webkit-font-smoothing:antialiased;padding:14px}
 a{color:inherit}button{font-family:inherit;cursor:pointer}
 svg.i{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex:none}
-.hatch{background-color:color-mix(in srgb,var(--ac) 16%,var(--pn));background-image:repeating-linear-gradient(135deg,var(--ac) 0 2px,transparent 2px 7px)}
 
 .shell{max-width:1400px;margin:0 auto;background:var(--shell);border-radius:38px;padding:18px 18px 28px}
 
@@ -44,15 +43,19 @@ a.chip:hover{background:color-mix(in srgb,var(--ac) 18%,var(--soft))}
 .rbtn.busy svg{animation:sp 1s linear infinite}@keyframes sp{to{transform:rotate(360deg)}}
 
 /* ===== layout ===== */
-.layout{display:grid;grid-template-columns:86px 1fr;gap:18px;margin-top:18px;align-items:start}
-.rail{position:sticky;top:14px;background:var(--pn);border-radius:44px;padding:14px 0;display:flex;flex-direction:column;align-items:center;gap:12px;box-shadow:var(--sh);max-height:calc(100vh - 28px);overflow:auto;scrollbar-width:none}
+.layout{display:grid;grid-template-columns:100px 1fr;gap:18px;margin-top:18px;align-items:start}
+.rail{position:sticky;top:14px;background:var(--pn);border-radius:44px;padding:16px 0;display:flex;flex-direction:column;align-items:center;gap:8px;box-shadow:var(--sh);max-height:calc(100vh - 28px);overflow:auto;scrollbar-width:none}
 .rail::-webkit-scrollbar{display:none}
-.rb{position:relative;width:54px;height:54px;border-radius:50%;border:none;background:var(--soft);color:var(--mut);display:grid;place-items:center;font:600 15px var(--f);transition:all .15s;flex:none}
-.rb:hover{color:var(--tx);box-shadow:inset 0 0 0 2px var(--c,var(--ac))}
-.rb.on{background:var(--ac);color:#fff;box-shadow:none}
-.rb .dot{position:absolute;right:3px;top:3px;width:12px;height:12px;border-radius:50%;background:var(--c);border:2px solid var(--pn)}
+.rb{border:none;background:none;width:84px;padding:6px 0;display:flex;flex-direction:column;align-items:center;gap:7px;color:var(--mut);font:inherit;border-radius:20px;flex:none}
+.av{position:relative;width:56px;height:56px;border-radius:50%;background:var(--soft);display:grid;place-items:center;font:600 15px var(--f);overflow:hidden;transition:box-shadow .15s;flex:none}
+.av img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.rb:hover .av{box-shadow:0 0 0 3px var(--c,var(--ac))}
+.rb.on .av{box-shadow:0 0 0 3px var(--pn),0 0 0 6px var(--ac)}
+.rb.home.on .av{background:var(--ac);color:#fff}
+.nm{font-size:11.5px;line-height:1.15;text-align:center;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;max-width:80px;word-break:break-word}
+.rb.on .nm{color:var(--tx);font-weight:700}.rb:hover .nm{color:var(--tx)}
 .rb:focus-visible{outline:2px solid var(--ac);outline-offset:2px}
-.rsep{width:30px;height:1px;background:var(--bd);flex:none}
+.rsep{width:34px;height:1px;background:var(--bd);flex:none}
 .content{min-width:0;display:flex;flex-direction:column;gap:18px}
 
 .card{background:var(--pn);border-radius:30px;padding:22px;box-shadow:var(--sh)}
@@ -65,11 +68,11 @@ a.chip:hover{background:color-mix(in srgb,var(--ac) 18%,var(--soft))}
 .bal{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:26px}
 .bc{display:flex;align-items:center;gap:16px;background:var(--pn);border-radius:30px;padding:22px;box-shadow:var(--sh)}
 .ico{width:56px;height:56px;border-radius:17px;display:grid;place-items:center;flex:none;color:#fff}
-.ico.dark{background:var(--ink);color:var(--inktx)}.ico.acc{background:var(--ac)}
+.ico.dark{background:var(--ink);color:var(--inktx)}.ico.acc{background:var(--ac2);color:#2b1a05}
 .bc .l{color:var(--mut);font-size:15px}
 .bc .v{font:400 clamp(26px,3vw,36px)/1.1 var(--f);letter-spacing:-.03em}
 .delta{margin-left:auto;align-self:flex-end;background:var(--ink);color:var(--inktx);font-size:12px;font-weight:600;border-radius:99px;padding:3px 10px;white-space:nowrap}
-.delta.ac{background:var(--ac);color:#fff}
+.delta.ac{background:var(--ac2);color:#2b1a05}
 
 /* medidor */
 .gcard{display:flex;flex-direction:column;gap:6px}
@@ -96,7 +99,7 @@ a.chip:hover{background:color-mix(in srgb,var(--ac) 18%,var(--soft))}
 /* ===== METAS BATIDAS ===== */
 .hitlist{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,470px),1fr));gap:16px}
 .hit{position:relative;display:flex;gap:18px;background:var(--pn);border-radius:30px;padding:16px;box-shadow:var(--sh);overflow:hidden}
-.hit::before{content:"";position:absolute;inset:0 0 auto 0;height:5px;background-image:repeating-linear-gradient(135deg,var(--ac) 0 3px,transparent 3px 8px);opacity:.9}
+.hit::before{content:"";position:absolute;inset:0 0 auto 0;height:6px;background:linear-gradient(90deg,var(--ac) 0 50%,var(--ac2) 50% 80%,var(--ac3) 80%)}
 .hit .th{flex:none;width:176px;align-self:center}
 .hit .th img{width:100%;aspect-ratio:16/9;object-fit:cover;display:block;border-radius:18px}
 .hit .b{display:flex;flex-direction:column;gap:7px;min-width:0;flex:1;justify-content:center;padding:6px 4px 2px 0}
@@ -121,39 +124,21 @@ a.chip:hover{background:color-mix(in srgb,var(--ac) 18%,var(--soft))}
 .pills{display:flex;gap:8px;flex-wrap:wrap;margin-left:auto;align-items:center}
 .pill{background:var(--soft);border:none;border-radius:99px;padding:10px 20px;font-size:14.5px;color:var(--tx);text-decoration:none;transition:background .15s}
 .pill.on{background:var(--ink);color:var(--inktx)}
-.agrid{display:grid;grid-template-columns:1.25fr 1fr 1fr;gap:16px}
-.sub{background:var(--shell);border-radius:26px;padding:18px;min-width:0}
-.sub .st{display:flex;align-items:center;gap:10px;font-weight:500;font-size:16px;margin-bottom:4px}
-.sub .ss{font-size:13px;color:var(--mut);margin-bottom:12px}
 
-/* quase lá (lista) */
-.nl{display:flex;flex-direction:column;gap:8px;max-height:430px;overflow:auto;padding-right:4px;scrollbar-width:thin}
-.nr{display:grid;grid-template-columns:58px 1fr;gap:12px;align-items:center;background:var(--pn);border-radius:18px;padding:8px 12px 8px 8px}
-.nr img{width:58px;aspect-ratio:16/9;object-fit:cover;border-radius:11px;display:block}
-.nr .t{font-size:13.5px;font-weight:500;text-decoration:none;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block}
-.nr .m{display:flex;align-items:center;gap:8px;margin-top:5px}
-.hb{flex:1;height:10px;border-radius:99px;overflow:hidden;background:var(--soft)}
-.hb i{display:block;height:100%;border-radius:99px}
-.nr .p{font-size:12.5px;font-weight:700;min-width:34px;text-align:right}
-.nr .f{font-size:12px;color:var(--mut);margin-top:3px}
-
-/* barras */
-.bars{display:flex;align-items:flex-end;gap:10px;height:230px;padding-top:30px}
-.bcol{flex:1;min-width:0;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;gap:7px;position:relative}
-.bcol .bar{width:100%;max-width:46px;border-radius:99px 99px 14px 14px;position:relative;min-height:12px}
-.bcol .bar.top{background:var(--ac)}
-.bcol .bar::before{content:"";position:absolute;left:50%;top:-5px;width:11px;height:11px;margin-left:-5.5px;border-radius:50%;background:var(--ac);border:2px solid var(--pn)}
-.bcol .bv{position:absolute;top:-28px;font-size:11.5px;font-weight:600;white-space:nowrap}
-.bcol .bl{font-size:11.5px;color:var(--mut);max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;height:16px}
-
-/* anel */
-.ringwrap{display:flex;flex-direction:column;align-items:center;gap:14px;padding-top:6px}
-.ring{width:150px;aspect-ratio:1;border-radius:50%;display:grid;place-items:center;position:relative;background:conic-gradient(var(--ac) calc(var(--p)*1%),color-mix(in srgb,var(--ac) 14%,var(--shell)) 0);box-shadow:0 0 0 10px color-mix(in srgb,var(--ac) 11%,transparent)}
-.ring::before{content:"";position:absolute;inset:15px;border-radius:50%;background:var(--shell)}
-.ring span{position:relative;font:400 32px var(--f);letter-spacing:-.03em}
-.ring small{display:block;font-size:12px;color:var(--mut);text-align:center;margin-top:-4px}
-.big2{font:400 40px/1 var(--f);letter-spacing:-.04em;text-align:center}
-.cap{font-size:13px;color:var(--mut);text-align:center;max-width:220px}
+/* quase lá (blocos) */
+.ngrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:16px}
+.nc{background:var(--shell);border-radius:26px;overflow:hidden;display:flex;flex-direction:column;transition:transform .15s,box-shadow .15s}
+.nc:hover{transform:translateY(-3px);box-shadow:var(--sh)}
+.nc .th{position:relative}
+.nc .th img{width:100%;aspect-ratio:16/9;object-fit:cover;display:block}
+.nc .tag{position:absolute;left:12px;top:12px;background:var(--ink);color:var(--inktx);font-size:12px;font-weight:600;padding:4px 12px;border-radius:99px}
+.nc .b{padding:14px 16px 18px;display:flex;flex-direction:column;gap:8px}
+.nc .ti{font-weight:500;font-size:15px;text-decoration:none;line-height:1.3;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.nc .ch{font-size:12.5px;font-weight:600}
+.nc .row{display:flex;justify-content:space-between;gap:8px;font-size:13px;color:var(--mut);align-items:baseline}
+.nc .row b{font-size:18px;font-weight:600;color:var(--tx);letter-spacing:-.01em}
+.pb{height:10px;border-radius:99px;background:color-mix(in srgb,var(--ac2) 22%,var(--pn));overflow:hidden}
+.pb i{display:block;height:100%;border-radius:99px;background:var(--ac2)}
 
 /* tabela */
 .tw{overflow-x:auto}
@@ -173,15 +158,15 @@ td .cdot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-righ
 #msg.on{opacity:1}
 
 /* ===== responsivo ===== */
-@media(max-width:1180px){.row1{grid-template-columns:1fr}.agrid{grid-template-columns:1fr 1fr}.agrid .sub:first-child{grid-column:1/-1}}
+@media(max-width:1180px){.row1{grid-template-columns:1fr}}
 @media(max-width:900px){
   body{padding:8px}.shell{border-radius:28px;padding:12px 12px 22px}
   .topbar{border-radius:30px}.chips{order:3}.brand span{font-size:17px}
   .layout{grid-template-columns:1fr}
-  .rail{position:static;flex-direction:row;border-radius:99px;padding:8px 12px;max-height:none;overflow-x:auto;justify-content:flex-start}
-  .rsep{width:1px;height:30px}
+  .rail{position:static;flex-direction:row;border-radius:34px;padding:8px 12px;max-height:none;overflow-x:auto;justify-content:flex-start;align-items:flex-start}
+  .rsep{width:1px;height:50px;align-self:center}
 }
-@media(max-width:640px){.bal{grid-template-columns:1fr}.agrid{grid-template-columns:1fr}.gbody{grid-template-columns:1fr}.tiles{flex-direction:row}.tiles .tile{flex:1}.rbtn span{display:none}.rbtn{padding:0 14px}.datepill .dt{display:none}}
+@media(max-width:640px){.bal{grid-template-columns:1fr}.gbody{grid-template-columns:1fr}.tiles{flex-direction:row}.tiles .tile{flex:1}.rbtn span{display:none}.rbtn{padding:0 14px}.datepill .dt{display:none}}
 @media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 </style>
 </head>
@@ -238,23 +223,10 @@ td .cdot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-righ
 
     <section class="panel" id="analytics">
       <div class="phead">
-        <h2><svg class="i" viewBox="0 0 24 24"><path d="m3 17 6-6 4 4 8-8"/><path d="M15 7h6v6"/></svg>Análise de vídeos</h2>
+        <h2>🔥 Quase lá</h2><span class="mut" id="nearsub"></span>
         <div class="pills"><a class="pill" href="#tablepanel" id="seeall">Ver todos os vídeos ↓</a></div>
       </div>
-      <div class="agrid">
-        <div class="sub">
-          <div class="st">🔥 Quase lá</div><div class="ss" id="nearsub"></div>
-          <div class="nl" id="near"></div>
-        </div>
-        <div class="sub">
-          <div class="st" id="bt">Views por artista</div><div class="ss" id="bs"></div>
-          <div class="bars" id="bars"></div>
-        </div>
-        <div class="sub">
-          <div class="st">Cobertura de metas</div><div class="ss" id="rs"></div>
-          <div class="ringwrap"><div class="ring" id="ring" style="--p:0"><span id="rp">0%</span></div><div class="big2" id="rn">0</div><div class="cap" id="rc"></div></div>
-        </div>
-      </div>
+      <div class="ngrid" id="near"></div>
     </section>
 
     <section class="panel" id="tablepanel">
@@ -309,12 +281,12 @@ function hitCard(v){
     </div></div>`;
 }
 
-function nearRow(v){
-  const p=Math.floor(v.progress*100);
-  return `<div class="nr"><img loading="lazy" src="https://i.ytimg.com/vi/${v.id}/default.jpg" alt="">
-    <div style="min-width:0"><a class="t" href="https://youtu.be/${v.id}" target="_blank" rel="noopener" title="${esc(v.title)}">${esc(v.title)}</a>
-    <div class="m"><div class="hb"><i class="hatch" style="width:${Math.min(100,v.progress*100)}%"></i></div><span class="p">${p}%</span></div>
-    <div class="f"><span style="color:${colorOf(v.channel)};font-weight:600">${esc(v.channel)}</span> · meta ${lab(v.next)} · faltam ${fmt(v.remaining)}${v.etaDays!=null?' · '+eta(v.etaDays):''}</div></div></div>`;
+function nearCard(v){
+  return `<div class="nc"><div class="th"><img loading="lazy" src="https://i.ytimg.com/vi/${v.id}/mqdefault.jpg" alt=""><span class="tag">${Math.floor(v.progress*100)}% da meta</span></div>
+    <div class="b"><a class="ti" href="https://youtu.be/${v.id}" target="_blank" rel="noopener">${esc(v.title)}</a><span class="ch" style="color:${colorOf(v.channel)}">${esc(v.channel)}</span>
+     <div class="row"><b>${fmt(v.views)}</b><span>meta: ${lab(v.next)}</span></div>
+     <div class="pb"><i style="width:${Math.min(100,v.progress*100)}%"></i></div>
+     <div class="row"><span>faltam ${fmt(v.remaining)}</span><span>${v.etaDays!=null?'previsão '+eta(v.etaDays):''}</span></div></div></div>`;
 }
 
 /* medidor segmentado */
@@ -326,12 +298,6 @@ function gauge(pct){
     s+=`<line x1="${x1.toFixed(1)}" y1="${y1.toFixed(1)}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}" stroke="${i<n?'var(--ac)':'var(--soft)'}" stroke-width="8" stroke-linecap="round"/>`;
   }
   $('#gsvg').innerHTML=s;
-}
-
-/* barras hachuradas */
-function bars(items){
-  const mx=Math.max(...items.map(i=>i.v),1),top=items.reduce((a,b)=>b.v>a.v?b:a,items[0]||{v:0});
-  $('#bars').innerHTML=items.map(i=>`<div class="bcol" title="${esc(i.full||i.n)}: ${fmt(i.v)}"><span class="bv">${cmp.format(i.v)}</span><div class="bar ${i===top?'top':'hatch'}" style="height:${Math.max(6,i.v/mx*78)}%"></div><span class="bl">${esc(i.n)}</span></div>`).join('')||'<div class="empty">Sem dados.</div>';
 }
 
 function applyData(){
@@ -405,8 +371,9 @@ function render(){
   const cut=Date.now()-14*864e5,V=list();
   // barra lateral de artistas
   const home='<svg class="i" viewBox="0 0 24 24"><path d="m3 11 9-8 9 8"/><path d="M5 10v10h14V10"/></svg>';
-  $('#rail').innerHTML=`<button class="rb ${cur===''?'on':''}" data-c="" title="Visão geral" aria-label="Visão geral">${home}</button><span class="rsep"></span>`+
-    chans.map(c=>`<button class="rb ${c===cur?'on':''}" style="--c:${colorOf(c)}" data-c="${esc(c)}" title="${esc(c)}" aria-label="${esc(c)}">${esc(initials(c))}<i class="dot"></i></button>`).join('');
+  const av=c=>D.avatars&&D.avatars[c];
+  $('#rail').innerHTML=`<button class="rb home ${cur===''?'on':''}" data-c="" title="Visão geral" aria-label="Visão geral"><span class="av">${home}</span><span class="nm">Geral</span></button><span class="rsep"></span>`+
+    chans.map(c=>`<button class="rb ${c===cur?'on':''}" style="--c:${colorOf(c)}" data-c="${esc(c)}" title="${esc(c)}" aria-label="${esc(c)}"><span class="av">${esc(initials(c))}${av(c)?`<img src="${esc(av(c))}" alt="" referrerpolicy="no-referrer" onerror="this.remove()">`:''}</span><span class="nm">${esc(c)}</span></button>`).join('');
 
   $('#ptitle').textContent=cur||'Visão geral';
 
@@ -427,23 +394,7 @@ function render(){
   $('#hitcount').textContent=hit.length;
   $('#hit').innerHTML=hit.map(hitCard).join('')||'<div class="empty">Nenhuma meta batida nos últimos 14 dias. Quando algum vídeo bater uma meta, ele aparece aqui no topo.</div>';
 
-  $('#near').innerHTML=near.map(nearRow).join('')||'<div class="empty">Nenhum vídeo perto de uma meta agora.</div>';
-
-  // barras: views por artista (visão geral) ou maiores vídeos (pasta do artista)
-  if(!cur){
-    $('#bt').textContent='Views por artista';$('#bs').textContent='total de views de cada canal';
-    bars(chans.map(c=>({n:c.split(' ')[0],full:c,v:D.videos.filter(v=>v.channel===c).reduce((s,v)=>s+v.views,0)})).sort((a,b)=>b.v-a.v));
-  }else{
-    $('#bt').textContent='Maiores vídeos';$('#bs').textContent='os 7 vídeos com mais views';
-    bars([...V].sort((a,b)=>b.views-a.views).slice(0,7).map((v,i)=>({n:'#'+(i+1)+' '+v.title.slice(0,6),full:v.title,v:v.views})));
-  }
-
-  // anel: quantos vídeos já bateram a primeira meta
-  const m0=(D.milestones&&D.milestones[0])||100000,passed=V.filter(v=>v.views>=m0).length,rp=V.length?Math.round(passed/V.length*100):0;
-  $('#rs').textContent='vídeos que passaram da primeira meta';
-  $('#ring').style.setProperty('--p',rp);$('#rp').textContent=rp+'%';
-  $('#rn').textContent=fmt(passed);
-  $('#rc').textContent=`de ${fmt(V.length)} vídeos já passaram de ${lab(m0)} views`;
+  $('#near').innerHTML=near.map(nearCard).join('')||'<div class="empty">Nenhum vídeo perto de uma meta agora.</div>';
 
   $('#psub').textContent=(D.updatedAt?'Atualizado em '+new Date(D.updatedAt).toLocaleString('pt-BR')+'. ':'')+(cur?'Pasta do artista: metas, ritmo e vídeos.':'Metas, ritmo e vídeos de todos os artistas.');
   table();
