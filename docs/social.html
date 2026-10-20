@@ -1,0 +1,244 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>REDES SOCIAIS · GBA MUSIC</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#e4e4e1;--shell:#f4f4f2;--pn:#fff;--soft:#f1f1ee;--tx:#17171a;--mut:#8b8b92;--bd:#ebebe8;
+  --ac:#c14428;--ac2:#e59632;--ac3:#ecb87a;--ink:#121214;--inktx:#fff;--ok:#17916a;--bad:#b3261e;
+  --f:'Hanken Grotesk',system-ui,-apple-system,sans-serif;
+  --sh:0 1px 2px rgba(20,20,25,.04),0 8px 24px rgba(20,20,25,.05);
+}
+@media(prefers-color-scheme:dark){:root{--bg:#08080a;--shell:#121214;--pn:#1b1b1f;--soft:#26262b;--tx:#f4f4f5;--mut:#9b9ba3;--bd:#2b2b31;--ac:#e2623e;--ac2:#eda44f;--ac3:#f0bf86;--ink:#f4f4f5;--inktx:#111;--ok:#4fd3a1;--bad:#ff8a80;--sh:none}}
+*{box-sizing:border-box}
+html{zoom:.82}
+@media(max-width:640px){html{zoom:.92}}
+body{margin:0;background:var(--bg);color:var(--tx);font:15px/1.5 var(--f);-webkit-font-smoothing:antialiased;padding:14px}
+a{color:inherit}button{font-family:inherit;cursor:pointer}
+.mut{color:var(--mut)}
+.shell{max-width:1640px;margin:0 auto;background:var(--shell);border-radius:38px;padding:18px 18px 30px}
+
+.topbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;background:var(--pn);border-radius:99px;padding:8px 10px;box-shadow:var(--sh)}
+.brand{display:flex;align-items:center;gap:12px;padding-right:10px}
+.logo{width:46px;height:46px;border-radius:50%;background:var(--ink);color:var(--inktx);display:grid;place-items:center;font:700 14px var(--f)}
+.brand span{font:500 20px/1 var(--f);letter-spacing:-.02em;white-space:nowrap}
+.navchips{display:flex;gap:8px;flex-wrap:wrap}
+.nchip{background:var(--soft);border-radius:99px;padding:11px 20px;font-size:15px;text-decoration:none;white-space:nowrap}
+.nchip.on{background:var(--ink);color:var(--inktx)}
+a.nchip:hover{background:color-mix(in srgb,var(--ac3) 45%,var(--soft))}
+.spacer{flex:1}
+.upd{font-size:13.5px;color:var(--mut);padding-right:14px}
+
+main{padding:22px 6px 10px}
+.nets{display:flex;gap:8px;margin-bottom:18px}
+.net{border:none;background:var(--pn);border-radius:99px;padding:10px 20px;font-size:14.5px;color:var(--tx);box-shadow:var(--sh)}
+.net.on{background:var(--ink);color:var(--inktx)}
+.net[disabled]{opacity:.5;cursor:default}
+
+.rail{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:22px}
+.rb{border:none;background:none;display:flex;flex-direction:column;align-items:center;gap:6px;color:var(--tx);padding:0}
+.av{width:62px;height:62px;border-radius:50%;background:var(--soft);display:grid;place-items:center;font-weight:700;overflow:hidden;border:3px solid transparent;position:relative}
+.av img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.rb.on .av{border-color:var(--ac)}
+.rb .nm{font-size:11.5px;max-width:80px;text-align:center;line-height:1.15}
+
+h1{font:400 40px/1.1 var(--f);letter-spacing:-.03em;margin:0 0 4px}
+h1 b{font-weight:600}
+.lead{color:var(--mut);margin:0 0 22px}
+.err{background:color-mix(in srgb,var(--bad) 12%,var(--pn));color:var(--bad);border-radius:18px;padding:12px 16px;margin:0 0 18px;font-size:14px}
+
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:14px}
+.card{background:var(--pn);border-radius:28px;padding:22px 24px;box-shadow:var(--sh)}
+.stat .l{color:var(--mut);font-size:14.5px}
+.stat b{display:block;font:400 38px/1.15 var(--f);letter-spacing:-.03em;margin-top:6px}
+.stat .d{font-size:13px;margin-top:4px;color:var(--mut)}
+.up{color:var(--ok);font-weight:600}.down{color:var(--bad);font-weight:600}
+
+.charts{display:grid;grid-template-columns:1.4fr 1fr;gap:14px;margin-bottom:26px}
+.card h3{margin:0 0 12px;font:500 17px var(--f)}
+.card svg{width:100%;height:auto;display:block}
+.note{font-size:13px;color:var(--mut);margin:8px 0 0}
+
+.shead{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:0 4px 14px}
+.shead h2{font:500 22px var(--f);margin:0;letter-spacing:-.02em}
+.pills{display:flex;gap:6px;flex-wrap:wrap}
+.pill{border:none;background:var(--soft);border-radius:99px;padding:8px 16px;font-size:14px;color:var(--tx)}
+.pill.on{background:var(--ink);color:var(--inktx)}
+.shead .sp{flex:1}
+
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:14px}
+.pc{background:var(--pn);border-radius:26px;overflow:hidden;box-shadow:var(--sh);display:flex;flex-direction:column;text-decoration:none}
+.pc .th{position:relative;aspect-ratio:4/5;background:var(--soft)}
+.pc .th img{width:100%;height:100%;object-fit:cover;display:block}
+.tag{position:absolute;left:12px;top:12px;background:var(--ink);color:var(--inktx);font-size:12px;font-weight:600;padding:4px 12px;border-radius:99px}
+.dt{position:absolute;right:12px;top:12px;background:rgba(0,0,0,.55);color:#fff;font-size:12px;padding:4px 10px;border-radius:99px}
+.pc .bd{padding:14px 16px 16px;display:flex;flex-direction:column;gap:10px}
+.cap{font-size:13.5px;line-height:1.35;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;min-height:36px}
+.m{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.m div{background:var(--soft);border-radius:14px;padding:8px 10px}
+.m span{display:block;font-size:11.5px;color:var(--mut)}
+.m b{font-size:16px;font-weight:600;letter-spacing:-.01em}
+.m .big{grid-column:span 3;background:var(--ink);color:var(--inktx)}
+.m .big span{color:inherit;opacity:.7}.m .big b{font-size:22px}
+.empty{background:var(--pn);border-radius:28px;padding:30px;box-shadow:var(--sh)}
+.empty ol{padding-left:20px;color:var(--mut)}
+
+@media(max-width:1100px){.stats{grid-template-columns:repeat(2,1fr)}.charts{grid-template-columns:1fr}}
+@media(max-width:640px){.shell{border-radius:28px;padding:12px 12px 22px}.topbar{border-radius:30px}h1{font-size:30px}}
+</style>
+</head>
+<body>
+<div class="shell">
+<header class="topbar">
+  <div class="brand"><div class="logo">GBA</div><span>YOUTUBE ARTISTAS GBA MUSIC</span></div>
+  <nav class="navchips"><a class="nchip" href="index.html">Dashboard</a><a class="nchip" href="acompanhamento.html">Acompanhamento</a><span class="nchip on">Redes sociais</span></nav>
+  <span class="spacer"></span>
+  <span class="upd" id="upd"></span>
+</header>
+<main id="app">Carregando…</main>
+</div>
+
+<script>
+const $=(s,r=document)=>r.querySelector(s);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const fmt=n=>n==null?'—':n>=1e6?(n/1e6).toFixed(1).replace('.',',')+' mi':n>=1e4?Math.round(n/1e3)+' mil':n.toLocaleString('pt-BR');
+const pct=n=>n==null?'—':n.toFixed(1).replace('.',',')+'%';
+const TYPES={reel:'Reel',foto:'Foto',carrossel:'Carrossel',video:'Vídeo'};
+let S=null,H=null,cur=null,f={type:'all',period:'all',sort:'date'};
+
+const eng=p=>{
+  const inter=(p.likes||0)+(p.comments||0)+(p.saved||0)+(p.shares||0);
+  const base=p.reach||p.views;
+  return base>0?inter/base*100:null;
+};
+const dayStr=d=>new Date(d).toLocaleDateString('pt-BR',{day:'2-digit',month:'short',timeZone:'America/Sao_Paulo'}).replace('.','');
+
+async function load(){
+  try{
+    const [a,b]=await Promise.all([
+      fetch('social.json?t='+Date.now()).then(r=>r.ok?r.json():null),
+      fetch('social-history.json?t='+Date.now()).then(r=>r.ok?r.json():null).catch(()=>null)
+    ]);
+    S=a;H=b;
+  }catch{S=null}
+  if(!S||!S.accounts?.length){empty();return}
+  cur=S.accounts[0].key;
+  $('#upd').textContent='Atualizado em '+new Date(S.updatedAt).toLocaleString('pt-BR',{timeZone:'America/Sao_Paulo',day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'});
+  render();
+}
+
+function empty(){
+  $('#app').innerHTML=`<div class="empty"><h1>Redes <b>sociais</b></h1>
+  <p class="mut">Ainda não há dados. Falta configurar o robô do Instagram:</p>
+  <ol><li>Guarde o segredo <b>SOCIAL_ACCOUNTS</b> no GitHub (Settings → Secrets and variables → Actions).</li>
+  <li>Coloque o arquivo <b>src/social.cjs</b> e o workflow <b>redes-sociais.yml</b> no repositório.</li>
+  <li>Em Actions, rode <b>Redes sociais</b> uma vez (Run workflow). Quando terminar, recarregue esta página.</li></ol></div>`;
+}
+
+function line(pts,w=640,h=220){
+  if(pts.length<2)return null;
+  const P={l:62,r:14,t:12,b:26},xs=pts.map((_,i)=>i),vs=pts.map(p=>p.v);
+  let mn=Math.min(...vs),mx=Math.max(...vs);if(mn===mx){mn-=1;mx+=1}
+  const pad=(mx-mn)*.1;mn-=pad;mx+=pad;
+  const X=i=>P.l+(w-P.l-P.r)*i/(pts.length-1),Y=v=>P.t+(h-P.t-P.b)*(1-(v-mn)/(mx-mn));
+  const d=pts.map((p,i)=>(i?'L':'M')+X(i).toFixed(1)+' '+Y(p.v).toFixed(1)).join(' ');
+  const ticks=[0,.5,1].map(t=>{const v=mn+(mx-mn)*t;return `<line x1="${P.l}" x2="${w-P.r}" y1="${Y(v)}" y2="${Y(v)}" stroke="var(--bd)"/><text x="${P.l-8}" y="${Y(v)+4}" text-anchor="end" font-size="11" fill="var(--mut)">${Math.round(v).toLocaleString('pt-BR')}</text>`}).join('');
+  const lab=[0,Math.floor((pts.length-1)/2),pts.length-1].map(i=>`<text x="${X(i)}" y="${h-6}" text-anchor="${i===0?'start':i===pts.length-1?'end':'middle'}" font-size="11" fill="var(--mut)">${dayStr(pts[i].d+'T12:00:00')}</text>`).join('');
+  return `<svg viewBox="0 0 ${w} ${h}">${ticks}<path d="${d}" fill="none" stroke="var(--ac)" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/><circle cx="${X(pts.length-1)}" cy="${Y(pts[pts.length-1].v)}" r="4.5" fill="var(--ac)"/>${lab}</svg>`;
+}
+
+function bars(g,w=420,h=220){
+  if(!g.length)return null;
+  const P={l:34,r:8,t:12,b:26},n=g.length,vs=g.map(x=>x[1]);
+  const mx=Math.max(1,...vs),mn=Math.min(0,...vs);
+  const bw=(w-P.l-P.r)/n,Y=v=>P.t+(h-P.t-P.b)*(1-(v-mn)/(mx-mn)),z=Y(0);
+  const rects=g.map((x,i)=>{const y=Y(x[1]);return `<rect x="${P.l+i*bw+bw*.15}" width="${bw*.7}" y="${Math.min(y,z)}" height="${Math.max(1,Math.abs(z-y))}" rx="2" fill="${x[1]<0?'var(--bad)':'var(--ac2)'}"><title>${dayStr(x[0]+'T12:00:00')}: ${x[1]}</title></rect>`}).join('');
+  return `<svg viewBox="0 0 ${w} ${h}"><line x1="${P.l}" x2="${w-P.r}" y1="${z}" y2="${z}" stroke="var(--bd)"/><text x="${P.l-6}" y="${Y(mx)+4}" text-anchor="end" font-size="11" fill="var(--mut)">${mx}</text><text x="${P.l-6}" y="${z+4}" text-anchor="end" font-size="11" fill="var(--mut)">0</text>${rects}<text x="${P.l}" y="${h-6}" font-size="11" fill="var(--mut)">${dayStr(g[0][0]+'T12:00:00')}</text><text x="${w-P.r}" y="${h-6}" text-anchor="end" font-size="11" fill="var(--mut)">${dayStr(g[n-1][0]+'T12:00:00')}</text></svg>`;
+}
+
+function delta(a,days){
+  const h=H?.accounts?.[a.key]?.followers||{},ds=Object.keys(h).sort();
+  if(ds.length>=2){
+    const last=ds[ds.length-1],t=Date.parse(last)-days*864e5;
+    const old=ds.filter(d=>Date.parse(d)<=t).pop()||ds[0];
+    if(old!==last)return {n:h[last]-h[old],from:old,exact:Date.parse(old)<=t};
+  }
+  const g=a.gains||[];
+  if(g.length){const s=g.slice(-days).reduce((x,y)=>x+y[1],0);return {n:s,exact:g.length>=days}}
+  return null;
+}
+const dl=(x,l)=>x?`<span class="${x.n>=0?'up':'down'}">${x.n>=0?'+':''}${fmt(x.n)}</span> ${l}${x.exact?'':' <span class="mut">(parcial)</span>'}`:'';
+
+function filtered(a){
+  const lim=f.period==='all'?0:Date.now()-(+f.period)*864e5;
+  let ps=a.posts.filter(p=>(f.type==='all'||p.type===f.type)&&Date.parse(p.date)>=lim);
+  const key={date:p=>Date.parse(p.date),views:p=>p.views??-1,likes:p=>p.likes??-1,eng:p=>eng(p)??-1}[f.sort];
+  return ps.sort((x,y)=>key(y)-key(x));
+}
+
+function render(){
+  const a=S.accounts.find(x=>x.key===cur)||S.accounts[0];
+  const ps30=a.posts.filter(p=>Date.parse(p.date)>=Date.now()-30*864e5);
+  const sum=k=>ps30.reduce((s,p)=>s+(p[k]||0),0);
+  const engs=ps30.map(eng).filter(x=>x!=null),engAvg=engs.length?engs.reduce((s,x)=>s+x,0)/engs.length:null;
+  const d7=delta(a,7),d30=delta(a,30);
+  const hist=H?.accounts?.[a.key]?.followers||{};
+  const pts=Object.keys(hist).sort().map(d=>({d,v:hist[d]}));
+  const c1=line(pts),c2=bars(a.gains||[]);
+  const list=filtered(a);
+  const types=[['all','Todos'],...Object.entries(TYPES).filter(([k])=>a.posts.some(p=>p.type===k))];
+  const seg=(name,arr)=>arr.map(([k,l])=>`<button class="pill ${String(f[name])===String(k)?'on':''}" data-f="${name}" data-v="${k}">${l}</button>`).join('');
+
+  $('#app').innerHTML=`
+  <div class="nets"><button class="net on">Instagram</button><button class="net" disabled title="Em breve">TikTok · em breve</button></div>
+  <div class="rail">${S.accounts.map(x=>`<button class="rb ${x.key===a.key?'on':''}" data-acc="${esc(x.key)}"><span class="av">${esc((x.name||'?').slice(0,2).toUpperCase())}${x.avatar?`<img src="${esc(x.avatar)}" alt="" referrerpolicy="no-referrer" onerror="this.remove()">`:''}</span><span class="nm">${esc(x.name)}</span></button>`).join('')}</div>
+  <h1>${esc(a.name)} <b>@${esc(a.username||'')}</b></h1>
+  <p class="lead">${fmt(a.mediaCount)} publicações · seguindo ${fmt(a.following)}</p>
+  ${a.error?`<div class="err">Não consegui atualizar esta conta agora (${esc(a.error)}). Os números abaixo são da última vez que funcionou.</div>`:''}
+  <div class="stats">
+    <div class="card stat"><div class="l">Seguidores</div><b>${fmt(a.followers)}</b><div class="d">${dl(d7,'em 7 dias')||'&nbsp;'}</div><div class="d">${dl(d30,'em 30 dias')}</div></div>
+    <div class="card stat"><div class="l">Views (posts dos últimos 30 dias)</div><b>${fmt(sum('views'))}</b><div class="d">${ps30.length} posts</div></div>
+    <div class="card stat"><div class="l">Curtidas (últimos 30 dias)</div><b>${fmt(sum('likes'))}</b><div class="d">${fmt(sum('comments'))} comentários</div></div>
+    <div class="card stat"><div class="l">Engajamento médio</div><b>${pct(engAvg)}</b><div class="d">curtidas + coment. + salvos + compart. ÷ alcance</div></div>
+  </div>
+  <div class="charts">
+    <div class="card"><h3>Seguidores ao longo do tempo</h3>${c1||'<p class="mut">O gráfico aparece a partir do segundo dia de coleta do robô. Ele guarda o número de seguidores todo dia.</p>'}</div>
+    <div class="card"><h3>Seguidores ganhos por dia</h3>${c2||'<p class="mut">Sem dados de ganho diário.</p>'}<p class="note">Últimos 30 dias, informado pelo Instagram.</p></div>
+  </div>
+  <div class="shead"><h2>Publicações</h2><span class="mut">${list.length} de ${a.posts.length}</span><span class="sp"></span>
+    <div class="pills">${seg('type',types)}</div>
+    <div class="pills">${seg('period',[['all','Tudo'],['7','7 dias'],['30','30 dias'],['90','90 dias']])}</div>
+    <div class="pills">${seg('sort',[['date','Recentes'],['views','Views'],['likes','Curtidas'],['eng','Engajamento']])}</div>
+  </div>
+  <div class="grid">${list.map(card).join('')||'<div class="empty">Nenhuma publicação nesse filtro.</div>'}</div>`;
+}
+
+function card(p){
+  const e=eng(p);
+  return `<a class="pc" href="${esc(p.url)}" target="_blank" rel="noopener">
+    <div class="th">${p.thumb?`<img loading="lazy" src="${esc(p.thumb)}" alt="" referrerpolicy="no-referrer" onerror="this.remove()">`:''}<span class="tag">${TYPES[p.type]||p.type}</span><span class="dt">${dayStr(p.date)}</span></div>
+    <div class="bd"><div class="cap">${esc(p.caption)||'<span class="mut">Sem legenda</span>'}</div>
+    <div class="m">
+      <div class="big"><span>Views</span><b>${fmt(p.views)}</b></div>
+      <div><span>Curtidas</span><b>${fmt(p.likes)}</b></div>
+      <div><span>Coment.</span><b>${fmt(p.comments)}</b></div>
+      <div><span>Alcance</span><b>${fmt(p.reach)}</b></div>
+      <div><span>Salvos</span><b>${fmt(p.saved)}</b></div>
+      <div><span>Compart.</span><b>${fmt(p.shares)}</b></div>
+      <div><span>Engaj.</span><b>${pct(e)}</b></div>
+    </div></div></a>`;
+}
+
+document.addEventListener('click',e=>{
+  const a=e.target.closest('[data-acc]');if(a){cur=a.dataset.acc;render();return}
+  const b=e.target.closest('[data-f]');if(b){f[b.dataset.f]=b.dataset.v;render()}
+});
+load();
+</script>
+</body>
+</html>
