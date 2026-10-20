@@ -16,11 +16,13 @@
 }
 @media(prefers-color-scheme:dark){:root{--page:#08080a;--shell:#121214;--pn:#1b1b1f;--soft:#26262b;--tx:#f4f4f5;--mut:#9b9ba3;--bd:#2b2b31;--ac:#e2623e;--ac2:#eda44f;--ac3:#f0bf86;--ink:#f4f4f5;--inktx:#111;--warn:#ffa58c;--ok:#4fd3a1;--sh:none}}
 *{box-sizing:border-box}
+html{zoom:.82}
+@media(max-width:640px){html{zoom:.92}}
 body{margin:0;background:var(--page);color:var(--tx);font:15px/1.5 var(--f);-webkit-font-smoothing:antialiased;padding:14px}
 a{color:inherit}button{font-family:inherit;cursor:pointer}
 svg.i{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex:none}
 
-.shell{max-width:1400px;margin:0 auto;background:var(--shell);border-radius:38px;padding:18px 18px 28px}
+.shell{max-width:1640px;margin:0 auto;background:var(--shell);border-radius:38px;padding:18px 18px 28px}
 
 /* ===== barra superior ===== */
 .topbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;background:var(--pn);border-radius:99px;padding:8px 10px 8px 10px;box-shadow:var(--sh)}
