@@ -8,7 +8,9 @@ const TZ = 'America/Sao_Paulo';
 const ROOT = path.join(__dirname, '..');
 const OUT = path.join(ROOT, 'docs', 'social.json');
 const HIST = path.join(ROOT, 'docs', 'social-history.json');
-const MAX_POSTS = 150;      // quantos posts recentes acompanhar por conta
+const MAX_POSTS = 3000;     // limite de segurança de posts por conta (busca todos)
+const FRESH = 150;          // os 150 mais recentes têm as métricas atualizadas a cada rodada
+const MAX_NEW = 400;        // posts antigos novos (sem métricas ainda) preenchidos por rodada
 const HIST_DAYS = 120;      // guarda histórico diário dos posts com até 120 dias
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
@@ -103,7 +105,7 @@ async function followFlow(userId, token, h, d, gains) {
   return { flow: rows.map((x) => [x, h.fu[x][gainKey] || 0, h.fu[x][lossKey] || 0]), map: gainKey };
 }
 
-async function instagram(acc, hist, d) {
+async function instagram(acc, hist, d, prevPosts) {
   const { token } = acc;
   const userId = acc.userId || 'me';
   const prof = await api(`/${userId}`, token, {
@@ -122,15 +124,24 @@ async function instagram(acc, hist, d) {
     page = await api(page.paging.next, token);
   }
   media.length = Math.min(media.length, MAX_POSTS);
+  console.log(media.length + ' posts encontrados');
 
-  // métricas de cada post (em lotes de 5)
+  // métricas: os mais recentes sempre atualizam; os antigos reaproveitam o que já foi salvo
+  const old = new Map((prevPosts || []).map((p) => [p.id, p]));
+  let budget = MAX_NEW;
+  const plan = media.map((m, i) => {
+    const o = old.get(m.id);
+    let fetchIt = i < FRESH;
+    if (!fetchIt && !o && budget > 0) { fetchIt = true; budget--; }
+    return { m, o, fetchIt };
+  });
   const posts = [];
-  for (let i = 0; i < media.length; i += 5) {
-    const batch = media.slice(i, i + 5);
-    const res = await Promise.all(batch.map((m) => insights(m.id, token, kind(m))));
-    batch.forEach((m, k) => {
+  for (let i = 0; i < plan.length; i += 5) {
+    const batch = plan.slice(i, i + 5);
+    const res = await Promise.all(batch.map(({ m, fetchIt }) => (fetchIt ? insights(m.id, token, kind(m)) : null)));
+    batch.forEach(({ m, o }, k) => {
       const x = res[k];
-      posts.push({
+      const base = {
         id: m.id,
         type: kind(m),
         caption: (m.caption || '').slice(0, 140),
@@ -138,16 +149,29 @@ async function instagram(acc, hist, d) {
         thumb: m.thumbnail_url || m.media_url || null,
         date: m.timestamp,
         likes: m.like_count ?? null,
-        comments: m.comments_count ?? null,
-        views: x.views ?? null,
-        reach: x.reach ?? null,
-        saved: x.saved ?? null,
-        shares: x.shares ?? null,
-        follows: x.follows ?? null,
-        visits: x.profile_visits ?? null,
-        watch: x.ig_reels_avg_watch_time != null ? Math.round(x.ig_reels_avg_watch_time / 100) / 10 : null,
-        interactions: x.total_interactions ?? null
-      });
+        comments: m.comments_count ?? null
+      };
+      if (x) {
+        posts.push({
+          ...base,
+          views: x.views ?? null,
+          reach: x.reach ?? null,
+          saved: x.saved ?? null,
+          shares: x.shares ?? null,
+          follows: x.follows ?? null,
+          visits: x.profile_visits ?? null,
+          watch: x.ig_reels_avg_watch_time != null ? Math.round(x.ig_reels_avg_watch_time / 100) / 10 : null,
+          interactions: x.total_interactions ?? null
+        });
+      } else {
+        const keep = o || {};
+        posts.push({
+          ...base,
+          views: keep.views ?? null, reach: keep.reach ?? null, saved: keep.saved ?? null,
+          shares: keep.shares ?? null, follows: keep.follows ?? null, visits: keep.visits ?? null,
+          watch: keep.watch ?? null, interactions: keep.interactions ?? null
+        });
+      }
     });
   }
 
@@ -215,7 +239,7 @@ async function instagram(acc, hist, d) {
     try {
       GRAPH = acc.api === 'instagram' ? 'https://graph.instagram.com/v23.0' : 'https://graph.facebook.com/v23.0';
       if (acc.platform !== 'instagram') throw new Error('plataforma ainda não suportada: ' + acc.platform);
-      out.push(await instagram(acc, hist, d));
+      out.push(await instagram(acc, hist, d, prev.accounts.find((a) => a.key === acc.key)?.posts));
       ok++;
       console.log('OK', acc.key);
     } catch (e) {
