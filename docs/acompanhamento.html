@@ -375,7 +375,7 @@ function vchart(x,p,c){
   h+=`<div class="zc" data-vid="${esc(x.id)}"><div class="zt"><button type="button" class="zb" data-z="out" title="Diminuir zoom" aria-label="Diminuir zoom">−</button><button type="button" class="zb" data-z="in" title="Aumentar zoom" aria-label="Aumentar zoom">+</button><button type="button" class="zb wide" data-z="all">Tudo</button></div><div class="zs"></div><div class="tip" hidden></div></div><div class="hint">Passe o mouse sobre o gráfico para ver as views de cada dia. Use + e − (ou Ctrl + rolagem) para dar zoom e arraste para o lado para mover. Dias sem coleta são estimados entre dois pontos conhecidos.</div>`;
   if(EDIT&&TOKEN){
     const pts=manualPoints(p,x),id=esc(x.id);
-    h+=`<div class="mp"><b>Pontos manuais</b> <span class="mut">views de uma data que o robô não guardou (ex.: antes de usar o site)</span>
+    h+=`<div class="mp"><b>Pontos manuais</b> <span class="mut">opcional: views de qualquer outra data (os valores de 7/30/60/90 dias ficam na tabela)</span>
     <div class="mpf"><input type="date" id="mpd-${id}" min="${x.d}" max="${today}" aria-label="Data"><input type="number" id="mpv-${id}" min="0" inputmode="numeric" placeholder="views nesse dia" aria-label="Views"><button type="button" class="btn sm" data-act="addpt" data-id="${id}">Adicionar ponto</button></div>
     ${pts.length?`<div class="chips">${pts.map(m=>`<div class="chip"><span>${dmy(m.date)} · ${fmt(m.v)}</span><button type="button" data-act="delpt" data-id="${id}" data-k="${m.k}" data-key="${esc(m.key)}" aria-label="Remover">×</button></div>`).join('')}</div>`:''}
     <div class="hint" style="margin-top:6px">Para entrar nos marcos do projeto, o ponto precisa cair exatamente em: ${MARCOS.map(n=>`${n}d = ${dmy(addDays(x.d,n))}`).join(' · ')}.</div></div>`;
@@ -477,8 +477,10 @@ function projectView(id){
   const by={};infos.forEach(x=>{const k=x.c||'—';by[k]=(by[k]||0)+(x.views||0)});
   const rows=Object.entries(by).sort((a,b)=>b[1]-a[1]),mxv=Math.max(...rows.map(r=>r[1]),1);
   h+=`<div class="sec"><h3>Por canal</h3><span>onde as views estão</span></div><div class="chbars">${rows.map(([k,v])=>`<div class="cb" style="--c:${colorOf(k)}"><span>${esc(k)}</span><div class="bar"><i style="width:${v/mxv*100}%"></i></div><b>${cmp.format(v)}</b></div>`).join('')}</div>`;
-  h+=`<div class="sec"><h3>Vídeos</h3><span>${EDIT?'modo de edição: abra 📈 Ver para adicionar ou remover pontos manuais':'clique em 📈 Ver para abrir o gráfico de progressão de cada vídeo'}</span><button type="button" class="btn sm ${EDIT?'on':'ghost'} editbar" data-act="edit">${EDIT?'✔ Concluir edição':'✎ Modo de edição'}</button></div><div class="tw"><table><thead><tr><th>Vídeo</th><th>Canal</th><th>Publicado</th><th>Hoje</th><th>Curtidas</th><th>Gráfico</th></tr></thead><tbody>`;
-  h+=[...infos].sort((a,b)=>(b.views||0)-(a.views||0)).map(x=>{const open=OPENV.has(x.id);return`<tr><td class="t"><div class="vt"><img src="https://i.ytimg.com/vi/${esc(x.id)}/default.jpg" width="56" loading="lazy" alt=""><a href="https://youtu.be/${esc(x.id)}" target="_blank" rel="noopener">${esc(x.t)}</a></div></td><td>${esc(x.c)}</td><td>${dmy(x.d)}</td><td><b>${x.views==null?'—':fmt(x.views)}</b></td><td>${x.likes==null?'<span class="mut">—</span>':fmt(x.likes)}</td><td class="nw"><button class="btn sm ghost" data-act="vgraph" data-id="${esc(x.id)}" aria-expanded="${open}">${open?'✕ Fechar':'📈 Ver'}</button></td></tr><tr class="vgr" id="vg-${esc(x.id)}" ${open?'data-done="1"':'hidden'}><td colspan="6"><div class="vgb">${open?vchart(x,p,c):''}</div></td></tr>`}).join('');
+  h+=`<div class="sec"><h3>Vídeos</h3><span>${EDIT?'campo vazio = valor automático (cinza); digite para sobrescrever':'views 7, 30, 60 e 90 dias após a publicação de cada vídeo (✎ = valor manual)'}</span><button type="button" class="btn sm ${EDIT?'on':'ghost'} editbar" data-act="edit">${EDIT?'✔ Concluir edição':'✎ Modo de edição'}</button></div><div class="tw"><table><thead><tr><th>Vídeo</th><th>Canal</th><th>Publicado</th><th>Hoje</th><th>Curtidas</th>${MARCOS.map(n=>`<th>${n}d</th>`).join('')}<th>Gráfico</th></tr></thead><tbody>`;
+  h+=[...infos].sort((a,b)=>(b.views||0)-(a.views||0)).map(x=>{const open=OPENV.has(x.id);return`<tr><td class="t"><div class="vt"><img src="https://i.ytimg.com/vi/${esc(x.id)}/default.jpg" width="56" loading="lazy" alt=""><a href="https://youtu.be/${esc(x.id)}" target="_blank" rel="noopener">${esc(x.t)}</a></div></td><td>${esc(x.c)}</td><td>${dmy(x.d)}</td><td><b>${x.views==null?'—':fmt(x.views)}</b></td><td>${x.likes==null?'<span class="mut">—</span>':fmt(x.likes)}</td>${ms.map(m=>{const r=vMarco(p,x,m.n);if(r.future)return`<td class="mut" title="faltam ${diffDays(today,r.date)} dias">—</td>`;
+    if(!EDIT||!TOKEN)return`<td>${r.v!=null?fmt(r.v)+(r.src==='manual'?' ✎':''):'<span class="mut">—</span>'}</td>`;
+    return`<td><input class="vm ${r.src==='manual'?'man':''}" type="number" min="0" inputmode="numeric" data-mvid="${esc(x.id)}" data-n="${m.n}" value="${p.mv?.[x.id]?.[m.n]??''}" placeholder="${r.v!=null?fmt(r.v):'—'}" aria-label="Views em ${m.n} dias"></td>`}).join('')}<td class="nw">${EDIT&&TOKEN?`<button class="btn sm" data-act="savevid" data-id="${esc(x.id)}">Salvar</button> `:''}<button class="btn sm ghost" data-act="vgraph" data-id="${esc(x.id)}" aria-expanded="${open}">${open?'✕ Fechar':'📈 Ver'}</button></td></tr><tr class="vgr" id="vg-${esc(x.id)}" ${open?'data-done="1"':'hidden'}><td colspan="${6+MARCOS.length}"><div class="vgb">${open?vchart(x,p,c):''}</div></td></tr>`}).join('');
   return h+'</tbody></table></div></section>';
 }
 
@@ -563,6 +565,15 @@ app.addEventListener('click',async e=>{
     catch(err){toast(err.message,true)}
   }
   else if(act==='edit'){if(!TOKEN){openDlg();return}EDIT=!EDIT;route()}
+  else if(act==='savevid'){
+    const vid=b.dataset.id,vals={};let bad=false;
+    app.querySelectorAll(`input[data-mvid="${CSS.escape(vid)}"]`).forEach(i=>{const r=i.value.trim();if(r!==''&&!(Number(r)>=0))bad=true;vals[i.dataset.n]=r});
+    if(bad)return toast('Digite só números.',true);
+    b.disabled=true;
+    try{await mutate(d=>{const p=d.projects.find(x=>x.id===id);if(!p)throw new Error('Projeto não existe mais.');p.mv??={};const o=p.mv[vid]??={};for(const[n,r]of Object.entries(vals)){if(r==='')delete o[n];else o[n]=Math.round(Number(r))}if(!Object.keys(o).length)delete p.mv[vid];return d},'Marcos do vídeo '+vid);
+      OPENV.add(vid);toast('Salvo ✔');route()}
+    catch(err){toast(err.message,true);b.disabled=false}
+  }
   else if(act==='addpt'){
     const vid=b.dataset.id,di=document.getElementById('mpd-'+vid),vi=document.getElementById('mpv-'+vid),date=di.value,raw=vi.value.trim();
     const pr=PRJ.projects.find(q=>q.id===id),x=pr&&pr.videos.map(vinfo).find(q=>q.id===vid);
