@@ -407,12 +407,30 @@ async function tiktok(acc, hist, d, prevPosts) {
 }
 
 (async () => {
-  let accounts;
-  try { accounts = JSON.parse(process.env.SOCIAL_ACCOUNTS || '[]'); }
-  catch { console.error('SOCIAL_ACCOUNTS não é um JSON válido.'); process.exit(1); }
-  // segredo extra opcional: permite adicionar contas (ex.: TikTok) sem mexer no SOCIAL_ACCOUNTS
-  try { accounts = accounts.concat(JSON.parse(process.env.SOCIAL_ACCOUNTS_EXTRA || '[]')); }
-  catch { console.error('SOCIAL_ACCOUNTS_EXTRA não é um JSON válido.'); process.exit(1); }
+  // lê a lista de contas, tolerando erros comuns de colagem (aspas curvas, ``` do chat, espaços invisíveis)
+  const lerLista = (nome) => {
+    let raw = process.env[nome] || '';
+    if (!raw.trim()) return [];
+    raw = raw
+      .replace(/[\u00a0\u200b\u200c\u200d\ufeff]/g, ' ')
+      .replace(/[\u201c\u201d\u201e\u201f\u2033]/g, '"')
+      .replace(/[\u2018\u2019]/g, "'")
+      .replace(/```[a-z]*/gi, '')
+      .replace(/`/g, '')
+      .trim();
+    if (raw.startsWith('{')) raw = '[' + raw + ']';
+    try {
+      const v = JSON.parse(raw);
+      return Array.isArray(v) ? v : [v];
+    } catch (e) {
+      console.error(`${nome} não é um JSON válido (${raw.length} caracteres).`);
+      console.error('  erro: ' + e.message.slice(0, 140));
+      console.error('  começa com: ' + raw.slice(0, 14) + ' | termina com: ' + raw.slice(-4));
+      console.error('  dicas: o texto deve começar com [{ e terminar com }] ; entre cada campo vai vírgula ; sem aspas duplas repetidas ("") ; não deixe os textos SUA_CLIENT_KEY.');
+      process.exit(1);
+    }
+  };
+  const accounts = [...lerLista('SOCIAL_ACCOUNTS'), ...lerLista('SOCIAL_ACCOUNTS_EXTRA')];
   if (!accounts.length) { console.log('Nenhuma conta configurada em SOCIAL_ACCOUNTS. Nada a fazer.'); return; }
   console.log('Contas lidas: ' + accounts.map((a) => `${a && a.platform}:${a && a.key}`).join(', ') + ' | EXTRA tem ' + (process.env.SOCIAL_ACCOUNTS_EXTRA || '').length + ' caracteres');
 
