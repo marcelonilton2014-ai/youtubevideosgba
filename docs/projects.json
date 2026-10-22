@@ -1,5 +1,5 @@
 {
- "rev": 26,
+ "rev": 27,
  "projects": [
   {
    "id": "pmvgrcjil",
@@ -419,6 +419,21 @@
      "t": "Aleluia - Ramon e Rafael (O Som da Igreja)",
      "c": "Ramone Rafael",
      "d": "2025-11-17"
+    }
+   ]
+  },
+  {
+   "id": "pmvjk5tn5",
+   "artist": "CAMPANHAS ONERPM",
+   "name": "VOCÊ VAI CHEGAR - RR E HESED",
+   "desc": "CAMPANHA INICIADA 18/10/26",
+   "launch": "2026-08-03",
+   "videos": [
+    {
+     "id": "_V3romZkc-w",
+     "t": "Você Vai Chegar - Irmã Maria Joana (Instituto Hesed), Ramon e Rafael e André Cavalcante | GBA Stage",
+     "c": "GBA Music",
+     "d": "2026-08-03"
     }
    ]
   }
