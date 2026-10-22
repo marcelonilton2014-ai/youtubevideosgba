@@ -438,9 +438,11 @@ async function tiktok(acc, hist, d, prevPosts) {
       process.exit(1);
     }
   };
-  const accounts = [...lerLista('SOCIAL_ACCOUNTS'), ...lerLista('SOCIAL_ACCOUNTS_EXTRA')];
+  // cada segredo guarda uma lista; use um segredo novo para cada conta nova (assim não precisa recolar os antigos)
+  const NOMES = ['SOCIAL_ACCOUNTS', 'SOCIAL_ACCOUNTS_EXTRA', 'SOCIAL_ACCOUNTS_3', 'SOCIAL_ACCOUNTS_4', 'SOCIAL_ACCOUNTS_5', 'SOCIAL_ACCOUNTS_6'];
+  const accounts = NOMES.flatMap((n) => lerLista(n));
   if (!accounts.length) { console.log('Nenhuma conta configurada em SOCIAL_ACCOUNTS. Nada a fazer.'); return; }
-  console.log('Contas lidas: ' + accounts.map((a) => `${a && a.platform}:${a && a.key}`).join(', ') + ' | EXTRA tem ' + (process.env.SOCIAL_ACCOUNTS_EXTRA || '').length + ' caracteres');
+  console.log('Contas lidas: ' + accounts.map((a) => `${a && a.platform}:${a && a.key}`).join(', ') + ' | segredos com texto: ' + NOMES.filter((n) => (process.env[n] || '').trim()).join(', '));
 
   const prev = readJson(OUT, { accounts: [] });
   const hist = readJson(HIST, { accounts: {} });
