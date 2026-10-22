@@ -117,8 +117,41 @@ async function followFlow(userId, token, h, d, gains) {
   return { flow: rows.map((x) => [x, h.fu[x][gainKey] || 0, h.fu[x][lossKey] || 0]), map: gainKey };
 }
 
+
+// ============ Renovação automática do token do Instagram (login do Instagram) ============
+// O token dura 60 dias, mas pode ser renovado a qualquer momento depois de 24h de vida.
+// O robô renova e guarda o novo token CRIPTOGRAFADO no repositório (chave = appSecret, que fica só no GitHub Secrets).
+async function igToken(acc) {
+  if (acc.api !== 'instagram' || !acc.appSecret) return acc.token;
+  const file = path.join(ROOT, 'state', `ig-${acc.key}.enc`);
+  const sig = crypto.createHash('sha256').update(acc.token).digest('hex');
+  let st = null;
+  try { st = openTokens(fs.readFileSync(file, 'utf8'), acc.appSecret); } catch {}
+  if (st && st.orig !== sig) st = null;              // você colou um token novo no segredo: ele vale mais
+  let token = st ? st.token : acc.token;
+  const idade = st ? Date.now() - Date.parse(st.at) : Infinity;
+  if (idade > 864e5) {
+    try {
+      const u = new URL('https://graph.instagram.com/refresh_access_token');
+      u.searchParams.set('grant_type', 'ig_refresh_token');
+      u.searchParams.set('access_token', token);
+      const r = await fetch(u);
+      const j = await r.json().catch(() => ({}));
+      if (j.access_token) {
+        token = j.access_token;
+        fs.mkdirSync(path.dirname(file), { recursive: true });
+        fs.writeFileSync(file, sealTokens({ orig: sig, token, at: new Date().toISOString() }, acc.appSecret));
+        console.log('token do Instagram renovado (vale mais ' + Math.round((j.expires_in || 0) / 86400) + ' dias)');
+      } else {
+        console.error('não consegui renovar o token do Instagram:', j.error?.message || r.status);
+      }
+    } catch (e) { console.error('renovação do token falhou:', e.message); }
+  }
+  return token;
+}
+
 async function instagram(acc, hist, d, prevPosts) {
-  const { token } = acc;
+  const token = await igToken(acc);
   const userId = acc.userId || 'me';
   const prof = await api(`/${userId}`, token, {
     fields: 'username,name,followers_count,follows_count,media_count,profile_picture_url'
@@ -377,7 +410,11 @@ async function tiktok(acc, hist, d, prevPosts) {
   let accounts;
   try { accounts = JSON.parse(process.env.SOCIAL_ACCOUNTS || '[]'); }
   catch { console.error('SOCIAL_ACCOUNTS não é um JSON válido.'); process.exit(1); }
+  // segredo extra opcional: permite adicionar contas (ex.: TikTok) sem mexer no SOCIAL_ACCOUNTS
+  try { accounts = accounts.concat(JSON.parse(process.env.SOCIAL_ACCOUNTS_EXTRA || '[]')); }
+  catch { console.error('SOCIAL_ACCOUNTS_EXTRA não é um JSON válido.'); process.exit(1); }
   if (!accounts.length) { console.log('Nenhuma conta configurada em SOCIAL_ACCOUNTS. Nada a fazer.'); return; }
+  console.log('Contas lidas: ' + accounts.map((a) => `${a && a.platform}:${a && a.key}`).join(', ') + ' | EXTRA tem ' + (process.env.SOCIAL_ACCOUNTS_EXTRA || '').length + ' caracteres');
 
   const prev = readJson(OUT, { accounts: [] });
   const hist = readJson(HIST, { accounts: {} });
