@@ -9,7 +9,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root{
-  --bg:#fbfbf9;--tx:#111114;--mut:#8a8a90;--line:#e8e8e3;--soft:#f3f3ef;
+  --bg:#f8f8f5;--panel:#eeeee9;--tx:#111114;--mut:#85858c;--line:rgba(17,17,20,.09);--soft:#e6e6e0;
   --ac:#c14428;--ok:#18866a;--bad:#c0392b;--warn:#b7791f;
   --f:'Hanken Grotesk',system-ui,-apple-system,sans-serif;
   --r:14px;--side:76px;
@@ -39,28 +39,27 @@ a.ni:focus-visible,a.ai:focus-visible,a.ar:focus-visible,a.vr:focus-visible,a.ac
 h1{font:300 46px/1.05 var(--f);letter-spacing:-.035em;margin:6px 0 0}
 .ph .upd{margin-left:auto;font-size:12.5px;color:var(--mut)}
 .lab{font-size:12px;letter-spacing:.09em;text-transform:uppercase;color:var(--mut);font-weight:500;margin:0 0 14px}
-.sec{margin-top:56px}
+.sec{margin-top:48px}
 .sec>h2{font:400 24px var(--f);letter-spacing:-.02em;margin:0 0 4px}
 .sec>p{margin:0 0 20px;color:var(--mut);font-size:13.5px}
 .note{font-size:12.5px;color:var(--mut);margin:10px 0 0}
 .empty{color:var(--mut)}
 
 /* faixa de atenção */
-.att{border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:14px 0}
+.att{background:var(--panel);border-radius:18px;padding:16px 22px}
 .att .hd{display:flex;align-items:center;gap:10px;font-weight:500;font-size:14px}
 .att .dot{width:8px;height:8px;border-radius:50%;background:var(--ok);flex:none}
 .att.has .dot{background:var(--warn)}.att.bad .dot{background:var(--bad)}
-.ai{display:flex;align-items:center;gap:12px;padding:9px 0 9px 18px;font-size:14px;border-top:1px solid var(--line);margin-top:10px}
+.ai{display:flex;align-items:center;gap:12px;padding:10px 0 4px 18px;font-size:14px;border-top:1px solid var(--line);margin-top:10px}
 .ai i{width:6px;height:6px;border-radius:50%;background:var(--warn);flex:none}
 .ai.bad i{background:var(--bad)}
 .ai .go{margin-left:auto;color:var(--ac);font-weight:600;font-size:13px;white-space:nowrap}
 a.ai:hover .go{text-decoration:underline}
 
 /* três áreas */
-.areas{display:grid;grid-template-columns:repeat(3,1fr);margin-top:34px}
-.ar{display:block;padding:4px 36px 6px;border-left:1px solid var(--line)}
-.ar:first-child{border-left:none;padding-left:0}
-.ar:last-child{padding-right:0}
+.areas{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:16px}
+.ar{display:block;background:var(--panel);border-radius:18px;padding:24px 26px 20px;transition:background .15s}
+a.ar:hover{background:#e8e8e2}
 .ah{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
 .ah span{font-size:12px;letter-spacing:.09em;text-transform:uppercase;color:var(--mut);font-weight:500}
 .ah i{font-style:normal;color:var(--mut);transition:transform .15s,color .15s}
@@ -76,7 +75,8 @@ a.ar:hover .ah i{transform:translateX(4px);color:var(--ac)}
 .li .r{color:var(--mut);white-space:nowrap}
 
 /* destaques */
-.row2{display:grid;grid-template-columns:1.35fr 1fr;gap:64px}
+.row2{display:grid;grid-template-columns:1.35fr 1fr;gap:16px}
+.pn{background:var(--panel);border-radius:18px;padding:24px 26px}
 .vl{display:flex;flex-direction:column}
 .vr{display:grid;grid-template-columns:22px 96px minmax(0,1fr) auto;gap:16px;align-items:center;padding:11px 0;border-top:1px solid var(--line)}
 .vr:first-child{border-top:none;padding-top:0}
@@ -91,10 +91,11 @@ a.vr:hover .cp{text-decoration:underline}
 .mini .it:first-child{border-top:none;padding-top:0}
 .mini .k{font-size:12px;color:var(--mut)}.mini .t{font:400 17px var(--f);letter-spacing:-.01em;margin:3px 0}.mini .d{font-size:13px;color:var(--mut)}
 a.it:hover .t{color:var(--ac)}
+.pn .lab{margin-bottom:16px}
 
 .ag{display:grid;grid-template-columns:repeat(auto-fill,minmax(310px,1fr));gap:14px}
-.ac{display:flex;gap:14px;border:1px solid var(--line);border-radius:var(--r);padding:12px;align-items:center;transition:border-color .15s,transform .15s}
-a.ac:hover{border-color:var(--ac);transform:translateY(-1px)}
+.ac{display:flex;gap:14px;background:var(--panel);border-radius:16px;padding:12px;align-items:center;transition:border-color .15s,transform .15s}
+a.ac:hover{background:#e8e8e2;transform:translateY(-1px)}
 .ac img,.ac .th0{width:104px;height:60px;border-radius:8px;object-fit:cover;background:var(--soft);flex:none;display:block}
 .ac .who{font-size:12px;font-weight:600;color:var(--ac);letter-spacing:.02em}
 .ac .tt{font-size:13.5px;line-height:1.3;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;margin:2px 0}
@@ -107,7 +108,7 @@ a.ac:hover{border-color:var(--ac);transform:translateY(-1px)}
 .av{width:42px;height:42px;border-radius:50%;background:var(--soft);display:grid;place-items:center;font-weight:600;font-size:12.5px;overflow:hidden;position:relative;flex:none}
 .av img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
 .cell{display:block;padding:6px 10px;margin:-6px -10px;border-radius:10px;transition:background .15s}
-a.cell:hover{background:var(--soft)}
+a.cell:hover{background:rgba(17,17,20,.06)}
 .cell b{font:400 22px var(--f);letter-spacing:-.025em}
 .cell .s{display:block;color:var(--mut);font-size:12px}
 
@@ -118,8 +119,8 @@ a.cell:hover{background:var(--soft)}
   @keyframes in{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
 }
 @media(max-width:1100px){
-  .areas{grid-template-columns:1fr;gap:34px}.ar,.ar:first-child{border-left:none;padding:0}
-  .row2{grid-template-columns:1fr;gap:40px}
+  .areas{grid-template-columns:1fr}
+  .row2{grid-template-columns:1fr}
 }
 @media(max-width:760px){
   .side{top:auto;right:0;width:auto;height:64px;flex-direction:row;border-right:none;border-top:1px solid var(--line);padding:6px 10px;gap:0;justify-content:space-around}
@@ -306,10 +307,10 @@ function highlights(){
   ].join('');
   return `
   <div class="row2">
-    <div><p class="lab">Vídeos que mais cresceram</p>${top.length?`<div class="vl">${top.map(vidRow).join('')}</div>`:'<p class="empty">O crescimento aparece depois de dois dias de coleta do robô.</p>'}<p class="note">Views ganhas nos últimos 7 dias (ou nos dias já medidos, quando o vídeo é novo).</p></div>
-    <div><p class="lab">Mais destaques</p><div class="mini">${mini||'<p class="empty">Sem destaques ainda.</p>'}</div></div>
+    <div class="pn"><p class="lab">Vídeos que mais cresceram</p>${top.length?`<div class="vl">${top.map(vidRow).join('')}</div>`:'<p class="empty">O crescimento aparece depois de dois dias de coleta do robô.</p>'}<p class="note">Views ganhas nos últimos 7 dias (ou nos dias já medidos, quando o vídeo é novo).</p></div>
+    <div class="pn"><p class="lab">Mais destaques</p><div class="mini">${mini||'<p class="empty">Sem destaques ainda.</p>'}</div></div>
   </div>
-  <div class="sec" style="margin-top:44px"><p class="lab">Destaque de cada artista</p>
+  <div class="sec" style="margin-top:28px"><p class="lab">Destaque de cada artista</p>
   <div class="ag">${groups.map(([name,x])=>`<a class="ac" href="https://youtu.be/${esc(x.v.id)}" target="_blank" rel="noopener"><img loading="lazy" src="${thumb(x.v.id)}" alt="" onerror="this.outerHTML='<span class=th0></span>'"><span style="min-width:0"><div class="who">${esc(name)}</div><div class="tt">${esc(x.v.title)}</div><div class="gr"><span class="up">+${fmt(x.g.d)}</span> <span class="mut">${when(x.g)}</span></div></span></a>`).join('')}${without.map(c=>`<div class="ac"><span class="th0"></span><span><div class="who">${esc(c)}</div><div class="tt mut">Sem crescimento medido nesta semana.</div></span></div>`).join('')}</div></div>`;
 }
 
@@ -333,9 +334,9 @@ function socCell(a,pl){
 function byArtist(){
   const rs=artists();
   if(!rs.length)return '<p class="empty">Sem artistas ainda.</p>';
-  return `<div class="art hd"><span>Artista</span><span>YouTube</span><span>Instagram</span><span>TikTok</span></div>${rs.map(r=>`<div class="art"><div class="nm"><span class="av">${esc(initials(r.name))}${r.avatar?`<img src="${esc(r.avatar)}" alt="" referrerpolicy="no-referrer" onerror="this.remove()">`:''}</span>${esc(r.name)}</div>
+  return `<div class="pn" style="padding:20px 26px 10px"><div class="art hd"><span>Artista</span><span>YouTube</span><span>Instagram</span><span>TikTok</span></div>${rs.map(r=>`<div class="art"><div class="nm"><span class="av">${esc(initials(r.name))}${r.avatar?`<img src="${esc(r.avatar)}" alt="" referrerpolicy="no-referrer" onerror="this.remove()">`:''}</span>${esc(r.name)}</div>
     ${r.yt?`<a class="cell" href="index.html#${encodeURIComponent(r.yt.chan)}"><span class="s">YouTube</span><b>${fmt(r.yt.views)}</b> <span class="mut" style="font-size:12.5px">views</span><span class="s">${r.yt.week!=null?`<span class="${r.yt.week>=0?'up':'down'}">${sg(r.yt.week)}</span> na semana`:'sem crescimento medido'}${r.yt.near?` · ${r.yt.near} perto da meta`:''}</span></a>`:`<div class="cell"><span class="s">YouTube</span><span class="empty">—</span></div>`}
-    ${socCell(r.ig,'instagram')}${socCell(r.tt,'tiktok')}</div>`).join('')}`;
+    ${socCell(r.ig,'instagram')}${socCell(r.tt,'tiktok')}</div>`).join('')}</div>`;
 }
 
 function render(){
