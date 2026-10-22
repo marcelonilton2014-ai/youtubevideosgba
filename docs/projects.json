@@ -1,5 +1,5 @@
 {
- "rev": 25,
+ "rev": 26,
  "projects": [
   {
    "id": "pmvgrcjil",
@@ -421,21 +421,6 @@
      "d": "2025-11-17"
     }
    ]
-  },
-  {
-   "id": "pmvjiwimg",
-   "artist": "Ramone Rafael",
-   "name": "ONE - VOCÊ VAI CHEGAR - IRMÃ MARIA JOANA",
-   "launch": "2026-08-03",
-   "videos": [
-    {
-     "id": "_V3romZkc-w",
-     "t": "Você Vai Chegar - Irmã Maria Joana (Instituto Hesed), Ramon e Rafael e André Cavalcante | GBA Stage",
-     "c": "GBA Music",
-     "d": "2026-08-03"
-    }
-   ],
-   "desc": "CAMPANHA INICIADA - 18/10/26"
   }
  ]
 }
