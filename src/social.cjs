@@ -261,6 +261,13 @@ async function instagram(acc, hist, d, prevPosts) {
     if (!posts.find((p) => p.id === id)) delete h.posts[id];
   }
 
+  // validade estimada do token: 60 dias a partir do dia em que o robô viu este token pela primeira vez
+  // (guarda só um "carimbo" curto do token, nunca o token). Com renovação automática (appSecret) não vence.
+  const tk = crypto.createHash('sha256').update(String(acc.token)).digest('hex').slice(0, 12);
+  h.tok ??= {};
+  h.tok[tk] ??= d;
+  const tokenExpires = acc.appSecret ? null : new Date(Date.parse(h.tok[tk] + 'T12:00:00Z') + 60 * 864e5).toISOString().slice(0, 10);
+
   return {
     key: acc.key,
     platform: 'instagram',
@@ -270,6 +277,7 @@ async function instagram(acc, hist, d, prevPosts) {
     followers: prof.followers_count,
     following: prof.follows_count,
     mediaCount: prof.media_count,
+    tokenExpires,
     gains,
     flow,
     flowMap,
