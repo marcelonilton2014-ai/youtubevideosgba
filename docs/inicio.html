@@ -14,10 +14,6 @@
   --f:'Hanken Grotesk',system-ui,-apple-system,sans-serif;
   --r:14px;--side:76px;
 }
-[data-theme="dark"]{
-  --bg:#0f0f11;--panel:#19191c;--hov:#222226;--hov2:rgba(255,255,255,.07);--tx:#f2f2f3;--mut:#9a9aa2;--line:rgba(255,255,255,.09);--soft:#26262b;
-  --ac:#e2623e;--ok:#4fd3a1;--bad:#ff8a80;--warn:#f0c36a;color-scheme:dark;
-}
 *{box-sizing:border-box}
 html{zoom:.86}
 @media(max-width:640px){html{zoom:.94}}
@@ -25,19 +21,9 @@ body{margin:0;background:var(--bg);color:var(--tx);font:14.5px/1.5 var(--f);-web
 a{color:inherit;text-decoration:none}button{font-family:inherit;cursor:pointer}
 .mut{color:var(--mut)}.up{color:var(--ok);font-weight:600}.down{color:var(--bad);font-weight:600}
 
-/* menu lateral estreito */
-.side{position:fixed;left:0;top:0;bottom:0;width:var(--side);border-right:1px solid var(--line);background:var(--bg);display:flex;flex-direction:column;align-items:center;padding:18px 0;gap:26px;z-index:5}
-.lg{width:40px;height:40px;border-radius:12px;background:var(--tx);color:var(--bg);display:grid;place-items:center;font:700 12.5px var(--f);letter-spacing:.02em}
-.side nav{display:flex;flex-direction:column;gap:6px;width:100%;padding:0 10px}
-.ni{display:flex;flex-direction:column;align-items:center;gap:3px;padding:9px 0 7px;border-radius:12px;color:var(--mut);transition:background .15s,color .15s}
-.ni svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
-.ni small{font-size:10.5px;letter-spacing:.01em}
-a.ni:hover{background:var(--soft);color:var(--tx)}
-.ni.on{background:var(--soft);color:var(--tx)}
-.ni.on svg{stroke:var(--ac)}
-a.ni:focus-visible,a.ai:focus-visible,a.ar:focus-visible,a.vr:focus-visible,a.ac:focus-visible,a.cell:focus-visible{outline:2px solid var(--ac);outline-offset:2px;border-radius:10px}
+a.ai:focus-visible,a.ar:focus-visible,a.vr:focus-visible,a.ac:focus-visible,a.cell:focus-visible{outline:2px solid var(--ac);outline-offset:2px;border-radius:10px}
 
-.pg{margin-left:var(--side);padding:34px 44px 80px;max-width:1500px}
+.pg{padding:30px 40px 80px;max-width:1500px;margin:0 auto}
 .ph{display:flex;align-items:flex-end;gap:16px;flex-wrap:wrap;margin-bottom:30px}
 .ph .ey{font-size:12.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--mut)}
 h1{font:300 46px/1.05 var(--f);letter-spacing:-.035em;margin:6px 0 0}
@@ -53,9 +39,9 @@ h1{font:300 46px/1.05 var(--f);letter-spacing:-.035em;margin:6px 0 0}
 .att{background:var(--panel);border-radius:18px;padding:16px 22px}
 .att .hd{display:flex;align-items:center;gap:10px;font-weight:500;font-size:14px}
 .att .dot{width:8px;height:8px;border-radius:50%;background:var(--ok);flex:none}
-.att.has .dot{background:var(--warn)}.att.bad .dot{background:var(--bad)}
+.att.has .dot{background:#d4902a}.att.bad .dot{background:var(--bad)}
 .ai{display:flex;align-items:center;gap:12px;padding:10px 0 4px 18px;font-size:14px;border-top:1px solid var(--line);margin-top:10px}
-.ai i{width:6px;height:6px;border-radius:50%;background:var(--warn);flex:none}
+.ai i{width:6px;height:6px;border-radius:50%;background:#d4902a;flex:none}
 .ai.bad i{background:var(--bad)}
 .ai .go{margin-left:auto;color:var(--ac);font-weight:600;font-size:13px;white-space:nowrap}
 a.ai:hover .go{text-decoration:underline}
@@ -127,38 +113,18 @@ a.cell:hover{background:var(--hov2)}
   .row2{grid-template-columns:1fr}
 }
 @media(max-width:760px){
-  .side{top:auto;right:0;width:auto;height:64px;flex-direction:row;border-right:none;border-top:1px solid var(--line);padding:6px 10px;gap:0;justify-content:space-around}
-  .side .lg{display:none}.side nav{flex-direction:row;padding:0;justify-content:space-around}.ni{flex:1}
-  .pg{margin-left:0;padding:22px 18px 100px}
+  .pg{padding:22px 18px 40px}
   h1{font-size:34px}.kp b{font-size:44px}
   .art{grid-template-columns:1fr 1fr}.art.hd{display:none}.art .nm{grid-column:1/-1}
   .vr{grid-template-columns:20px 80px minmax(0,1fr)}.vr .v{grid-column:2/-1;text-align:left}.vr img,.vr .th0{width:80px;height:46px}
 }
 
-/* botão de tema */
-.tg{margin-top:auto;width:44px;height:44px;border-radius:12px;border:none;background:transparent;color:var(--mut);display:grid;place-items:center;transition:background .15s,color .15s}
-.tg:hover{background:var(--soft);color:var(--tx)}
-.tg svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
-.tg .sun{display:none}[data-theme="dark"] .tg .sun{display:block}[data-theme="dark"] .tg .moon{display:none}
-.tg:focus-visible{outline:2px solid var(--ac);outline-offset:2px}
-@media(max-width:760px){.tg{margin-top:0;width:auto;flex:1;height:auto;padding:9px 0}}
-body,.side,.att,.ar,.pn,.ac{transition:background-color .25s,color .25s,border-color .25s}
+body,.att,.ar,.pn,.ac{transition:background-color .25s,color .25s,border-color .25s}
 </style>
-<script>
-try{var t=localStorage.getItem('gba-tema');if(t==='dark'||t==='light')document.documentElement.setAttribute('data-theme',t)}catch(e){}
-</script>
+<script src="tema.js"></script>
+<link rel="stylesheet" href="tema.css">
 </head>
 <body>
-<aside class="side">
-  <a class="lg" href="inicio.html" title="GBA Music">GBA</a>
-  <nav>
-    <span class="ni on" title="Início"><svg viewBox="0 0 24 24"><path d="m3 11 9-8 9 8"/><path d="M5 10v10h14V10"/></svg><small>Início</small></span>
-    <a class="ni" href="index.html" title="Metas e vídeos (Dashboard)"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4.5"/><circle cx="12" cy="12" r=".8"/></svg><small>Metas</small></a>
-    <a class="ni" href="acompanhamento.html" title="Acompanhamento de projetos"><svg viewBox="0 0 24 24"><rect x="4" y="12" width="4" height="8" rx="1"/><rect x="10" y="4" width="4" height="16" rx="1"/><rect x="16" y="9" width="4" height="11" rx="1"/></svg><small>Projetos</small></a>
-    <a class="ni" href="social.html" title="Redes sociais"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M16 12v1.5a2.5 2.5 0 0 0 5 0V12a9 9 0 1 0-3.5 7.1"/></svg><small>Redes</small></a>
-  </nav>
-  <button class="tg" id="tema" type="button" title="Alternar entre modo claro e escuro" aria-label="Alternar entre modo claro e escuro"><svg class="moon" viewBox="0 0 24 24"><path d="M20 14.5A8.5 8.5 0 1 1 9.5 4a7 7 0 0 0 10.5 10.5z"/></svg><svg class="sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg></button>
-</aside>
 <main class="pg" id="app">Carregando…</main>
 
 <script>
@@ -178,11 +144,6 @@ const inDays=n=>n===0?'hoje':n===1?'amanhã':'em '+n+' dias';
 const ago=ms=>{const h=ms/36e5;return h<1?Math.round(ms/6e4)+' min':h<48?Math.round(h)+' h':Math.round(h/24)+' dias'};
 const cu=(v,f='fmt')=>`<b data-n="${v}" data-f="${f}">${f==='N'?N(v):fmt(v)}</b>`;   // número que "conta" ao carregar
 
-$('#tema').onclick=()=>{
-  const dark=document.documentElement.getAttribute('data-theme')==='dark',next=dark?'light':'dark';
-  document.documentElement.setAttribute('data-theme',next);
-  try{localStorage.setItem('gba-tema',next)}catch(e){}
-};
 let D,Hy,PR,S,SH,byId=new Map();
 const getJ=async u=>{try{const r=await fetch(u+'?t='+Date.now());return r.ok?await r.json():null}catch{return null}};
 (async()=>{

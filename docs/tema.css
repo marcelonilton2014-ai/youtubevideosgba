@@ -1,0 +1,93 @@
+/* ============================================================
+   TEMA COMPARTILHADO · GBA MUSIC
+   Carregado por todas as páginas (depois do estilo de cada uma).
+   Define: cores claro/escuro, menu lateral, blocos com fundo próprio.
+   Para mudar o visual do site inteiro, mexa só aqui.
+   ============================================================ */
+
+/* ---------- cores: claro ---------- */
+:root,html[data-theme="light"]{
+  --page:#f8f8f5;--bg:#f8f8f5;--shell:#f8f8f5;
+  --panel:#eeeee9;--pn:#eeeee9;--card:#f8f8f5;
+  --hov:#e8e8e2;--hov2:rgba(17,17,20,.06);
+  --soft:#e4e4de;--bar:#dcdcd5;
+  --tx:#111114;--mut:#85858c;--line:rgba(17,17,20,.09);--bd:rgba(17,17,20,.10);
+  --ac:#c14428;--ac2:#e59632;--ac3:#ecb87a;--ink:#121214;--inktx:#fff;
+  --ok:#18866a;--bad:#c0392b;--warn:#8f2f17;--warnbg:#f8e6d8;
+  --sh:none;--side:76px;color-scheme:light;
+}
+/* ---------- cores: escuro ---------- */
+html[data-theme="dark"]{
+  --page:#0f0f11;--bg:#0f0f11;--shell:#0f0f11;
+  --panel:#19191c;--pn:#19191c;--card:#121214;
+  --hov:#222226;--hov2:rgba(255,255,255,.07);
+  --soft:#26262b;--bar:#2e2e34;
+  --tx:#f2f2f3;--mut:#9a9aa2;--line:rgba(255,255,255,.09);--bd:rgba(255,255,255,.10);
+  --ac:#e2623e;--ac2:#eda44f;--ac3:#f0bf86;--ink:#f4f4f5;--inktx:#111;
+  --ok:#4fd3a1;--bad:#ff8a80;--warn:#f2b79d;--warnbg:#3a2418;
+  --sh:none;color-scheme:dark;
+}
+
+/* ---------- página inteira ---------- */
+html{zoom:.85}
+@media(max-width:640px){html{zoom:.94}}
+body{background:var(--page);color:var(--tx);padding:0 0 0 var(--side)}
+.shell{max-width:1500px;margin:0 auto;background:transparent;border-radius:0;padding:30px 40px 80px}
+body{transition:background-color .25s,color .25s}
+
+/* o menu superior antigo vira só uma barra de ferramentas */
+.brand,.navchips,.chips{display:none!important}
+.topbar{background:transparent;box-shadow:none;border-radius:0;padding:0 0 18px;gap:12px}
+.topbar .upd{margin-left:auto}
+.search,.datepill{background:var(--panel);border:none}
+.iconbtn{background:var(--panel)}
+.search{border-radius:14px}.datepill{border-radius:14px}
+
+/* ---------- blocos com fundo próprio, cantos menos exagerados ---------- */
+.card,.panel,.bc,.hit,.stat,.pcard,.acc,.mc,.chart,.res,.blk,.empty,.note{border-radius:18px;box-shadow:none}
+.pc{border-radius:16px;box-shadow:none}
+dialog{border-radius:20px}
+.rail{border-radius:22px;box-shadow:none}
+.rb{border-radius:14px}
+.nc{border-radius:16px;box-shadow:none}
+.tile{border-radius:12px}
+.hit .th img{border-radius:10px}
+.ico{border-radius:12px}
+.rv{border-radius:12px}
+.hit::before{height:4px}
+.empty{background:var(--card)}
+.nc,td{background:var(--card)}
+tbody tr:hover td{background:var(--soft)}
+.tile,.pend{background:var(--soft)}
+.card,.panel,.bc,.hit,.rail{transition:background-color .25s}
+a.card:hover,a.blk:hover{background:var(--hov)}
+.pill,.chip,.nchip{border-radius:99px}
+
+/* ---------- menu lateral estreito ---------- */
+.gside{position:fixed;left:0;top:0;bottom:0;width:var(--side);border-right:1px solid var(--line);background:var(--page);display:flex;flex-direction:column;align-items:center;padding:18px 0;gap:26px;z-index:20;transition:background-color .25s,border-color .25s}
+.gside .glg{width:40px;height:40px;border-radius:12px;background:var(--tx);color:var(--page);display:grid;place-items:center;font:700 12.5px var(--f,'Hanken Grotesk',system-ui,sans-serif);letter-spacing:.02em;text-decoration:none}
+.gside nav{display:flex;flex-direction:column;gap:6px;width:100%;padding:0 10px}
+.gni{display:flex;flex-direction:column;align-items:center;gap:3px;padding:9px 0 7px;border-radius:12px;color:var(--mut);text-decoration:none;transition:background .15s,color .15s;font-family:var(--f,'Hanken Grotesk',system-ui,sans-serif)}
+.gni svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.gni small{font-size:10.5px;letter-spacing:.01em}
+a.gni:hover{background:var(--soft);color:var(--tx)}
+.gni.on{background:var(--soft);color:var(--tx)}
+.gni.on svg{stroke:var(--ac)}
+.gni:focus-visible,.gtema:focus-visible{outline:2px solid var(--ac);outline-offset:2px}
+.gtema{margin-top:auto;width:44px;height:44px;border-radius:12px;border:none;background:transparent;color:var(--mut);display:grid;place-items:center;cursor:pointer;transition:background .15s,color .15s}
+.gtema:hover{background:var(--soft);color:var(--tx)}
+.gtema svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.gtema .sun{display:none}
+html[data-theme="dark"] .gtema .sun{display:block}
+html[data-theme="dark"] .gtema .moon{display:none}
+
+@media(max-width:900px){
+  body{padding:0 0 70px}
+  .shell{padding:20px 14px 40px}
+  .gside{top:auto;right:0;width:auto;height:64px;flex-direction:row;border-right:none;border-top:1px solid var(--line);padding:6px 10px;gap:0;justify-content:space-around}
+  .gside .glg{display:none}
+  .gside nav{flex-direction:row;padding:0;justify-content:space-around;flex:1}
+  .gni{flex:1}
+  .gtema{margin-top:0;width:auto;flex:1;height:auto;padding:9px 0}
+}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
