@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CONECTAR TIKTOK · GBA MUSIC</title>
+<style>
+:root{--bg:#e4e4e1;--pn:#fff;--soft:#f1f1ee;--tx:#17171a;--mut:#6f6f76;--ac:#c14428;--ink:#121214;--inktx:#fff}
+@media(prefers-color-scheme:dark){:root{--bg:#08080a;--pn:#1b1b1f;--soft:#26262b;--tx:#f4f4f5;--mut:#9b9ba3;--ac:#e2623e;--ink:#f4f4f5;--inktx:#111}}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--tx);font:16px/1.55 system-ui,-apple-system,'Segoe UI',sans-serif;padding:20px}
+main{max-width:680px;margin:0 auto;background:var(--pn);border-radius:30px;padding:28px}
+h1{font-size:26px;font-weight:500;letter-spacing:-.02em;margin:0 0 6px}p{color:var(--mut);margin:6px 0 14px}
+label{display:block;font-weight:600;font-size:14px;margin:16px 0 6px}
+input{width:100%;background:var(--soft);color:var(--tx);border:1px solid transparent;border-radius:12px;padding:11px 14px;font:inherit;font-size:15px}
+.box{background:var(--soft);border-radius:14px;padding:12px 14px;word-break:break-all;font-family:ui-monospace,Menlo,monospace;font-size:13.5px;margin:6px 0}
+button{background:var(--ink);color:var(--inktx);border:none;border-radius:99px;padding:11px 22px;font:inherit;font-weight:500;cursor:pointer;margin-top:14px}
+button.g{background:var(--soft);color:var(--tx);margin-left:6px}
+.ok{border-left:5px solid #17916a;background:var(--soft);border-radius:14px;padding:12px 16px;margin:14px 0}
+.er{border-left:5px solid var(--ac);background:var(--soft);border-radius:14px;padding:12px 16px;margin:14px 0}
+ol{color:var(--mut);padding-left:20px}
+</style>
+</head>
+<body>
+<main>
+<h1>Conectar o TikTok</h1>
+<div id="v"></div>
+</main>
+<script>
+const $=s=>document.querySelector(s);
+const SCOPES='user.info.basic,user.info.profile,user.info.stats,video.list';
+const ru=location.origin+location.pathname;
+const q=new URLSearchParams(location.search);
+const ss={get:k=>{try{return sessionStorage.getItem(k)}catch(e){return null}},set:(k,v)=>{try{sessionStorage.setItem(k,v)}catch(e){}}};
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+if(q.get('code')){
+  const okState=q.get('state')&&q.get('state')===ss.get('ttstate');
+  $('#v').innerHTML=`<p>Autorização recebida. Copie o código abaixo e use-o agora: ele vale por poucos minutos e só funciona uma vez.</p>
+  ${okState?'':'<div class="er">Atenção: o código de verificação desta página não confere. Se você não começou a conexão por aqui, não use este código.</div>'}
+  <div class="box" id="c">${esc(q.get('code'))}</div><button id="cp">Copiar código</button>
+  <div class="ok"><b>Próximo passo:</b><ol><li>No GitHub, abra <b>Actions → Redes sociais → Run workflow</b>.</li><li>Cole o código no campo <b>tiktok_code</b> e confirme.</li><li>Quando terminar (bolinha verde), o TikTok aparece na página Redes sociais.</li></ol></div>`;
+  $('#cp').onclick=async()=>{try{await navigator.clipboard.writeText(q.get('code'));$('#cp').textContent='Copiado ✔'}catch(e){const r=document.createRange();r.selectNode($('#c'));getSelection().removeAllRanges();getSelection().addRange(r)}};
+}else if(q.get('error')){
+  $('#v').innerHTML=`<div class="er"><b>O TikTok recusou ou cancelou:</b> ${esc(q.get('error_description')||q.get('error'))}</div><p><a href="${esc(ru)}">Tentar de novo</a></p>`;
+}else{
+  $('#v').innerHTML=`<p>Esta página só faz a ponte com o TikTok: ela não guarda nada. Siga na ordem:</p>
+  <label>1. Endereço de retorno (copie e cadastre no app do TikTok, em Login Kit → Redirect URI)</label><div class="box">${esc(ru)}</div>
+  <label for="ck">2. Client key do app do TikTok</label><input id="ck" value="${esc(ss.get('ttkey')||'')}" placeholder="aw…" autocomplete="off">
+  <button id="go" type="button">3. Entrar com o TikTok do GBA Worship</button>
+  <p style="font-size:13px">Entre com a conta que vai ser acompanhada. Você volta para esta página com um código.</p>`;
+  $('#go').onclick=()=>{
+    const key=$('#ck').value.trim();if(!key){$('#ck').focus();return}
+    const st=Math.random().toString(36).slice(2)+Date.now().toString(36);ss.set('ttstate',st);ss.set('ttkey',key);
+    location.href='https://www.tiktok.com/v2/auth/authorize/?'+new URLSearchParams({client_key:key,scope:SCOPES,response_type:'code',redirect_uri:ru,state:st});
+  };
+}
+</script>
+</body>
+</html>
