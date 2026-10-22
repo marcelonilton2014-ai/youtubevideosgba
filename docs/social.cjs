@@ -1,6 +1,7 @@
 // Robô das redes sociais (Instagram agora; TikTok depois).
 // Lê a variável SOCIAL_ACCOUNTS (secret do GitHub) e grava docs/social.json e docs/social-history.json.
 const fs = require('fs');
+const crypto = require('crypto');
 const path = require('path');
 
 let GRAPH = 'https://graph.facebook.com/v23.0'; // muda para graph.instagram.com nas contas com "api":"instagram"
@@ -116,8 +117,41 @@ async function followFlow(userId, token, h, d, gains) {
   return { flow: rows.map((x) => [x, h.fu[x][gainKey] || 0, h.fu[x][lossKey] || 0]), map: gainKey };
 }
 
+
+// ============ Renovação automática do token do Instagram (login do Instagram) ============
+// O token dura 60 dias, mas pode ser renovado a qualquer momento depois de 24h de vida.
+// O robô renova e guarda o novo token CRIPTOGRAFADO no repositório (chave = appSecret, que fica só no GitHub Secrets).
+async function igToken(acc) {
+  if (acc.api !== 'instagram' || !acc.appSecret) return acc.token;
+  const file = path.join(ROOT, 'state', `ig-${acc.key}.enc`);
+  const sig = crypto.createHash('sha256').update(acc.token).digest('hex');
+  let st = null;
+  try { st = openTokens(fs.readFileSync(file, 'utf8'), acc.appSecret); } catch {}
+  if (st && st.orig !== sig) st = null;              // você colou um token novo no segredo: ele vale mais
+  let token = st ? st.token : acc.token;
+  const idade = st ? Date.now() - Date.parse(st.at) : Infinity;
+  if (idade > 864e5) {
+    try {
+      const u = new URL('https://graph.instagram.com/refresh_access_token');
+      u.searchParams.set('grant_type', 'ig_refresh_token');
+      u.searchParams.set('access_token', token);
+      const r = await fetch(u);
+      const j = await r.json().catch(() => ({}));
+      if (j.access_token) {
+        token = j.access_token;
+        fs.mkdirSync(path.dirname(file), { recursive: true });
+        fs.writeFileSync(file, sealTokens({ orig: sig, token, at: new Date().toISOString() }, acc.appSecret));
+        console.log('token do Instagram renovado (vale mais ' + Math.round((j.expires_in || 0) / 86400) + ' dias)');
+      } else {
+        console.error('não consegui renovar o token do Instagram:', j.error?.message || r.status);
+      }
+    } catch (e) { console.error('renovação do token falhou:', e.message); }
+  }
+  return token;
+}
+
 async function instagram(acc, hist, d, prevPosts) {
-  const { token } = acc;
+  const token = await igToken(acc);
   const userId = acc.userId || 'me';
   const prof = await api(`/${userId}`, token, {
     fields: 'username,name,followers_count,follows_count,media_count,profile_picture_url'
@@ -244,10 +278,141 @@ async function instagram(acc, hist, d, prevPosts) {
   };
 }
 
+
+// ============ TikTok (Display API) ============
+const TT = 'https://open.tiktokapis.com/v2';
+// Os tokens ficam no repositório, mas CRIPTOGRAFADOS com a chave secreta do app (que só existe no GitHub Secrets).
+const encKey = (secret) => crypto.createHash('sha256').update('gba-tiktok:' + secret).digest();
+function sealTokens(obj, secret) {
+  const iv = crypto.randomBytes(12);
+  const c = crypto.createCipheriv('aes-256-gcm', encKey(secret), iv);
+  const enc = Buffer.concat([c.update(JSON.stringify(obj), 'utf8'), c.final()]);
+  return Buffer.concat([iv, c.getAuthTag(), enc]).toString('base64');
+}
+function openTokens(b64, secret) {
+  const b = Buffer.from(b64, 'base64');
+  const d = crypto.createDecipheriv('aes-256-gcm', encKey(secret), b.subarray(0, 12));
+  d.setAuthTag(b.subarray(12, 28));
+  return JSON.parse(Buffer.concat([d.update(b.subarray(28)), d.final()]).toString('utf8'));
+}
+async function ttToken(params) {
+  const r = await fetch(TT + '/oauth/token/', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded', 'Cache-Control': 'no-cache' },
+    body: new URLSearchParams(params)
+  });
+  const j = await r.json().catch(() => ({}));
+  if (!r.ok || j.error) throw new Error('TikTok: ' + (j.error_description || j.error || 'HTTP ' + r.status));
+  return j;
+}
+async function ttApi(path, access, opts = {}) {
+  const r = await fetch(TT + path, {
+    ...opts,
+    headers: { Authorization: 'Bearer ' + access, 'Content-Type': 'application/json; charset=UTF-8' }
+  });
+  const j = await r.json().catch(() => ({}));
+  if (!r.ok || (j.error && j.error.code && j.error.code !== 'ok')) {
+    throw new Error('TikTok: ' + (j.error?.message || j.error?.code || 'HTTP ' + r.status));
+  }
+  return j.data || {};
+}
+
+async function tiktok(acc, hist, d, prevPosts) {
+  const secret = acc.clientSecret;
+  if (!acc.clientKey || !secret) throw new Error('TikTok: faltam clientKey e clientSecret no SOCIAL_ACCOUNTS');
+  const file = path.join(ROOT, 'state', `tiktok-${acc.key}.enc`);
+  let tok = null;
+  try { tok = openTokens(fs.readFileSync(file, 'utf8'), secret); } catch {}
+
+  const code = (process.env.TIKTOK_CODE || '').trim();
+  let r;
+  if (code && !tok) {
+    if (!acc.redirectUri) throw new Error('TikTok: falta redirectUri no SOCIAL_ACCOUNTS');
+    r = await ttToken({
+      client_key: acc.clientKey, client_secret: secret, grant_type: 'authorization_code',
+      code: decodeURIComponent(code), redirect_uri: acc.redirectUri
+    });
+  } else if (tok) {
+    r = await ttToken({
+      client_key: acc.clientKey, client_secret: secret, grant_type: 'refresh_token', refresh_token: tok.refresh_token
+    });
+  } else {
+    throw new Error('TikTok ainda não conectado: gere o código em tiktok-conectar.html e rode o robô com ele.');
+  }
+  fs.mkdirSync(path.dirname(file), { recursive: true });
+  fs.writeFileSync(file, sealTokens({ refresh_token: r.refresh_token || tok?.refresh_token, open_id: r.open_id || tok?.open_id }, secret));
+  const access = r.access_token;
+
+  // perfil
+  let user = {};
+  const base = 'open_id,avatar_url,display_name';
+  try {
+    user = (await ttApi(`/user/info/?fields=${base},username,follower_count,following_count,likes_count,video_count`, access)).user || {};
+  } catch (e) {
+    console.error('perfil completo indisponível, tentando o básico:', e.message);
+    user = (await ttApi(`/user/info/?fields=${base}`, access)).user || {};
+  }
+
+  // vídeos (20 por página)
+  const vids = [];
+  let cursor, more = true;
+  while (more && vids.length < MAX_POSTS) {
+    const data = await ttApi(
+      '/video/list/?fields=id,title,video_description,create_time,cover_image_url,share_url,duration,like_count,comment_count,share_count,view_count',
+      access,
+      { method: 'POST', body: JSON.stringify(cursor ? { max_count: 20, cursor } : { max_count: 20 }) }
+    );
+    vids.push(...(data.videos || []));
+    more = !!data.has_more && data.cursor != null;
+    cursor = data.cursor;
+  }
+  console.log(vids.length + ' vídeos do TikTok encontrados');
+
+  const posts = vids.map((v) => ({
+    id: String(v.id),
+    type: 'tiktok',
+    caption: (v.video_description || v.title || '').slice(0, 140),
+    url: v.share_url,
+    thumb: v.cover_image_url || null,
+    date: new Date(v.create_time * 1000).toISOString(),
+    likes: v.like_count ?? null,
+    comments: v.comment_count ?? null,
+    views: v.view_count ?? null,
+    shares: v.share_count ?? null,
+    duration: v.duration ?? null,
+    reach: null, saved: null, follows: null, visits: null, watch: null, interactions: null
+  }));
+
+  const h = (hist.accounts[acc.key] ??= { followers: {}, posts: {} });
+  if (user.follower_count != null) h.followers[d] = user.follower_count;
+  const limit = Date.now() - HIST_DAYS * 864e5;
+  for (const p of posts) {
+    if (Date.parse(p.date) < limit) continue;
+    (h.posts[p.id] ??= {})[d] = [p.views, p.likes];
+  }
+  for (const id of Object.keys(h.posts)) if (!posts.find((p) => p.id === id)) delete h.posts[id];
+
+  return {
+    key: acc.key,
+    platform: 'tiktok',
+    name: acc.name || user.display_name || user.username,
+    username: user.username || user.display_name,
+    avatar: user.avatar_url || null,
+    followers: user.follower_count ?? null,
+    following: user.following_count ?? null,
+    mediaCount: user.video_count ?? posts.length,
+    likesTotal: user.likes_count ?? null,
+    gains: [], flow: [], posts
+  };
+}
+
 (async () => {
   let accounts;
   try { accounts = JSON.parse(process.env.SOCIAL_ACCOUNTS || '[]'); }
   catch { console.error('SOCIAL_ACCOUNTS não é um JSON válido.'); process.exit(1); }
+  // segredo extra opcional: permite adicionar contas (ex.: TikTok) sem mexer no SOCIAL_ACCOUNTS
+  try { accounts = accounts.concat(JSON.parse(process.env.SOCIAL_ACCOUNTS_EXTRA || '[]')); }
+  catch { console.error('SOCIAL_ACCOUNTS_EXTRA não é um JSON válido.'); process.exit(1); }
   if (!accounts.length) { console.log('Nenhuma conta configurada em SOCIAL_ACCOUNTS. Nada a fazer.'); return; }
 
   const prev = readJson(OUT, { accounts: [] });
@@ -259,9 +424,12 @@ async function instagram(acc, hist, d, prevPosts) {
 
   for (const acc of accounts) {
     try {
-      GRAPH = acc.api === 'instagram' ? 'https://graph.instagram.com/v23.0' : 'https://graph.facebook.com/v23.0';
-      if (acc.platform !== 'instagram') throw new Error('plataforma ainda não suportada: ' + acc.platform);
-      out.push(await instagram(acc, hist, d, prev.accounts.find((a) => a.key === acc.key)?.posts));
+      const before = prev.accounts.find((a) => a.key === acc.key)?.posts;
+      if (acc.platform === 'tiktok') out.push(await tiktok(acc, hist, d, before));
+      else if (acc.platform === 'instagram') {
+        GRAPH = acc.api === 'instagram' ? 'https://graph.instagram.com/v23.0' : 'https://graph.facebook.com/v23.0';
+        out.push(await instagram(acc, hist, d, before));
+      } else throw new Error('plataforma não suportada: ' + acc.platform);
       ok++;
       console.log('OK', acc.key);
     } catch (e) {
