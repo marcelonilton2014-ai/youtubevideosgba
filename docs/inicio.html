@@ -9,115 +9,139 @@
 <link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root{
-  --bg:#e4e4e1;--shell:#f4f4f2;--pn:#fff;--soft:#f1f1ee;--tx:#17171a;--mut:#8b8b92;--bd:#ebebe8;
-  --ac:#c14428;--ac2:#e59632;--ac3:#ecb87a;--ink:#121214;--inktx:#fff;--ok:#17916a;--bad:#b3261e;--warn:#b7791f;
+  --bg:#fbfbf9;--tx:#111114;--mut:#8a8a90;--line:#e8e8e3;--soft:#f3f3ef;
+  --ac:#c14428;--ok:#18866a;--bad:#c0392b;--warn:#b7791f;
   --f:'Hanken Grotesk',system-ui,-apple-system,sans-serif;
-  --sh:0 1px 2px rgba(20,20,25,.04),0 8px 24px rgba(20,20,25,.05);
+  --r:14px;--side:76px;
 }
-@media(prefers-color-scheme:dark){:root{--bg:#08080a;--shell:#121214;--pn:#1b1b1f;--soft:#26262b;--tx:#f4f4f5;--mut:#9b9ba3;--bd:#2b2b31;--ac:#e2623e;--ac2:#eda44f;--ac3:#f0bf86;--ink:#f4f4f5;--inktx:#111;--ok:#4fd3a1;--bad:#ff8a80;--warn:#f0c36a;--sh:none}}
 *{box-sizing:border-box}
-html{zoom:.82}
-@media(max-width:640px){html{zoom:.92}}
-body{margin:0;background:var(--bg);color:var(--tx);font:15px/1.5 var(--f);-webkit-font-smoothing:antialiased;padding:14px}
-a{color:inherit}button{font-family:inherit;cursor:pointer}
-.mut{color:var(--mut)}
-.shell{max-width:1640px;margin:0 auto;background:var(--shell);border-radius:38px;padding:18px 18px 30px}
-.topbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;background:var(--pn);border-radius:99px;padding:8px 10px;box-shadow:var(--sh)}
-.brand{display:flex;align-items:center;gap:12px;padding-right:10px}
-.logo{width:46px;height:46px;border-radius:50%;background:var(--ink);color:var(--inktx);display:grid;place-items:center;font:700 14px var(--f)}
-.brand span{font:500 20px/1 var(--f);letter-spacing:-.02em;white-space:nowrap}
-.navchips{display:flex;gap:8px;flex-wrap:wrap}
-.nchip{background:var(--soft);border-radius:99px;padding:11px 20px;font-size:15px;text-decoration:none;white-space:nowrap}
-.nchip.on{background:var(--ink);color:var(--inktx)}
-a.nchip:hover{background:color-mix(in srgb,var(--ac3) 45%,var(--soft))}
-.spacer{flex:1}.upd{font-size:13.5px;color:var(--mut);padding-right:14px}
-main{padding:22px 6px 10px}
-h1{font:400 40px/1.1 var(--f);letter-spacing:-.03em;margin:0 0 4px}h1 b{font-weight:600}
-.lead{color:var(--mut);margin:0 0 22px}
-.card{background:var(--pn);border-radius:28px;padding:22px 24px;box-shadow:var(--sh)}
-.card h3{margin:0 0 12px;font:500 17px var(--f)}
-.sechd{margin:34px 4px 14px}.sechd h2{font:500 23px var(--f);margin:0;letter-spacing:-.02em}.sechd p{margin:2px 0 0;color:var(--mut);font-size:14px}
-.note{font-size:13px;color:var(--mut);margin:8px 0 0}
-.up{color:var(--ok);font-weight:600}.down{color:var(--bad);font-weight:600}
+html{zoom:.86}
+@media(max-width:640px){html{zoom:.94}}
+body{margin:0;background:var(--bg);color:var(--tx);font:14.5px/1.5 var(--f);-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}button{font-family:inherit;cursor:pointer}
+.mut{color:var(--mut)}.up{color:var(--ok);font-weight:600}.down{color:var(--bad);font-weight:600}
+
+/* menu lateral estreito */
+.side{position:fixed;left:0;top:0;bottom:0;width:var(--side);border-right:1px solid var(--line);background:var(--bg);display:flex;flex-direction:column;align-items:center;padding:18px 0;gap:26px;z-index:5}
+.lg{width:40px;height:40px;border-radius:12px;background:var(--tx);color:var(--bg);display:grid;place-items:center;font:700 12.5px var(--f);letter-spacing:.02em}
+.side nav{display:flex;flex-direction:column;gap:6px;width:100%;padding:0 10px}
+.ni{display:flex;flex-direction:column;align-items:center;gap:3px;padding:9px 0 7px;border-radius:12px;color:var(--mut);transition:background .15s,color .15s}
+.ni svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.ni small{font-size:10.5px;letter-spacing:.01em}
+a.ni:hover{background:var(--soft);color:var(--tx)}
+.ni.on{background:var(--soft);color:var(--tx)}
+.ni.on svg{stroke:var(--ac)}
+a.ni:focus-visible,a.ai:focus-visible,a.ar:focus-visible,a.vr:focus-visible,a.ac:focus-visible,a.cell:focus-visible{outline:2px solid var(--ac);outline-offset:2px;border-radius:10px}
+
+.pg{margin-left:var(--side);padding:34px 44px 80px;max-width:1500px}
+.ph{display:flex;align-items:flex-end;gap:16px;flex-wrap:wrap;margin-bottom:30px}
+.ph .ey{font-size:12.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--mut)}
+h1{font:300 46px/1.05 var(--f);letter-spacing:-.035em;margin:6px 0 0}
+.ph .upd{margin-left:auto;font-size:12.5px;color:var(--mut)}
+.lab{font-size:12px;letter-spacing:.09em;text-transform:uppercase;color:var(--mut);font-weight:500;margin:0 0 14px}
+.sec{margin-top:56px}
+.sec>h2{font:400 24px var(--f);letter-spacing:-.02em;margin:0 0 4px}
+.sec>p{margin:0 0 20px;color:var(--mut);font-size:13.5px}
+.note{font-size:12.5px;color:var(--mut);margin:10px 0 0}
+.empty{color:var(--mut)}
 
 /* faixa de atenção */
-.att{border-radius:28px;padding:16px 22px;display:flex;flex-direction:column;gap:8px;background:var(--pn);box-shadow:var(--sh)}
-.att .hd{display:flex;align-items:center;gap:10px;font-weight:600}
-.att .dot{width:10px;height:10px;border-radius:50%;background:var(--ok);flex:none}
-.att.has .dot{background:var(--warn)}
-.att.bad .dot{background:var(--bad)}
-.ai{display:flex;align-items:center;gap:12px;background:var(--soft);border-radius:16px;padding:10px 14px;text-decoration:none;font-size:14.5px}
-.ai i{width:8px;height:8px;border-radius:50%;background:var(--warn);flex:none}
+.att{border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:14px 0}
+.att .hd{display:flex;align-items:center;gap:10px;font-weight:500;font-size:14px}
+.att .dot{width:8px;height:8px;border-radius:50%;background:var(--ok);flex:none}
+.att.has .dot{background:var(--warn)}.att.bad .dot{background:var(--bad)}
+.ai{display:flex;align-items:center;gap:12px;padding:9px 0 9px 18px;font-size:14px;border-top:1px solid var(--line);margin-top:10px}
+.ai i{width:6px;height:6px;border-radius:50%;background:var(--warn);flex:none}
 .ai.bad i{background:var(--bad)}
-.ai .go{margin-left:auto;color:var(--ac);font-weight:600;font-size:13.5px;white-space:nowrap}
-a.ai:hover{background:color-mix(in srgb,var(--ac3) 35%,var(--soft))}
+.ai .go{margin-left:auto;color:var(--ac);font-weight:600;font-size:13px;white-space:nowrap}
+a.ai:hover .go{text-decoration:underline}
 
-/* três blocos */
-.areas{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:14px}
-.blk{display:flex;flex-direction:column;background:var(--pn);border-radius:28px;padding:22px 24px;box-shadow:var(--sh);text-decoration:none;color:var(--tx);outline:2px solid transparent;transition:transform .15s,outline-color .15s}
-a.blk:hover{transform:translateY(-2px);outline-color:var(--ac3)}
-.bh{display:flex;align-items:center;gap:10px;margin-bottom:14px}
-.bh .pf{background:var(--ink);color:var(--inktx);border-radius:99px;padding:5px 14px;font-weight:600;font-size:13.5px}
-.bh .go{margin-left:auto;color:var(--ac);font-weight:600;font-size:14px}
-.kp{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:12px}
-.kp div{background:var(--soft);border-radius:14px;padding:9px 12px}
-.kp span{display:block;font-size:11.5px;color:var(--mut)}.kp b{font:400 28px/1.15 var(--f);letter-spacing:-.02em}
-.li{display:flex;flex-direction:column;gap:7px;font-size:13.5px}
-.li div{display:flex;justify-content:space-between;gap:10px;border-top:1px solid var(--bd);padding-top:7px}
-.li div span:first-child{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+/* três áreas */
+.areas{display:grid;grid-template-columns:repeat(3,1fr);margin-top:34px}
+.ar{display:block;padding:4px 36px 6px;border-left:1px solid var(--line)}
+.ar:first-child{border-left:none;padding-left:0}
+.ar:last-child{padding-right:0}
+.ah{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
+.ah span{font-size:12px;letter-spacing:.09em;text-transform:uppercase;color:var(--mut);font-weight:500}
+.ah i{font-style:normal;color:var(--mut);transition:transform .15s,color .15s}
+a.ar:hover .ah i{transform:translateX(4px);color:var(--ac)}
+.kp{display:grid;grid-template-columns:repeat(2,1fr);gap:18px 20px;margin-bottom:24px}
+.kp b{display:block;font:300 52px/1 var(--f);letter-spacing:-.04em;font-variant-numeric:tabular-nums}
+.kp span{display:block;font-size:12.5px;color:var(--mut);margin-top:6px}
+.kp em{font-style:normal;font-size:12.5px}
+.li{display:flex;flex-direction:column}
+.li .t{font-size:12px;color:var(--mut);margin-bottom:4px}
+.li div.i{display:flex;justify-content:space-between;gap:12px;border-top:1px solid var(--line);padding:9px 0;font-size:13.5px}
+.li div.i span:first-child{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .li .r{color:var(--mut);white-space:nowrap}
-.sub{font-size:12px;color:var(--mut);margin:0 0 6px}
 
 /* destaques */
-.row2{display:grid;grid-template-columns:1.2fr 1fr;gap:14px}
-.vl{display:flex;flex-direction:column;gap:8px}
-.vr{display:grid;grid-template-columns:26px 88px minmax(0,1fr) auto;gap:12px;align-items:center;background:var(--soft);border-radius:18px;padding:8px 14px 8px 12px;text-decoration:none;color:var(--tx)}
-a.vr:hover{background:color-mix(in srgb,var(--ac3) 35%,var(--soft))}
-.vr .rk{font-weight:700;color:var(--mut)}
-.vr img,.vr .th0{width:88px;height:50px;border-radius:10px;object-fit:cover;background:var(--pn);display:block}
-.vr .cp{overflow:hidden;white-space:nowrap;text-overflow:ellipsis;font-size:14px}
-.vr .mt{font-size:12px;color:var(--mut)}
-.vr .v{text-align:right}.vr .v b{font-size:17px;color:var(--ok)}.vr .v span{display:block;font-size:11.5px;color:var(--mut)}
-.mini{display:flex;flex-direction:column;gap:12px}
-.mini .it{background:var(--soft);border-radius:18px;padding:12px 14px;text-decoration:none;color:var(--tx);display:block}
-a.it:hover{background:color-mix(in srgb,var(--ac3) 35%,var(--soft))}
-.mini .k{font-size:12px;color:var(--mut)}.mini .t{font-weight:600;margin:2px 0}.mini .d{font-size:13px;color:var(--mut)}
-.ag{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:12px}
-.ac{display:flex;gap:12px;background:var(--pn);border-radius:22px;padding:12px;box-shadow:var(--sh);text-decoration:none;color:var(--tx);align-items:center}
-a.ac:hover{outline:2px solid var(--ac3)}
-.ac img,.ac .th0{width:96px;height:56px;border-radius:12px;object-fit:cover;background:var(--soft);flex:none;display:block}
-.ac .who{font-size:12px;font-weight:600;color:var(--ac)}.ac .tt{font-size:13.5px;line-height:1.3;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-.ac .gr{font-size:13px;margin-top:2px}
+.row2{display:grid;grid-template-columns:1.35fr 1fr;gap:64px}
+.vl{display:flex;flex-direction:column}
+.vr{display:grid;grid-template-columns:22px 96px minmax(0,1fr) auto;gap:16px;align-items:center;padding:11px 0;border-top:1px solid var(--line)}
+.vr:first-child{border-top:none;padding-top:0}
+a.vr:hover .cp{text-decoration:underline}
+.vr .rk{color:var(--mut);font-size:13px;font-variant-numeric:tabular-nums}
+.vr img,.vr .th0{width:96px;height:54px;border-radius:8px;object-fit:cover;background:var(--soft);display:block}
+.vr .cp{overflow:hidden;white-space:nowrap;text-overflow:ellipsis;font-weight:500}
+.vr .mt{font-size:12.5px;color:var(--mut)}
+.vr .v{text-align:right}.vr .v b{font:400 20px var(--f);letter-spacing:-.02em;color:var(--ok)}.vr .v span{display:block;font-size:11.5px;color:var(--mut)}
+.mini{display:flex;flex-direction:column}
+.mini .it{display:block;padding:13px 0;border-top:1px solid var(--line)}
+.mini .it:first-child{border-top:none;padding-top:0}
+.mini .k{font-size:12px;color:var(--mut)}.mini .t{font:400 17px var(--f);letter-spacing:-.01em;margin:3px 0}.mini .d{font-size:13px;color:var(--mut)}
+a.it:hover .t{color:var(--ac)}
+
+.ag{display:grid;grid-template-columns:repeat(auto-fill,minmax(310px,1fr));gap:14px}
+.ac{display:flex;gap:14px;border:1px solid var(--line);border-radius:var(--r);padding:12px;align-items:center;transition:border-color .15s,transform .15s}
+a.ac:hover{border-color:var(--ac);transform:translateY(-1px)}
+.ac img,.ac .th0{width:104px;height:60px;border-radius:8px;object-fit:cover;background:var(--soft);flex:none;display:block}
+.ac .who{font-size:12px;font-weight:600;color:var(--ac);letter-spacing:.02em}
+.ac .tt{font-size:13.5px;line-height:1.3;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;margin:2px 0}
+.ac .gr{font-size:13px}
 
 /* por artista */
-.art{display:grid;grid-template-columns:minmax(150px,1.1fr) repeat(3,minmax(0,1fr));gap:12px;align-items:center;padding:12px 6px;border-top:1px solid var(--bd)}
-.art.hd{border-top:none;color:var(--mut);font-size:12.5px;padding-top:0}
-.art .nm{display:flex;align-items:center;gap:12px;font-weight:600}
-.av{width:44px;height:44px;border-radius:50%;background:var(--soft);display:grid;place-items:center;font-weight:700;font-size:13px;overflow:hidden;position:relative;flex:none}
+.art{display:grid;grid-template-columns:minmax(170px,1.1fr) repeat(3,minmax(0,1fr));gap:16px;align-items:center;padding:14px 0;border-top:1px solid var(--line)}
+.art.hd{border-top:none;color:var(--mut);font-size:12px;letter-spacing:.09em;text-transform:uppercase;padding:0 0 8px}
+.art .nm{display:flex;align-items:center;gap:14px;font-weight:500;font-size:15px}
+.av{width:42px;height:42px;border-radius:50%;background:var(--soft);display:grid;place-items:center;font-weight:600;font-size:12.5px;overflow:hidden;position:relative;flex:none}
 .av img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
-.cell{font-size:13.5px;text-decoration:none;display:block;border-radius:14px;padding:6px 10px}
-a.cell:hover{background:color-mix(in srgb,var(--ac3) 35%,var(--soft))}
-.cell b{font-size:17px;font-weight:600;letter-spacing:-.01em}
+.cell{display:block;padding:6px 10px;margin:-6px -10px;border-radius:10px;transition:background .15s}
+a.cell:hover{background:var(--soft)}
+.cell b{font:400 22px var(--f);letter-spacing:-.025em}
 .cell .s{display:block;color:var(--mut);font-size:12px}
-.empty{color:var(--mut)}
-@media(max-width:1100px){.areas{grid-template-columns:1fr}.row2{grid-template-columns:1fr}}
-@media(max-width:760px){
-  .art{grid-template-columns:1fr 1fr}.art.hd{display:none}.art .nm{grid-column:1/-1}
-  .vr{grid-template-columns:22px 70px minmax(0,1fr)}.vr .v{grid-column:2/-1;text-align:left}
+
+/* entrada suave */
+@media(prefers-reduced-motion:no-preference){
+  .pg>*{animation:in .5s ease both}
+  .pg>*:nth-child(2){animation-delay:.05s}.pg>*:nth-child(3){animation-delay:.1s}.pg>*:nth-child(4){animation-delay:.15s}.pg>*:nth-child(5){animation-delay:.2s}.pg>*:nth-child(6){animation-delay:.25s}
+  @keyframes in{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
 }
-@media(max-width:640px){.shell{border-radius:28px;padding:12px 12px 22px}.topbar{border-radius:30px}h1{font-size:30px}}
+@media(max-width:1100px){
+  .areas{grid-template-columns:1fr;gap:34px}.ar,.ar:first-child{border-left:none;padding:0}
+  .row2{grid-template-columns:1fr;gap:40px}
+}
+@media(max-width:760px){
+  .side{top:auto;right:0;width:auto;height:64px;flex-direction:row;border-right:none;border-top:1px solid var(--line);padding:6px 10px;gap:0;justify-content:space-around}
+  .side .lg{display:none}.side nav{flex-direction:row;padding:0;justify-content:space-around}.ni{flex:1}
+  .pg{margin-left:0;padding:22px 18px 100px}
+  h1{font-size:34px}.kp b{font-size:44px}
+  .art{grid-template-columns:1fr 1fr}.art.hd{display:none}.art .nm{grid-column:1/-1}
+  .vr{grid-template-columns:20px 80px minmax(0,1fr)}.vr .v{grid-column:2/-1;text-align:left}.vr img,.vr .th0{width:80px;height:46px}
+}
 </style>
 </head>
 <body>
-<div class="shell">
-<header class="topbar">
-  <div class="brand"><div class="logo">GBA</div><span>YOUTUBE ARTISTAS GBA MUSIC</span></div>
-  <nav class="navchips"><span class="nchip on">Início</span><a class="nchip" href="index.html">Dashboard</a><a class="nchip" href="acompanhamento.html">Acompanhamento</a><a class="nchip" href="social.html">Redes sociais</a></nav>
-  <span class="spacer"></span>
-  <span class="upd" id="upd"></span>
-</header>
-<main id="app">Carregando…</main>
-</div>
+<aside class="side">
+  <a class="lg" href="inicio.html" title="GBA Music">GBA</a>
+  <nav>
+    <span class="ni on" title="Início"><svg viewBox="0 0 24 24"><path d="m3 11 9-8 9 8"/><path d="M5 10v10h14V10"/></svg><small>Início</small></span>
+    <a class="ni" href="index.html" title="Metas e vídeos (Dashboard)"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4.5"/><circle cx="12" cy="12" r=".8"/></svg><small>Metas</small></a>
+    <a class="ni" href="acompanhamento.html" title="Acompanhamento de projetos"><svg viewBox="0 0 24 24"><rect x="4" y="12" width="4" height="8" rx="1"/><rect x="10" y="4" width="4" height="16" rx="1"/><rect x="16" y="9" width="4" height="11" rx="1"/></svg><small>Projetos</small></a>
+    <a class="ni" href="social.html" title="Redes sociais"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M16 12v1.5a2.5 2.5 0 0 0 5 0V12a9 9 0 1 0-3.5 7.1"/></svg><small>Redes</small></a>
+  </nav>
+</aside>
+<main class="pg" id="app">Carregando…</main>
 
 <script>
 const $=(s,r=document)=>r.querySelector(s);
@@ -130,19 +154,28 @@ const brDay=iso=>new Date(iso).toLocaleDateString('en-CA',{timeZone:BRT});
 const T12=s=>Date.parse(s+'T12:00:00Z');
 const addDays=(s,n)=>new Date(T12(s)+n*864e5).toISOString().slice(0,10);
 const diffDays=(a,b)=>Math.round((T12(b)-T12(a))/864e5);
-const dmy=s=>s.split('-').reverse().join('/');
 const slug=n=>String(n||'').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
 const initials=c=>c?c.split(/\s+/).slice(0,2).map(w=>w[0]).join('').toUpperCase():'GBA';
 const inDays=n=>n===0?'hoje':n===1?'amanhã':'em '+n+' dias';
 const ago=ms=>{const h=ms/36e5;return h<1?Math.round(ms/6e4)+' min':h<48?Math.round(h)+' h':Math.round(h/24)+' dias'};
+const cu=(v,f='fmt')=>`<b data-n="${v}" data-f="${f}">${f==='N'?N(v):fmt(v)}</b>`;   // número que "conta" ao carregar
 
 let D,Hy,PR,S,SH,byId=new Map();
 const getJ=async u=>{try{const r=await fetch(u+'?t='+Date.now());return r.ok?await r.json():null}catch{return null}};
 (async()=>{
   [D,Hy,PR,S,SH]=await Promise.all([getJ('data.json'),getJ('history.json'),getJ('projects.json'),getJ('social.json'),getJ('social-history.json')]);
   (D?.videos||[]).forEach(v=>byId.set(v.id,v));
-  try{render()}catch(e){$('#app').innerHTML='<div class="card">Não consegui montar a página: '+esc(e.message)+'</div>'}
+  try{render();countUp()}catch(e){$('#app').innerHTML='<p>Não consegui montar a página: '+esc(e.message)+'</p>'}
 })();
+function countUp(){
+  if(matchMedia('(prefers-reduced-motion: reduce)').matches)return;
+  document.querySelectorAll('[data-n]').forEach(el=>{
+    const to=+el.dataset.n,f=el.dataset.f==='N'?N:fmt,t0=performance.now(),dur=700;
+    if(!isFinite(to)||to<=0)return;
+    const step=t=>{const k=Math.min(1,(t-t0)/dur),e=1-Math.pow(1-k,3);el.textContent=f(to*e);if(k<1)requestAnimationFrame(step);else el.textContent=f(to)};
+    requestAnimationFrame(step);
+  });
+}
 
 /* ---------- YouTube: crescimento de views ---------- */
 function growth(id){
@@ -162,6 +195,7 @@ function growth(id){
 }
 const pace=g=>g.d/Math.max(1,g.days)*7;
 const thumb=id=>`https://i.ytimg.com/vi/${id}/mqdefault.jpg`;
+const when=g=>g.est?'ritmo de 7 dias':g.days<7?'em '+g.days+(g.days===1?' dia':' dias'):'em 7 dias';
 
 /* ---------- Redes: saldo diário de seguidores ---------- */
 function netMap(a){
@@ -195,21 +229,19 @@ function attention(){
   return `<div class="att ${out.length?'has':''} ${bad?'bad':''}"><div class="hd"><span class="dot"></span>${out.length?`Precisa de atenção (${out.length})`:'Tudo em dia'}</div>${out.map(x=>{const tag=x.href?'a':'div';return `<${tag} class="ai ${x.bad?'bad':''}" ${x.href?`href="${x.href}"`:''}><i></i><span>${x.t}</span>${x.go?`<span class="go">${x.go} →</span>`:''}</${tag}>`}).join('')}</div>`;
 }
 
-/* ---------- Bloco: Metas ---------- */
+/* ---------- Áreas ---------- */
 function blockMetas(){
   const vids=D?.videos||[];
-  if(!vids.length)return `<div class="blk"><div class="bh"><span class="pf">Metas</span></div><p class="empty">Sem dados do YouTube ainda.</p></div>`;
+  if(!vids.length)return `<div class="ar"><div class="ah"><span>Metas · YouTube</span></div><p class="empty">Sem dados do YouTube ainda.</p></div>`;
   let posted={};try{posted=JSON.parse(localStorage.getItem('posted')||'{}')}catch{}
   const cut=Date.now()-14*864e5;
   const hits=vids.filter(v=>v.reachedAt&&Date.parse(v.reachedAt)>=cut);
   const pend=hits.filter(v=>!posted[v.id+':'+v.lastMilestone]);
   const near=vids.filter(v=>v.next&&v.progress>=D.nearRatio).sort((a,b)=>b.progress-a.progress);
-  return `<a class="blk" href="index.html"><div class="bh"><span class="pf">Metas · YouTube</span><span class="go">Abrir →</span></div>
-    <div class="kp"><div><span>Metas batidas (14 dias)</span><b>${hits.length}</b></div><div><span>Posts pendentes</span><b>${pend.length}</b></div><div><span>Perto da meta</span><b>${near.length}</b></div><div><span>Vídeos acompanhados</span><b>${vids.length}</b></div></div>
-    <p class="sub">Mais perto de bater</p><div class="li">${near.slice(0,3).map(v=>`<div><span>${esc(v.title)}</span><span class="r">${Math.floor(v.progress*100)}% · faltam ${fmt(v.remaining)}</span></div>`).join('')||'<div><span class="empty">Nenhum vídeo perto da meta agora.</span></div>'}</div></a>`;
+  return `<a class="ar" href="index.html"><div class="ah"><span>Metas · YouTube</span><i>→</i></div>
+    <div class="kp"><div>${cu(hits.length,'N')}<span>metas batidas em 14 dias</span></div><div>${cu(pend.length,'N')}<span>posts pendentes</span></div><div>${cu(near.length,'N')}<span>perto da meta</span></div><div>${cu(vids.length,'N')}<span>vídeos acompanhados</span></div></div>
+    <div class="li"><div class="t">Mais perto de bater</div>${near.slice(0,3).map(v=>`<div class="i"><span>${esc(v.title)}</span><span class="r">${Math.floor(v.progress*100)}% · faltam ${fmt(v.remaining)}</span></div>`).join('')||'<div class="i"><span class="empty">Nenhum vídeo perto da meta agora.</span></div>'}</div></a>`;
 }
-
-/* ---------- Bloco: Projetos ---------- */
 function projInfo(p){
   const today=brDay(new Date()),ds=p.videos.map(x=>{const v=byId.get(x.id);return v?brDay(v.publishedAt):x.d}).filter(d=>d&&d>'2000');
   const marcos=ds.length?MARCOS.map(n=>({n,date:ds.map(d=>addDays(d,n)).sort().pop()})):[];
@@ -219,46 +251,41 @@ function projInfo(p){
 }
 function blockProjetos(){
   const ps=(PR?.projects||[]).map(projInfo),act=ps.filter(x=>x.next).sort((a,b)=>a.next.date<b.next.date?-1:1),today=brDay(new Date());
-  if(!ps.length)return `<a class="blk" href="acompanhamento.html"><div class="bh"><span class="pf">Projetos</span><span class="go">Abrir →</span></div><p class="empty">Nenhum projeto cadastrado ainda.</p></a>`;
+  if(!ps.length)return `<a class="ar" href="acompanhamento.html"><div class="ah"><span>Projetos</span><i>→</i></div><p class="empty">Nenhum projeto cadastrado ainda.</p></a>`;
   const week=act.filter(x=>diffDays(today,x.next.date)<=7).length;
-  return `<a class="blk" href="acompanhamento.html"><div class="bh"><span class="pf">Projetos</span><span class="go">Abrir →</span></div>
-    <div class="kp"><div><span>Em andamento</span><b>${act.length}</b></div><div><span>Marcos nesta semana</span><b>${week}</b></div></div>
-    <p class="sub">Próximos marcos</p><div class="li">${act.slice(0,3).map(x=>`<div><span>${esc(x.p.name)}</span><span class="r">${x.next.n} dias · ${inDays(diffDays(today,x.next.date))}</span></div>`).join('')||'<div><span class="empty">Nenhum marco pela frente.</span></div>'}</div></a>`;
+  return `<a class="ar" href="acompanhamento.html"><div class="ah"><span>Projetos</span><i>→</i></div>
+    <div class="kp"><div>${cu(act.length,'N')}<span>em andamento</span></div><div>${cu(week,'N')}<span>marcos nesta semana</span></div></div>
+    <div class="li"><div class="t">Próximos marcos</div>${act.slice(0,3).map(x=>`<div class="i"><span>${esc(x.p.name)}</span><span class="r">${x.next.n} dias · ${inDays(diffDays(today,x.next.date))}</span></div>`).join('')||'<div class="i"><span class="empty">Nenhum marco pela frente.</span></div>'}</div></a>`;
 }
-
-/* ---------- Bloco: Redes ---------- */
 function blockRedes(){
   const acc=S?.accounts||[];
-  if(!acc.length)return `<a class="blk" href="social.html"><div class="bh"><span class="pf">Redes sociais</span><span class="go">Abrir →</span></div><p class="empty">Ainda sem dados das redes.</p></a>`;
+  if(!acc.length)return `<a class="ar" href="social.html"><div class="ah"><span>Redes sociais</span><i>→</i></div><p class="empty">Ainda sem dados das redes.</p></a>`;
   const tot=pl=>acc.filter(a=>a.platform===pl).reduce((s,a)=>s+(a.followers||0),0),has=pl=>acc.some(a=>a.platform===pl);
   const sum=pl=>{const r=acc.filter(a=>a.platform===pl).map(d30).filter(Boolean);return r.length?r.reduce((s,x)=>s+x.n,0):null};
-  const kp=pl=>has(pl)?`<div><span>${PN[pl]}</span><b>${fmt(tot(pl))}</b><span class="${sum(pl)>=0?'up':'down'}">${sum(pl)==null?'':sg(sum(pl))+' em 30 dias'}</span></div>`:'';
+  const kp=pl=>has(pl)?`<div>${cu(tot(pl))}<span>${PN[pl]} ${sum(pl)==null?'':`· <em class="${sum(pl)>=0?'up':'down'}">${sg(sum(pl))} em 30 dias</em>`}</span></div>`:'';
   const rows=acc.map(a=>({a,d:d30(a)})).filter(x=>x.d).sort((x,y)=>y.d.n-x.d.n);
-  return `<a class="blk" href="social.html"><div class="bh"><span class="pf">Redes sociais</span><span class="go">Abrir →</span></div>
+  return `<a class="ar" href="social.html"><div class="ah"><span>Redes sociais</span><i>→</i></div>
     <div class="kp">${kp('instagram')}${kp('tiktok')}</div>
-    <p class="sub">Seguidores em 30 dias</p><div class="li">${rows.slice(0,3).map(x=>`<div><span>${esc(x.a.name)} · ${PN[x.a.platform]}</span><span class="r ${x.d.n>=0?'up':'down'}">${sg(x.d.n)}</span></div>`).join('')||'<div><span class="empty">O saldo aparece depois do segundo dia de coleta.</span></div>'}</div></a>`;
+    <div class="li"><div class="t">Seguidores em 30 dias</div>${rows.slice(0,3).map(x=>`<div class="i"><span>${esc(x.a.name)} · ${PN[x.a.platform]}</span><span class="r ${x.d.n>=0?'up':'down'}">${sg(x.d.n)}</span></div>`).join('')||'<div class="i"><span class="empty">O saldo aparece depois do segundo dia de coleta.</span></div>'}</div></a>`;
 }
 
 /* ---------- Destaques da semana ---------- */
 function vidRow(x,i){
   const g=x.g,v=x.v;
-  return `<a class="vr" href="https://youtu.be/${esc(v.id)}" target="_blank" rel="noopener"><span class="rk">${i+1}</span><img loading="lazy" src="${thumb(v.id)}" alt="" onerror="this.outerHTML='<span class=th0></span>'"><span style="min-width:0"><div class="cp">${esc(v.title)}</div><div class="mt">${esc(v.channel)} · ${fmt(g.total)} views no total</div></span><span class="v"><b>+${fmt(g.d)}</b><span>${g.est?'ritmo de 7 dias':g.days<7?'em '+g.days+(g.days===1?' dia':' dias'):'em 7 dias'}</span></span></a>`;
+  return `<a class="vr" href="https://youtu.be/${esc(v.id)}" target="_blank" rel="noopener"><span class="rk">${i+1}</span><img loading="lazy" src="${thumb(v.id)}" alt="" onerror="this.outerHTML='<span class=th0></span>'"><span style="min-width:0"><div class="cp">${esc(v.title)}</div><div class="mt">${esc(v.channel)} · ${fmt(g.total)} views no total</div></span><span class="v"><b>+${fmt(g.d)}</b><span>${when(g)}</span></span></a>`;
 }
 function weekVideos(){
   const all=(D?.videos||[]).map(v=>({v,g:growth(v.id)})).filter(x=>x.g&&x.g.d>0);
   const top=[...all].sort((a,b)=>pace(b.g)-pace(a.g)).slice(0,6);
-  // um destaque por artista (canal)
   const by=new Map();for(const x of all){const k=x.v.channel;if(!by.has(k)||pace(x.g)>pace(by.get(k).g))by.set(k,x)}
   const groups=[...by.entries()];
-  // campanhas: vídeos dos projetos do “artista” virtual
   const ids=new Set((PR?.projects||[]).filter(p=>p.artist===CAMPAIGNS).flatMap(p=>p.videos.map(x=>x.id)));
   const camp=all.filter(x=>ids.has(x.v.id)).sort((a,b)=>pace(b.g)-pace(a.g))[0];
   if(camp)groups.push([CAMPAIGNS,camp]);
   const chans=[...new Set((D?.videos||[]).map(v=>v.channel))].sort((a,b)=>a.localeCompare(b,'pt-BR'));
   const order=[...chans,CAMPAIGNS];
   groups.sort((a,b)=>order.indexOf(a[0])-order.indexOf(b[0]));
-  const without=chans.filter(c=>!by.has(c));
-  return {top,groups,without};
+  return {top,groups,without:chans.filter(c=>!by.has(c))};
 }
 function bestPost(){
   const t7=Date.now()-7*864e5,all=[];
@@ -266,8 +293,7 @@ function bestPost(){
   return all.sort((x,y)=>y.p.views-x.p.views)[0]||null;
 }
 function bestLaunch(){
-  const today=brDay(new Date()),c=(PR?.projects||[]).map(projInfo).filter(x=>x.days>=0&&x.days<=30&&x.total>0).sort((a,b)=>b.total-a.total)[0];
-  return c||null;
+  return (PR?.projects||[]).map(projInfo).filter(x=>x.days>=0&&x.days<=30&&x.total>0).sort((a,b)=>b.total-a.total)[0]||null;
 }
 function highlights(){
   const {top,groups,without}=weekVideos();
@@ -280,48 +306,47 @@ function highlights(){
   ].join('');
   return `
   <div class="row2">
-    <div class="card"><h3>Vídeos que mais cresceram na semana</h3>${top.length?`<div class="vl">${top.map(vidRow).join('')}</div>`:'<p class="empty">O crescimento aparece depois de dois dias de coleta do robô.</p>'}<p class="note">Views ganhas nos últimos 7 dias (ou nos dias já medidos, quando o vídeo é novo).</p></div>
-    <div class="card"><h3>Mais destaques</h3><div class="mini">${mini||'<p class="empty">Sem destaques ainda.</p>'}</div></div>
+    <div><p class="lab">Vídeos que mais cresceram</p>${top.length?`<div class="vl">${top.map(vidRow).join('')}</div>`:'<p class="empty">O crescimento aparece depois de dois dias de coleta do robô.</p>'}<p class="note">Views ganhas nos últimos 7 dias (ou nos dias já medidos, quando o vídeo é novo).</p></div>
+    <div><p class="lab">Mais destaques</p><div class="mini">${mini||'<p class="empty">Sem destaques ainda.</p>'}</div></div>
   </div>
-  <div class="sechd" style="margin-top:26px"><h2>Destaque de cada artista</h2><p>O vídeo que mais cresceu na semana em cada canal.</p></div>
-  <div class="ag">${groups.map(([name,x])=>`<a class="ac" href="https://youtu.be/${esc(x.v.id)}" target="_blank" rel="noopener"><img loading="lazy" src="${thumb(x.v.id)}" alt="" onerror="this.outerHTML='<span class=th0></span>'"><span style="min-width:0"><div class="who">${esc(name)}</div><div class="tt">${esc(x.v.title)}</div><div class="gr"><span class="up">+${fmt(x.g.d)}</span> <span class="mut">${x.g.est?'ritmo de 7 dias':x.g.days<7?'em '+x.g.days+' dias':'em 7 dias'}</span></div></span></a>`).join('')}${without.map(c=>`<div class="ac"><span class="th0"></span><span><div class="who">${esc(c)}</div><div class="tt mut">Sem crescimento medido nesta semana.</div></span></div>`).join('')}</div>`;
+  <div class="sec" style="margin-top:44px"><p class="lab">Destaque de cada artista</p>
+  <div class="ag">${groups.map(([name,x])=>`<a class="ac" href="https://youtu.be/${esc(x.v.id)}" target="_blank" rel="noopener"><img loading="lazy" src="${thumb(x.v.id)}" alt="" onerror="this.outerHTML='<span class=th0></span>'"><span style="min-width:0"><div class="who">${esc(name)}</div><div class="tt">${esc(x.v.title)}</div><div class="gr"><span class="up">+${fmt(x.g.d)}</span> <span class="mut">${when(x.g)}</span></div></span></a>`).join('')}${without.map(c=>`<div class="ac"><span class="th0"></span><span><div class="who">${esc(c)}</div><div class="tt mut">Sem crescimento medido nesta semana.</div></span></div>`).join('')}</div></div>`;
 }
 
-/* ---------- Visão por artista ---------- */
+/* ---------- Por artista ---------- */
 function artists(){
   const rows=new Map();
-  const get=(name)=>{const k=slug(name);if(!rows.has(k))rows.set(k,{k,name,yt:null,ig:null,tt:null,avatar:null});return rows.get(k)};
+  const get=name=>{const k=slug(name);if(!rows.has(k))rows.set(k,{k,name,yt:null,ig:null,tt:null,avatar:null});return rows.get(k)};
   for(const c of new Set((D?.videos||[]).map(v=>v.channel))){
     const r=get(c),vs=D.videos.filter(v=>v.channel===c),gs=vs.map(v=>growth(v.id)).filter(Boolean);
-    r.yt={views:vs.reduce((s,v)=>s+(v.views||0),0),week:gs.length?gs.reduce((s,g)=>s+g.d,0):null,near:vs.filter(v=>v.next&&v.progress>=D.nearRatio).length,n:vs.length,chan:c};
+    r.yt={views:vs.reduce((s,v)=>s+(v.views||0),0),week:gs.length?gs.reduce((s,g)=>s+g.d,0):null,near:vs.filter(v=>v.next&&v.progress>=D.nearRatio).length,chan:c};
     r.avatar=D.avatars?.[c]||r.avatar;
   }
   for(const a of (S?.accounts||[])){const r=get(a.name);r[a.platform==='tiktok'?'tt':'ig']=a;r.avatar=r.avatar||a.avatar}
   return [...rows.values()].sort((a,b)=>a.name.localeCompare(b.name,'pt-BR'));
 }
-function socCell(a,pl,r){
+function socCell(a,pl){
   if(!a)return `<div class="cell"><span class="s">${PN[pl]}</span><span class="empty">—</span></div>`;
   const d=d30(a);
   return `<a class="cell" href="social.html#${slug(a.name)}/${pl}"><span class="s">${PN[pl]}</span><b>${fmt(a.followers)}</b>${d?` <span class="${d.n>=0?'up':'down'}" style="font-size:12.5px">${sg(d.n)}</span>`:''}</a>`;
 }
 function byArtist(){
   const rs=artists();
-  if(!rs.length)return '<div class="card"><p class="empty">Sem artistas ainda.</p></div>';
-  return `<div class="card" style="padding:18px 20px"><div class="art hd"><span>Artista</span><span>YouTube</span><span>Instagram</span><span>TikTok</span></div>${rs.map(r=>`<div class="art"><div class="nm"><span class="av">${esc(initials(r.name))}${r.avatar?`<img src="${esc(r.avatar)}" alt="" referrerpolicy="no-referrer" onerror="this.remove()">`:''}</span>${esc(r.name)}</div>
-    ${r.yt?`<a class="cell" href="index.html#${encodeURIComponent(r.yt.chan)}"><span class="s">YouTube</span><b>${fmt(r.yt.views)}</b> <span style="font-size:12.5px">views</span><span class="s">${r.yt.week!=null?`<span class="${r.yt.week>=0?'up':'down'}">${sg(r.yt.week)}</span> na semana`:'sem crescimento medido'}${r.yt.near?` · ${r.yt.near} perto da meta`:''}</span></a>`:`<div class="cell"><span class="s">YouTube</span><span class="empty">—</span></div>`}
-    ${socCell(r.ig,'instagram')}${socCell(r.tt,'tiktok')}</div>`).join('')}</div>`;
+  if(!rs.length)return '<p class="empty">Sem artistas ainda.</p>';
+  return `<div class="art hd"><span>Artista</span><span>YouTube</span><span>Instagram</span><span>TikTok</span></div>${rs.map(r=>`<div class="art"><div class="nm"><span class="av">${esc(initials(r.name))}${r.avatar?`<img src="${esc(r.avatar)}" alt="" referrerpolicy="no-referrer" onerror="this.remove()">`:''}</span>${esc(r.name)}</div>
+    ${r.yt?`<a class="cell" href="index.html#${encodeURIComponent(r.yt.chan)}"><span class="s">YouTube</span><b>${fmt(r.yt.views)}</b> <span class="mut" style="font-size:12.5px">views</span><span class="s">${r.yt.week!=null?`<span class="${r.yt.week>=0?'up':'down'}">${sg(r.yt.week)}</span> na semana`:'sem crescimento medido'}${r.yt.near?` · ${r.yt.near} perto da meta`:''}</span></a>`:`<div class="cell"><span class="s">YouTube</span><span class="empty">—</span></div>`}
+    ${socCell(r.ig,'instagram')}${socCell(r.tt,'tiktok')}</div>`).join('')}`;
 }
 
 function render(){
-  const now=new Date(),stamp=[D?.updatedAt,S?.updatedAt].filter(Boolean).map(Date.parse).sort((a,b)=>b-a)[0];
-  if(stamp)$('#upd').textContent='Atualizado em '+new Date(stamp).toLocaleString('pt-BR',{timeZone:BRT,day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'});
-  $('#app').innerHTML=`<h1>Visão <b>geral</b></h1><p class="lead">${now.toLocaleDateString('pt-BR',{timeZone:BRT,weekday:'long',day:'2-digit',month:'long'})}. O que precisa de você agora, o que aconteceu na semana e como está cada artista.</p>
+  const stamp=[D?.updatedAt,S?.updatedAt].filter(Boolean).map(Date.parse).sort((a,b)=>b-a)[0];
+  const upd=stamp?'Atualizado em '+new Date(stamp).toLocaleString('pt-BR',{timeZone:BRT,day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'}):'';
+  $('#app').innerHTML=`
+  <header class="ph"><div><div class="ey">${new Date().toLocaleDateString('pt-BR',{timeZone:BRT,weekday:'long',day:'2-digit',month:'long'})}</div><h1>Visão geral</h1></div><span class="upd">${upd}</span></header>
   ${attention()}
   <div class="areas">${blockMetas()}${blockProjetos()}${blockRedes()}</div>
-  <div class="sechd"><h2>Destaques da semana</h2><p>O que mais cresceu nos últimos 7 dias.</p></div>
-  ${highlights()}
-  <div class="sechd"><h2>Por artista</h2><p>YouTube, Instagram e TikTok lado a lado. Clique em uma rede para ver o detalhe.</p></div>
-  ${byArtist()}`;
+  <section class="sec"><h2>Destaques da semana</h2><p>O que mais cresceu nos últimos 7 dias.</p>${highlights()}</section>
+  <section class="sec"><h2>Por artista</h2><p>YouTube, Instagram e TikTok lado a lado. Clique em uma rede para ver o detalhe.</p>${byArtist()}</section>`;
 }
 </script>
 </body>
