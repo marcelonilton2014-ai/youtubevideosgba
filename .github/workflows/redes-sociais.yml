@@ -30,6 +30,7 @@ jobs:
         run: node src/social.cjs
         env:
           SOCIAL_ACCOUNTS: ${{ secrets.SOCIAL_ACCOUNTS }}
+          SOCIAL_ACCOUNTS_EXTRA: ${{ secrets.SOCIAL_ACCOUNTS_EXTRA }}
           TIKTOK_CODE: ${{ inputs.tiktok_code }}
 
       - name: Salvar no repositório
@@ -37,7 +38,7 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add docs/social.json docs/social-history.json
-          git add state/tiktok-*.enc 2>/dev/null || true
+          git add state/tiktok-*.enc state/ig-*.enc 2>/dev/null || true
           if git diff --cached --quiet; then echo "Sem mudanças"; exit 0; fi
           git commit -m "Atualiza redes sociais"
           for i in 1 2 3; do
