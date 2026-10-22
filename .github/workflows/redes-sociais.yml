@@ -4,6 +4,11 @@ on:
   schedule:
     - cron: '17 */3 * * *'
   workflow_dispatch:
+    inputs:
+      tiktok_code:
+        description: 'Código do TikTok (só na primeira conexão; gere em tiktok-conectar.html)'
+        required: false
+        default: ''
 
 concurrency:
   group: redes-sociais
@@ -21,16 +26,18 @@ jobs:
         with:
           node-version: 20
 
-      - name: Buscar dados do Instagram
+      - name: Buscar dados (Instagram e TikTok)
         run: node src/social.cjs
         env:
           SOCIAL_ACCOUNTS: ${{ secrets.SOCIAL_ACCOUNTS }}
+          TIKTOK_CODE: ${{ inputs.tiktok_code }}
 
       - name: Salvar no repositório
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add docs/social.json docs/social-history.json
+          git add state/tiktok-*.enc 2>/dev/null || true
           if git diff --cached --quiet; then echo "Sem mudanças"; exit 0; fi
           git commit -m "Atualiza redes sociais"
           for i in 1 2 3; do
