@@ -126,6 +126,53 @@ dialog::backdrop{background:rgba(0,0,0,.45)}
 .pager select{background:var(--soft);color:var(--tx);border:none;border-radius:99px;padding:7px 12px;font:inherit;font-size:14px}
 .per{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:0 4px 14px}
 .per input[type=date]{border:1px solid var(--bd);background:var(--pn);color:var(--tx);border-radius:99px;padding:7px 12px;font:inherit;font-size:14px;margin-left:4px}
+a.pill{text-decoration:none;display:inline-block}
+.back{display:inline-block;text-decoration:none;color:var(--mut);font-size:14px;margin:0 0 12px 4px}
+.back:hover{color:var(--tx)}
+.prof{margin-bottom:30px}
+.phead{display:flex;align-items:center;gap:14px;margin:0 4px 14px}
+.phead h2{font:500 26px var(--f);margin:0;letter-spacing:-.02em}
+.pgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(380px,1fr));gap:14px}
+.blk{display:block;background:var(--pn);border-radius:28px;padding:22px 24px;box-shadow:var(--sh);text-decoration:none;color:var(--tx);transition:transform .15s,outline-color .15s;outline:2px solid transparent}
+a.blk:hover{transform:translateY(-2px);outline-color:var(--ac3)}
+.blk.off{opacity:.55}
+.bh{display:flex;align-items:center;gap:10px;margin-bottom:16px;flex-wrap:wrap}
+.bh .pf{background:var(--ink);color:var(--inktx);border-radius:99px;padding:5px 14px;font-weight:600;font-size:13.5px}
+.bh .go{margin-left:auto;color:var(--ac);font-weight:600;font-size:14px}
+.bbig{display:flex;align-items:flex-end;justify-content:space-between;gap:12px}
+.bbig b{font:400 44px/1 var(--f);letter-spacing:-.03em;display:block}
+.bbig .d{font-size:13.5px;margin-top:6px;color:var(--mut)}
+.bm{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:16px}
+.bm div{background:var(--soft);border-radius:14px;padding:9px 11px}
+.bm span{display:block;font-size:11.5px;color:var(--mut)}.bm b{font-size:17px;font-weight:600}
+.bbest{margin:12px 0 0;font-size:13px;color:var(--mut)}
+.row{display:grid;gap:14px;margin-bottom:14px}
+.row.a{grid-template-columns:1.5fr 1fr}.row.b{grid-template-columns:1fr 1fr}.row.c{grid-template-columns:1.25fr 1fr}
+.sechd{margin:34px 4px 14px}
+.sechd h2{font:500 23px var(--f);margin:0;letter-spacing:-.02em}
+.sechd p{margin:2px 0 0;color:var(--mut);font-size:14px}
+.hb .hr{display:grid;grid-template-columns:minmax(110px,170px) 1fr 78px;gap:10px;align-items:center;margin:10px 0;font-size:13.5px}
+.hb .hl span{display:block;font-size:11.5px;color:var(--mut)}
+.hb .ht{height:12px;background:var(--soft);border-radius:99px;overflow:hidden}
+.hb .ht i{display:block;height:100%;border-radius:99px}
+.hb b{text-align:right;font-weight:600}
+.tbl{width:100%;border-collapse:collapse;font-size:13.5px}
+.tbl th{font-weight:500;color:var(--mut);text-align:right;padding:6px 8px;font-size:12px}
+.tbl td{text-align:right;padding:9px 8px;border-top:1px solid var(--bd)}
+.tbl th:first-child,.tbl td:first-child{text-align:left}
+.top{display:flex;flex-direction:column;gap:8px}
+.tr{display:grid;grid-template-columns:26px 52px minmax(0,1fr) auto;gap:12px;align-items:center;background:var(--soft);border:none;border-radius:18px;padding:8px 14px 8px 12px;text-align:left;color:var(--tx);font:inherit;width:100%;cursor:pointer}
+.tr:hover{background:color-mix(in srgb,var(--ac3) 35%,var(--soft))}
+.tr .rk{font-weight:700;color:var(--mut)}
+.tr img,.tr .th0{width:52px;height:52px;border-radius:12px;object-fit:cover;background:var(--pn);display:block}
+.tr .cp{overflow:hidden;white-space:nowrap;text-overflow:ellipsis;font-size:14px}
+.tr .mt{font-size:12px;color:var(--mut)}
+.tr .vl{text-align:right}.tr .vl b{font-size:18px;letter-spacing:-.01em}
+.tr .vl span{display:block;font-size:11.5px;color:var(--ok);font-weight:600}
+.ins{background:color-mix(in srgb,var(--ac3) 28%,var(--pn));border-radius:16px;padding:10px 14px;font-size:13.5px;margin:12px 0 0}
+.how{margin:0;padding-left:18px;font-size:13.5px;color:var(--mut)}.how li{margin:6px 0}.how b{color:var(--tx)}
+@media(max-width:1100px){.row.a,.row.b,.row.c{grid-template-columns:1fr}}
+@media(max-width:640px){.pgrid{grid-template-columns:1fr}.hb .hr{grid-template-columns:100px 1fr 70px}}
 @media(max-width:1100px){.stats{grid-template-columns:repeat(2,1fr)}.charts{grid-template-columns:1fr}}
 @media(max-width:640px){.shell{border-radius:28px;padding:12px 12px 22px}.topbar{border-radius:30px}h1{font-size:30px}}
 </style>
@@ -169,9 +216,8 @@ async function load(){
     S=a;H=b;
   }catch{S=null}
   if(!S||!S.accounts?.length){empty();return}
-  plat=S.accounts.some(x=>x.platform==='instagram')?'instagram':S.accounts[0].platform;cur=accs()[0].key;
   $('#upd').textContent='Atualizado em '+new Date(S.updatedAt).toLocaleString('pt-BR',{timeZone:'America/Sao_Paulo',day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'});
-  render();
+  route();
 }
 
 function empty(){
@@ -282,44 +328,212 @@ function filtered(a){
   return ps.sort((x,y)=>key(y)-key(x));
 }
 
+/* ───────── helpers novos ───────── */
+const avg=x=>x.length?x.reduce((s,v)=>s+v,0)/x.length:null;
+const med=x=>{if(!x.length)return null;const s=[...x].sort((p,q)=>p-q),m=s.length>>1;return s.length%2?s[m]:(s[m-1]+s[m])/2};
+const dkey=iso=>new Date(iso).toLocaleDateString('en-CA',{timeZone:BRT});
+const sg=(n,d=1)=>n==null?'—':(n>=0?'+':'−')+Math.abs(n).toFixed(d).replace('.',',');
+const slug=n=>String(n||'').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
+const PN={instagram:'Instagram',tiktok:'TikTok'};
+function profiles(){const m=new Map();for(const a of S.accounts){const k=slug(a.name);if(!m.has(k))m.set(k,{slug:k,name:a.name,accs:[]});m.get(k).accs.push(a)}return [...m.values()]}
+function avatar(accs,size){const a=accs.find(x=>x.avatar),n=(accs[0].name||'?').slice(0,2).toUpperCase();return `<span class="av" style="width:${size}px;height:${size}px">${esc(n)}${a?`<img src="${esc(a.avatar)}" alt="" referrerpolicy="no-referrer" onerror="this.remove()">`:''}</span>`}
+function hbars(rows){
+  const mx=Math.max(1e-9,...rows.map(r=>Math.abs(r.v)));
+  return '<div class="hb">'+rows.map(r=>`<div class="hr"><div class="hl">${r.l}<span>${r.s||''}</span></div><div class="ht"><i style="width:${Math.max(1.5,Math.abs(r.v)/mx*100)}%;background:${r.v<0?'var(--bad)':(r.c||'var(--ac)')}"></i></div><b>${r.t}</b></div>`).join('')+'</div>';
+}
+function spark(pts,w=150,h=46){
+  if(pts.length<2)return '';
+  let mn=Math.min(...pts),mx=Math.max(...pts);if(mn===mx){mn-=1;mx+=1}
+  const X=i=>2+(w-4)*i/(pts.length-1),Y=v=>3+(h-6)*(1-(v-mn)/(mx-mn));
+  return `<svg viewBox="0 0 ${w} ${h}" style="width:${w}px;height:${h}px;flex:none"><path d="${pts.map((v,i)=>(i?'L':'M')+X(i).toFixed(1)+' '+Y(v).toFixed(1)).join(' ')}" fill="none" stroke="var(--ac)" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"/><circle cx="${X(pts.length-1)}" cy="${Y(pts[pts.length-1])}" r="3.5" fill="var(--ac)"/></svg>`;
+}
+
+/* ───────── roteamento: #perfil/rede ───────── */
+function route(){
+  const [sl,pl]=decodeURIComponent(location.hash.slice(1)).split('/');
+  const pr=profiles().find(x=>x.slug===sl),a=pr&&pr.accs.find(x=>x.platform===pl);
+  f.page=1;f.type='all';f.q='';f.sort='date';topM='views';
+  if(a){plat=pl;cur=a.key;render();window.scrollTo(0,0)}
+  else{home();window.scrollTo(0,0)}
+}
+window.addEventListener('hashchange',()=>{if(S)route()});
+let topM='views';
+
+/* ───────── visão geral: um bloco por rede de cada perfil ───────── */
+function block(pr,pl){
+  const a=pr.accs.find(x=>x.platform===pl);
+  if(!a)return `<div class="blk off"><div class="bh"><span class="pf">${PN[pl]}</span></div><p class="mut" style="margin:0">Ainda não conectado.</p></div>`;
+  const t0=Date.now()-30*864e5,p30=a.posts.filter(p=>Date.parse(p.date)>=t0);
+  const vs=p30.filter(p=>p.views!=null&&!p.legacy).map(p=>p.views);
+  const best=p30.filter(p=>p.views!=null&&!p.legacy).sort((x,y)=>y.views-x.views)[0];
+  const h=H?.accounts?.[a.key]?.followers||{},pts=Object.keys(h).sort().slice(-30).map(d=>h[d]);
+  const d=delta(a,30);
+  return `<a class="blk" href="#${pr.slug}/${pl}">
+    <div class="bh"><span class="pf">${PN[pl]}</span><span class="mut">@${esc(a.username||'')}</span><span class="go">Ver detalhado →</span></div>
+    <div class="bbig"><div><span class="mut" style="font-size:14px">Seguidores</span><b>${fmt(a.followers)}</b><div class="d">${dl(d,'em 30 dias')||'&nbsp;'}</div></div>${spark(pts)}</div>
+    <div class="bm"><div><span>Posts (30 dias)</span><b>${p30.length}</b></div><div><span>Views (30 dias)</span><b>${vs.length?fmt(vs.reduce((s,x)=>s+x,0)):'—'}</b></div><div><span>Views por post</span><b>${vs.length?fmt(Math.round(avg(vs))):'—'}</b></div></div>
+    ${best?`<p class="bbest">Melhor post dos últimos 30 dias: <b style="color:var(--tx)">${fmt(best.views)} views</b> · ${dayStr(best.date)} · ${TYPES[best.type]||''}</p>`:'<p class="bbest">Sem posts nos últimos 30 dias.</p>'}
+    ${a.error?`<p class="bbest" style="color:var(--bad)">Não consegui atualizar agora. Mostrando a última leitura.</p>`:''}
+  </a>`;
+}
+function home(){
+  $('#app').innerHTML=`<h1>Redes <b>sociais</b></h1><p class="lead">Resumo dos últimos 30 dias de cada perfil. Clique em uma rede para ver o detalhado.</p>`+
+  profiles().map(pr=>`<section class="prof"><div class="phead">${avatar(pr.accs,54)}<h2>${esc(pr.name)}</h2></div><div class="pgrid">${['instagram','tiktok'].map(pl=>block(pr,pl)).join('')}</div></section>`).join('');
+}
+
+/* ───────── análises do detalhado ───────── */
+function netMap(a){
+  const m={};
+  for(const [d,n] of (a.gains||[]))m[d]=n;
+  for(const [d,g,l] of (a.flow||[]))m[d]=g-l;
+  for(const [d,n] of histGains(a))if(!(d in m))m[d]=n;
+  return m;
+}
+function netBars(a){
+  const nm=netMap(a),days=Object.keys(nm).filter(inDay);
+  if(days.length<3)return '<p class="mut">Ainda não há dias suficientes de seguidores para comparar. Isto melhora a cada dia que o robô roda.</p>';
+  const posted={};for(const p of a.posts)(posted[dkey(p.date)]??=[]).push(p);
+  const withP=days.filter(d=>posted[d]),noP=days.filter(d=>!posted[d]),m=ds=>avg(ds.map(d=>nm[d]));
+  const row=(l,ds,c)=>ds.length?{l,s:`${ds.length} dia${ds.length>1?'s':''}`,v:m(ds),t:sg(m(ds))+'/dia',c}:null;
+  const rows=[row('Todos os dias',days,'var(--mut)'),row('Dias sem post',noP,'var(--mut)'),row('Dias com post',withP,'var(--ac)')];
+  for(const t of ['reel','foto','carrossel','video','tiktok']){const ds=days.filter(d=>posted[d]?.some(p=>p.type===t));if(ds.length&&a.posts.some(p=>p.type===t)&&(plat==='tiktok'?false:true))rows.push(row('Dia de '+TYPES[t],ds,'var(--ac2)'))}
+  let ins='';
+  if(withP.length>=2&&noP.length>=2){const df=m(withP)-m(noP);ins=`<p class="ins">${df>0?`Nos dias com post a conta ganhou <b>${sg(df)} seguidores por dia a mais</b> que nos dias sem post.`:`Nos dias com post a conta <b>não ganhou mais seguidores</b> que nos dias sem post (${sg(df)}/dia).`}</p>`}
+  return hbars(rows.filter(Boolean))+ins+`<p class="note">Média de seguidores líquidos (ganhos − perdas) por dia, em ${days.length} dias. Isto mostra <b>correlação</b>: as redes não dizem de qual post veio cada seguidor. Poucos dias = indício, não regra.</p>`;
+}
+const METRICS={instagram:[['views','Views'],['reach','Alcance'],['eng','Engajamento'],['shares','Compart.'],['saved','Salvos'],['follows','Seguidores']],tiktok:[['views','Views'],['eng','Engajamento'],['shares','Compart.'],['likes','Curtidas'],['comments','Comentários']]};
+const gm=(p,m)=>m==='eng'?eng(p):p[m];
+function topList(a,psR){
+  const pool=psR.filter(p=>!p.legacy),legN=psR.length-pool.length;
+  const vals=pool.map(p=>gm(p,topM)).filter(x=>x!=null),md=med(vals);
+  const top=pool.filter(p=>gm(p,topM)!=null).sort((x,y)=>gm(y,topM)-gm(x,topM)).slice(0,10);
+  const show=v=>topM==='eng'?pct(v):topM==='follows'?'+'+N(v):N(v);
+  const pills=`<div class="pills" style="margin-bottom:12px">${METRICS[a.platform].map(([k,l])=>`<button class="pill ${topM===k?'on':''}" data-tm="${k}" type="button">${l}</button>`).join('')}</div>`;
+  if(!top.length)return pills+`<p class="mut">${topM==='follows'?'O Instagram só informa seguidores por post para fotos. Nenhuma foto neste período.':'Sem dados desta métrica neste período.'}</p>`;
+  return pills+'<div class="top">'+top.map((p,i)=>{const v=gm(p,topM),x=md>0?v/md:0;
+    return `<button class="tr" data-open="${esc(p.id)}" type="button"><span class="rk">${i+1}</span>${p.thumb?`<img loading="lazy" src="${esc(p.thumb)}" alt="" referrerpolicy="no-referrer" onerror="this.outerHTML='<span class=th0></span>'">`:'<span class="th0"></span>'}<span style="min-width:0"><div class="cp">${esc(p.caption)||'Sem legenda'}</div><div class="mt">${TYPES[p.type]||p.type} · ${dayStr(p.date)}</div></span><span class="vl"><b>${show(v)}</b>${x>=1.5?`<span>${x.toFixed(1).replace('.',',')}× a mediana</span>`:''}</span></button>`}).join('')+'</div>'
+  +`<p class="note">Os 10 melhores do período por ${METRICS[a.platform].find(m=>m[0]===topM)[1].toLowerCase()}. Mediana do período: ${md==null?'—':topM==='eng'?pct(md):N(Math.round(md))}.${legN?` ${legN} post(s) antigo(s), que só têm impressões, ficam fora do ranking.`:''}${topM==='follows'?' Reels não têm esta métrica.':''}</p>`;
+}
+function groupStats(a,psR){
+  const TT=a.platform==='tiktok',ok=psR.filter(p=>p.views!=null&&!p.legacy);
+  let g;
+  if(TT){
+    if(!ok.some(p=>p.duration!=null))return {noDur:true,st:[]};
+    g=[['Até 15 s',0,15],['15 a 30 s',15,30],['30 a 60 s',30,60],['Mais de 60 s',60,1e9]].map(([l,lo,hi])=>({l,ps:ok.filter(p=>p.duration!=null&&p.duration>=lo&&p.duration<hi)}));
+  }else g=['reel','foto','carrossel','video'].filter(t=>ok.some(p=>p.type===t)).map(t=>({l:TYPES[t],t,ps:ok.filter(p=>p.type===t)}));
+  const st=g.filter(x=>x.ps.length).map(x=>{
+    const v=x.ps.map(p=>p.views),w=x.ps.map(p=>p.watch).filter(y=>y!=null),fo=x.ps.map(p=>p.follows).filter(y=>y!=null),sh=x.ps.map(p=>p.shares).filter(y=>y!=null);
+    return {l:x.l,n:x.ps.length,av:avg(v),md:med(v),en:avg(x.ps.map(eng).filter(e=>e!=null)),
+      ex:TT?(sh.length?N(Math.round(avg(sh)))+' compart.':'—'):x.t==='reel'?(w.length?avg(w).toFixed(1).replace('.',',')+' s assistidos':'—'):(fo.length?sg(avg(fo))+' seg./post':'—')};
+  });
+  return {st};
+}
+function formatSection(a,psR){
+  const TT=a.platform==='tiktok',{st,noDur}=groupStats(a,psR);
+  if(noDur)return `<div class="card"><p class="mut">O robô ainda não coletou a duração dos vídeos do TikTok. Rode o robô novamente e recarregue.</p></div>`;
+  if(!st.length)return `<div class="card"><p class="mut">Sem posts com dados neste período.</p></div>`;
+  const left=hbars(st.map(x=>({l:x.l,s:`${x.n} post${x.n>1?'s':''}`,v:x.av,t:fmt(Math.round(x.av))})));
+  const elig=st.filter(x=>x.n>=3).sort((x,y)=>y.md-x.md);
+  let ins='';
+  if(elig.length>=2){const b=elig[0],w=elig[elig.length-1];ins=`<p class="ins"><b>${b.l}</b> tem a maior mediana de views (${fmt(Math.round(b.md))}), ${w.md>0?(b.md/w.md).toFixed(1).replace('.',',')+'× a de':'contra'} <b>${w.l}</b>.${st.some(x=>x.n<5)?' Há grupos com menos de 5 posts: use como indício.':''}</p>`}
+  return `<div class="row b"><div class="card"><h3>${TT?'Views médias por duração do vídeo':'Views médias por formato'}</h3>${left}${ins}<p class="note">${TT?'Duração informada pelo TikTok.':'O Instagram não informa a duração dos vídeos; para Reels, veja o tempo médio assistido na tabela.'} Posts antigos, que só têm impressões, ficam fora desta comparação.</p></div>
+  <div class="card"><h3>Comparação detalhada</h3><table class="tbl"><tr><th>${TT?'Duração':'Formato'}</th><th>Posts</th><th>Views médias</th><th>Mediana</th><th>Engaj.</th><th>${TT?'Compart. por post':'Extra'}</th></tr>${st.map(x=>`<tr><td><b>${x.l}</b></td><td>${x.n}</td><td>${fmt(Math.round(x.av))}</td><td>${fmt(Math.round(x.md))}</td><td>${pct(x.en)}</td><td>${x.ex}</td></tr>`).join('')}</table><p class="note">A mediana é o post "típico": um único post viral não a distorce como faz com a média.</p></div></div>`;
+}
+function weeksOf(a){
+  const r=range(),psR=a.posts.filter(p=>inR(p.date)),nm=netMap(a),today=dkey(new Date());
+  const ds=psR.map(p=>dkey(p.date)).sort(),startD=r.a>0?dkey(new Date(r.a)):ds[0];
+  if(!startD)return [];
+  const wk=k=>{const d=new Date(k+'T12:00:00Z');d.setUTCDate(d.getUTCDate()-(d.getUTCDay()+6)%7);return d.toISOString().slice(0,10)};
+  const add=(k,n)=>{const d=new Date(k+'T12:00:00Z');d.setUTCDate(d.getUTCDate()+n);return d.toISOString().slice(0,10)};
+  const byW={};for(const p of psR)(byW[wk(dkey(p.date))]??=[]).push(p);
+  const out=[],endK=wk(dkey(new Date(Math.min(r.b,Date.now()))));
+  for(let k=wk(startD);k<=endK;k=add(k,7)){
+    if(add(k,6)>=today)continue;           // semana ainda em andamento
+    if(r.a>0&&k<startD)continue;           // semana cortada pelo início do período
+    const ps=byW[k]||[],bad=ps.some(p=>p.legacy||p.views==null);
+    let net=0,ok=true;for(let i=0;i<7;i++){const v=nm[add(k,i)];if(v==null){ok=false;break}net+=v}
+    out.push({k,posts:ps.length,views:bad?null:ps.reduce((s,p)=>s+p.views,0),net:ok?net:null});
+  }
+  return out;
+}
+function weekChart(W,w=640,h=220){
+  const ws=W.slice(-26);if(!ws.length)return null;
+  const P={l:46,r:8,t:12,b:42},mx=Math.max(1,...ws.map(x=>x.views||0)),bw=(w-P.l-P.r)/ws.length,Y=v=>P.t+(h-P.t-P.b)*(1-v/mx);
+  const bars=ws.map((x,i)=>`<g><title>Semana de ${dayStr(x.k+'T12:00:00')}: ${x.posts} post(s)${x.views!=null?', '+N(x.views)+' views':''}${x.net!=null?', saldo '+sg(x.net,0)+' seguidores':''}</title>${x.views?`<rect x="${P.l+i*bw+bw*.15}" width="${bw*.7}" y="${Y(x.views)}" height="${Math.max(1,h-P.b-Y(x.views))}" rx="3" fill="var(--ac)"/>`:''}<text x="${P.l+i*bw+bw/2}" y="${h-24}" text-anchor="middle" font-size="10.5" fill="${x.posts?'var(--tx)':'var(--mut)'}">${x.posts}</text></g>`).join('');
+  return `<svg viewBox="0 0 ${w} ${h}"><line x1="${P.l}" x2="${w-P.r}" y1="${Y(mx)}" y2="${Y(mx)}" stroke="var(--bd)"/><text x="${P.l-6}" y="${Y(mx)+4}" text-anchor="end" font-size="11" fill="var(--mut)">${fmt(mx)}</text><text x="${P.l-6}" y="${h-P.b+4}" text-anchor="end" font-size="11" fill="var(--mut)">0</text>${bars}<text x="${P.l}" y="${h-4}" font-size="11" fill="var(--mut)">${dayStr(ws[0].k+'T12:00:00')}</text><text x="${w-P.r}" y="${h-4}" text-anchor="end" font-size="11" fill="var(--mut)">${dayStr(ws[ws.length-1].k+'T12:00:00')}</text></svg><div class="leg"><span><i style="background:var(--ac)"></i>Views dos posts publicados na semana</span><span>Número embaixo de cada barra: posts da semana</span></div>`;
+}
+function freqSection(a){
+  const W=weeksOf(a);
+  if(W.length<2)return '<p class="mut">Escolha um período maior (90 dias ou Tudo) para analisar a frequência por semana.</p>';
+  const B=[['Nenhum post',w=>w.posts===0],['1 post',w=>w.posts===1],['2 a 3 posts',w=>w.posts>=2&&w.posts<=3],['4 ou mais',w=>w.posts>=4]];
+  const rows=B.map(([l,fn])=>{const ws=W.filter(fn);if(!ws.length)return null;
+    const v=ws.filter(w=>w.views!=null).map(w=>w.views),vp=ws.filter(w=>w.views!=null&&w.posts>0).map(w=>w.views/w.posts),n=ws.filter(w=>w.net!=null).map(w=>w.net);
+    return `<tr><td><b>${l}</b></td><td>${ws.length}</td><td>${v.length?fmt(Math.round(avg(v))):'—'}</td><td>${vp.length?fmt(Math.round(avg(vp))):'—'}</td><td>${n.length?sg(avg(n),0):'—'}</td></tr>`}).filter(Boolean).join('');
+  return (weekChart(W)||'')+`<table class="tbl" style="margin-top:12px"><tr><th>Posts na semana</th><th>Semanas</th><th>Views na semana</th><th>Views por post</th><th>Seguidores na semana</th></tr>${rows}</table><p class="note">Só semanas completas. "Seguidores na semana" aparece apenas onde há saldo de todos os 7 dias (Instagram: últimos 30 dias; TikTok: desde que o robô começou).</p>`;
+}
+function howCard(a){
+  return a.platform==='tiktok'
+  ?`<ul class="how"><li>O TikTok informa só o <b>total</b> de seguidores. O robô calcula o saldo diário comparando cada dia com o anterior, então o histórico começa no primeiro dia de coleta.</li><li>Ele <b>não diz</b> quem seguiu ou deixou de seguir, nem de qual vídeo veio cada seguidor.</li><li>Por isso a leitura aqui é por <b>correlação</b>: o que acontece com os seguidores nos dias em que você posta.</li></ul>`
+  :`<ul class="how"><li>O Instagram informa <b>ganhos e perdas por dia</b> (últimos 30 dias) e, nas <b>fotos</b>, quantos seguidores vieram de cada post.</li><li>Para <b>Reels</b> não há seguidores por post: compare os dias com Reel no gráfico ao lado.</li><li>Ele <b>não diz</b> quem deixou de seguir, de onde saiu, nem em qual post isso aconteceu.</li></ul>`;
+}
+
+/* ───────── detalhado ───────── */
 function render(){
-  const a=curAcc(),TT=a.platform==='tiktok';
-  const ps30=a.posts.filter(p=>inR(p.date));
-  const sum=k=>ps30.reduce((s,p)=>s+(p[k]||0),0);
-  const engs=ps30.map(eng).filter(x=>x!=null),engAvg=engs.length?engs.reduce((s,x)=>s+x,0)/engs.length:null;
-  const dP=deltaR(a);
-  const hist=H?.accounts?.[a.key]?.followers||{};
-  const pts=Object.keys(hist).sort().filter(inDay).map(d=>({d,v:hist[d]}));
-  const fl=(a.flow||[]).filter(r=>inDay(r[0])),gTot=fl.reduce((s,r)=>s+r[1],0),lTot=fl.reduce((s,r)=>s+r[2],0);
+  const a=curAcc(),TT=a.platform==='tiktok',pr=profiles().find(x=>x.slug===slug(a.name));
+  const r=range(),psR=a.posts.filter(p=>inR(p.date));
+  const dP=deltaR(a),base=dP?a.followers-dP.n:null,gp=dP&&base>0?dP.n/base*100:null;
+  const fl=(a.flow||[]).filter(x=>inDay(x[0])),gTot=fl.reduce((s,x)=>s+x[1],0),lTot=fl.reduce((s,x)=>s+x[2],0);
+  const vs=psR.filter(p=>p.views!=null&&!p.legacy).map(p=>p.views);
+  const first=Math.min(Date.now(),...psR.map(p=>Date.parse(p.date))),days=Math.max(1,(R.mode==='all'?Date.now()-first:r.b-r.a)/864e5),perWeek=psR.length/days*7;
+  const hist=H?.accounts?.[a.key]?.followers||{},pts=Object.keys(hist).sort().filter(inDay).map(d=>({d,v:hist[d]}));
   const types=[['all','Todos'],...Object.entries(TYPES).filter(([k])=>a.posts.some(p=>p.type===k))];
   const seg=(name,arr)=>arr.map(([k,l])=>`<button class="pill ${String(f[name])===String(k)?'on':''}" data-f="${name}" data-v="${k}">${l}</button>`).join('');
+  const sec=(t,s)=>`<div class="sechd"><h2>${t}</h2><p>${s}</p></div>`;
 
   $('#app').innerHTML=`
-  <div class="nets">${[['instagram','Instagram'],['tiktok','TikTok']].map(([k,l])=>{const has=S.accounts.some(x=>x.platform===k);return `<button class="net ${plat===k?'on':''}" ${has?`data-plat="${k}"`:'disabled title="Ainda não conectado"'} type="button">${l}${has?'':' · não conectado'}</button>`}).join('')}</div>
-  <div class="rail">${accs().map(x=>`<button class="rb ${x.key===a.key?'on':''}" data-acc="${esc(x.key)}"><span class="av">${esc((x.name||'?').slice(0,2).toUpperCase())}${x.avatar?`<img src="${esc(x.avatar)}" alt="" referrerpolicy="no-referrer" onerror="this.remove()">`:''}</span><span class="nm">${esc(x.name)}</span></button>`).join('')}</div>
-  <h1>${esc(a.name)} <b>@${esc(a.username||'')}</b></h1>
+  <a class="back" href="#">← Todos os perfis</a>
+  <h1>${esc(a.name)} <b>${PN[a.platform]} @${esc(a.username||'')}</b></h1>
+  <div class="nets">${pr.accs.map(x=>`<a class="pill ${x.key===a.key?'on':''}" href="#${pr.slug}/${x.platform}">${PN[x.platform]}</a>`).join('')}</div>
   <p class="lead">${N(a.posts.length)} publicações carregadas${a.mediaCount&&a.mediaCount!==a.posts.length?` de ${N(a.mediaCount)} no perfil`:''} · seguindo ${fmt(a.following)}</p>
   ${a.error?`<div class="err">Não consegui atualizar esta conta agora (${esc(a.error)}). Os números abaixo são da última vez que funcionou.</div>`:''}
   <div class="per"><span class="mut">Período:</span>
     <div class="pills">${[['7','7 dias'],['30','30 dias'],['90','90 dias'],['all','Tudo'],['custom','Personalizado']].map(([k,l])=>`<button class="pill ${R.mode===k?'on':''}" data-r="${k}" type="button">${l}</button>`).join('')}</div>
-    ${R.mode==='custom'?`<label class="mut">de <input type="date" id="rf" value="${R.from}" max="${new Date().toLocaleDateString('en-CA',{timeZone:BRT})}"></label><label class="mut">até <input type="date" id="rt" value="${R.to}" max="${new Date().toLocaleDateString('en-CA',{timeZone:BRT})}"></label>`:''}
-    <span class="mut" style="font-size:13px">Ganhos e perdas por dia existem só para os últimos 30 dias.</span>
+    ${R.mode==='custom'?`<label class="mut">de <input type="date" id="rf" value="${R.from}" max="${dkey(new Date())}"></label><label class="mut">até <input type="date" id="rt" value="${R.to}" max="${dkey(new Date())}"></label>`:''}
   </div>
+
   <div class="stats">
     <div class="card stat"><div class="l">Seguidores</div><b>${fmt(a.followers)}</b><div class="d">${dl(dP,'no período')||'&nbsp;'}</div><div class="d">${esc(perLabel())}</div></div>
-    ${TT?`<div class="card stat"><div class="l">Curtidas do perfil (total)</div><b>${fmt(a.likesTotal)}</b><div class="d">${N(a.mediaCount)} vídeos</div></div>`:`<div class="card stat"><div class="l">Ganhos e perdas (período)</div><b>${fl.length?`<span class="up">+${N(gTot)}</span> <span class="down" style="font-size:.7em">−${N(lTot)}</span>`:'—'}</b><div class="d">${fl.length?`saldo ${gTot-lTot>=0?'+':''}${N(gTot-lTot)}`:'indisponível nesta conta'}</div></div>`}
-    <div class="card stat"><div class="l">Views (posts do período)</div><b>${fmt(sum('views'))}</b><div class="d">${ps30.length} posts · ${fmt(sum('likes'))} curtidas</div></div>
-    <div class="card stat"><div class="l">Engajamento médio</div><b>${pct(engAvg)}</b><div class="d">${TT?'curtidas + coment. + compart. ÷ views':'curtidas + coment. + salvos + compart. ÷ alcance'}</div></div>
+    <div class="card stat"><div class="l">Crescimento no período</div><b>${gp==null?'—':`<span class="${gp>=0?'up':'down'}">${sg(gp,2)}%</span>`}</b><div class="d">${!TT&&fl.length?`<span class="up">+${N(gTot)}</span> ganhos · <span class="down">−${N(lTot)}</span> perdas`:'seguidores novos ÷ base inicial'}</div></div>
+    <div class="card stat"><div class="l">Posts no período</div><b>${psR.length}</b><div class="d">${perWeek.toFixed(1).replace('.',',')} por semana</div></div>
+    <div class="card stat"><div class="l">Views por post</div><b>${vs.length?fmt(Math.round(avg(vs))):'—'}</b><div class="d">${vs.length?`mediana ${fmt(Math.round(med(vs)))} · total ${fmt(vs.reduce((s,x)=>s+x,0))}`:'sem dados no período'}</div></div>
   </div>
-  <div class="charts">
-    ${TT?`<div class="card"><h3>Seguidores: saldo por dia</h3>${flowChart({...a,gains:histGains(a)})||'<p class="mut">O gráfico aparece a partir do segundo dia de coleta do robô.</p>'}<p class="note">O TikTok não informa ganhos e perdas. O saldo é calculado pelo robô, comparando o total de cada dia com o do dia anterior.</p></div>`:`<div class="card"><h3>Seguidores ganhos e perdidos por dia</h3>${flowChart(a)||'<p class="mut">Sem dados de seguidores por dia.</p>'}<p class="note">Passe o mouse em cada dia para ver ganhos, perdas e saldo. O Instagram informa o total do dia: não diz quem deixou de seguir, de onde, nem em qual post isso aconteceu.${a.flowError?' <b>Perdas indisponíveis:</b> '+esc(a.flowError):''}</p></div>`}
+
+  ${sec('O que faz a conta crescer','Seguidores ao longo do tempo e o que acontece com eles nos dias em que você posta.')}
+  <div class="row a">
+    <div class="card"><h3>${TT?'Seguidores: saldo por dia':'Seguidores ganhos e perdidos por dia'}</h3>${(TT?flowChart({...a,gains:histGains(a)}):flowChart(a))||'<p class="mut">Sem dados de seguidores por dia neste período.</p>'}<p class="note">${TT?'Saldo calculado pelo robô (total do dia − total do dia anterior).':'Passe o mouse em cada dia para ver ganhos, perdas e saldo. Ganhos e perdas por dia existem só para os últimos 30 dias.'}${a.flowError?' <b>Perdas indisponíveis:</b> '+esc(a.flowError):''}</p></div>
     <div class="card"><h3>Total de seguidores</h3>${line(pts)||'<p class="mut">O gráfico aparece a partir do segundo dia de coleta do robô.</p>'}</div>
   </div>
-  <div class="charts">
-    <div class="card"><h3>Views por publicação (até 24 no período)</h3>${postBars(a)||'<p class="mut">Sem dados.</p>'}<p class="note">Clique numa barra para ver o post e a curva de crescimento dele.</p></div>
-    <div class="card"><h3>Melhor dia e horário para postar</h3>${heat(a)||'<p class="mut">Sem dados.</p>'}</div>
+  <div class="row b">
+    <div class="card"><h3>Seguidores por dia: com post × sem post</h3>${netBars(a)}</div>
+    <div class="card"><h3>Como ler estes números</h3>${howCard(a)}</div>
   </div>
-  <div class="shead"><h2>Publicações</h2><span class="mut" id="pcount"></span><span class="sp"></span>
+
+  ${sec('Posts que mais deram resultado','Os melhores do período, na métrica que você escolher. Clique para ver o post e a curva dele.')}
+  <div class="row c">
+    <div class="card"><h3>Top 10</h3>${topList(a,psR)}</div>
+    <div class="card"><h3>Views por publicação (até 24 no período)</h3>${postBars(a)||'<p class="mut">Sem dados.</p>'}<p class="note">Clique numa barra para abrir o post.</p></div>
+  </div>
+
+  ${sec(TT?'Que tipo de conteúdo performa melhor: duração':'Que tipo de conteúdo performa melhor: formato',TT?'Vídeos curtos ou longos: qual rende mais views e engajamento.':'Reel, foto ou carrossel: qual rende mais views e engajamento.')}
+  ${formatSection(a,psR)}
+
+  ${sec('Quando e com que frequência postar','Dia e horário com mais views, e o que muda quando você posta mais ou menos por semana.')}
+  <div class="row b">
+    <div class="card"><h3>Melhor dia e horário para postar</h3>${heat(a)||'<p class="mut">Sem dados.</p>'}</div>
+    <div class="card"><h3>Frequência: posts por semana</h3>${freqSection(a)}</div>
+  </div>
+
+  <div class="shead" style="margin-top:34px"><h2>Todas as publicações</h2><span class="mut" id="pcount"></span><span class="sp"></span>
     <input id="q" class="srch" type="search" placeholder="Buscar na legenda…" value="${esc(f.q)}">
     ${types.length>2?`<div class="pills">${seg('type',types)}</div>`:''}
     <div class="pills">${seg('sort',[['date','Recentes'],['views','Views'],['likes','Curtidas'],['eng','Engajamento']])}</div>
@@ -375,10 +589,9 @@ function openPost(id){
 }
 
 document.addEventListener('click',e=>{
-  const pl=e.target.closest('[data-plat]');if(pl){plat=pl.dataset.plat;cur=accs()[0]?.key;f.page=1;f.type='all';render();return}
+  const tm=e.target.closest('[data-tm]');if(tm){topM=tm.dataset.tm;render();return}
   const o=e.target.closest('[data-open]');if(o){openPost(o.dataset.open);return}
   if(e.target.closest('[data-close]')||e.target.id==='dlg'){$('#dlg').close();return}
-  const a=e.target.closest('[data-acc]');if(a){cur=a.dataset.acc;f.page=1;render();return}
   const rb=e.target.closest('[data-r]');if(rb){R.mode=rb.dataset.r;if(R.mode==='custom'&&!R.from){R.to=new Date().toLocaleDateString('en-CA',{timeZone:BRT});R.from=new Date(Date.now()-30*864e5).toLocaleDateString('en-CA',{timeZone:BRT})}f.page=1;render();return}
   const g=e.target.closest('[data-pg]');if(g&&!g.disabled){f.page=+g.dataset.pg;renderList();$('#plist').scrollIntoView({block:'start',behavior:'smooth'});return}
   const b=e.target.closest('[data-f]');if(b){f[b.dataset.f]=b.dataset.v;f.page=1;render()}
