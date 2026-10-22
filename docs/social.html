@@ -301,23 +301,16 @@ function heat(a){
 }
 
 function delta(a,days){
-  const h=H?.accounts?.[a.key]?.followers||{},ds=Object.keys(h).sort();
-  if(ds.length>=2){
-    const last=ds[ds.length-1],t=Date.parse(last)-days*864e5;
-    const old=ds.filter(d=>Date.parse(d)<=t).pop()||ds[0];
-    if(old!==last)return {n:h[last]-h[old],exact:Date.parse(old)<=t};
-  }
-  const g=a.gains||[];
-  if(g.length){const s=g.slice(-days).reduce((x,y)=>x+y[1],0);return {n:s,exact:g.length>=days}}
-  return null;
+  const nm=netMap(a),t=Date.now()-days*864e5,ds=Object.keys(nm).filter(d=>Date.parse(d+'T12:00:00-03:00')>=t);
+  if(!ds.length)return null;
+  return {n:ds.reduce((s,d)=>s+nm[d],0),exact:ds.length>=Math.min(days,30)-1};
 }
 function histGains(a){const h=H?.accounts?.[a.key]?.followers||{},ds=Object.keys(h).sort();return ds.slice(1).map((d,i)=>[d,h[d]-h[ds[i]]])}
 function deltaR(a){
-  const h=H?.accounts?.[a.key]?.followers||{},ds=Object.keys(h).sort().filter(inDay);
-  if(ds.length>=2)return {n:h[ds[ds.length-1]]-h[ds[0]],exact:true};
-  const g=(a.gains||[]).filter(x=>inDay(x[0]));
-  if(g.length)return {n:g.reduce((s,x)=>s+x[1],0),exact:R.mode==='30'||R.mode==='7'};
-  return null;
+  const nm=netMap(a),ds=Object.keys(nm).filter(inDay);
+  if(!ds.length)return null;
+  const want=['7','30','90'].includes(R.mode)?+R.mode:null;
+  return {n:ds.reduce((s,d)=>s+nm[d],0),exact:want?ds.length>=want-1:false};
 }
 const dl=(x,l)=>x?`<span class="${x.n>=0?'up':'down'}">${x.n>=0?'+':''}${fmt(x.n)}</span> ${l}${x.exact?'':' <span class="mut">(parcial)</span>'}`:'';
 
