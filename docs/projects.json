@@ -1,5 +1,5 @@
 {
- "rev": 32,
+ "rev": 33,
  "projects": [
   {
    "id": "pmvgrcjil",
@@ -443,6 +443,62 @@
      "60": 526000
     }
    }
+  },
+  {
+   "id": "pmvjoa8x9",
+   "artist": "Davidson Silva",
+   "name": "MINHA HISTORIA",
+   "launch": "2025-11-06",
+   "videos": [
+    {
+     "id": "ghxccsqOJG4",
+     "t": "Davidson Silva -  Me Conduzirás ( Video Oficial )",
+     "c": "Davidson Silva",
+     "d": "2025-11-19"
+    },
+    {
+     "id": "6HZdboUKI5Y",
+     "t": "Davidson Silva -  Tomé ( Video Oficial )",
+     "c": "Davidson Silva",
+     "d": "2025-11-18"
+    },
+    {
+     "id": "cKZK_JEDEkg",
+     "t": "Davidson Silva - Segura a Minha Mão ( Video Oficial )",
+     "c": "Davidson Silva",
+     "d": "2025-11-17"
+    },
+    {
+     "id": "2Rx8ZxBu7uE",
+     "t": "Davidson Silva -  Só Por Ti Jesus ( Video Oficial )",
+     "c": "Davidson Silva",
+     "d": "2025-11-13"
+    },
+    {
+     "id": "A9ysDR-3oMQ",
+     "t": "Davidson Silva -  Vem Espírito Santo ( Video Oficial )",
+     "c": "Davidson Silva",
+     "d": "2025-11-12"
+    },
+    {
+     "id": "uTlkgJYR6hE",
+     "t": "Davidson Silva -  Amar-te Mais ( Video Oficial )",
+     "c": "Davidson Silva",
+     "d": "2025-11-11"
+    },
+    {
+     "id": "dWlgxE3fyBg",
+     "t": "Davidson Silva -  Águas Profundas ( Video Oficial )",
+     "c": "Davidson Silva",
+     "d": "2025-11-10"
+    },
+    {
+     "id": "gaoG53ePJiA",
+     "t": "Davidson Silva -  Busque o Alto ( Video Oficial )",
+     "c": "Davidson Silva",
+     "d": "2025-11-06"
+    }
+   ]
   }
  ]
 }
