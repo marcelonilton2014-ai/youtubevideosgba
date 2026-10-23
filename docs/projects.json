@@ -1,5 +1,5 @@
 {
- "rev": 33,
+ "rev": 34,
  "projects": [
   {
    "id": "pmvgrcjil",
@@ -497,6 +497,50 @@
      "t": "Davidson Silva -  Busque o Alto ( Video Oficial )",
      "c": "Davidson Silva",
      "d": "2025-11-06"
+    }
+   ]
+  },
+  {
+   "id": "pmvl88ilv",
+   "artist": "Davidson Silva",
+   "name": "DVD AO VIVO - DAVIDSON SILVA",
+   "launch": "2018-01-31",
+   "videos": [
+    {
+     "id": "Hb97HxwzTyM",
+     "t": "Davidson Silva - Me Conduzirás (DVD Ao Vivo)",
+     "c": "Davidson Silva",
+     "d": "2018-01-31"
+    },
+    {
+     "id": "Zq-1QwcU2uM",
+     "t": "Davidson Silva - Exemplo de Esperança (DVD Ao Vivo) feat. Eliana Ribeiro",
+     "c": "Davidson Silva",
+     "d": "2018-01-31"
+    },
+    {
+     "id": "2yjXgPJ151Q",
+     "t": "Davidson Silva - Olha Pra Mim (DVD Ao Vivo) feat. Suely Façanha",
+     "c": "Davidson Silva",
+     "d": "2018-01-31"
+    },
+    {
+     "id": "dJX05tuQmJo",
+     "t": "Davidson Silva - Tomé (DVD Ao Vivo)",
+     "c": "Davidson Silva",
+     "d": "2018-01-31"
+    },
+    {
+     "id": "7nrG9A8sPqo",
+     "t": "Davidson Silva - Com Tua Mão (DVD Ao Vivo) feat. Adriana Arydes",
+     "c": "Davidson Silva",
+     "d": "2018-01-31"
+    },
+    {
+     "id": "HOVHDFUvkEk",
+     "t": "Davidson Silva - Vem Espírito Santo (DVD Ao Vivo)",
+     "c": "Davidson Silva",
+     "d": "2018-01-31"
     }
    ]
   }
