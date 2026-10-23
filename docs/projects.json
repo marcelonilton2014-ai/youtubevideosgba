@@ -1,5 +1,5 @@
 {
- "rev": 34,
+ "rev": 35,
  "projects": [
   {
    "id": "pmvgrcjil",
@@ -541,6 +541,38 @@
      "t": "Davidson Silva - Vem Espírito Santo (DVD Ao Vivo)",
      "c": "Davidson Silva",
      "d": "2018-01-31"
+    }
+   ]
+  },
+  {
+   "id": "pmvl89jjv",
+   "artist": "Flávio Vitor",
+   "name": "NOVO DE NOVO",
+   "launch": "2024-02-05",
+   "videos": [
+    {
+     "id": "dVgFwYCjwoo",
+     "t": "EGITO - FLAVIO VITOR JR. & JULLIANY SOUZA (NOVO DE NOVO - AO VIVO)",
+     "c": "Flávio Vitor",
+     "d": "2024-06-27"
+    },
+    {
+     "id": "9M3GpuN585A",
+     "t": "MÃE PRESENTE - FLAVIO VITOR JR. & IRMÃ ANA PAULA (NOVO DE NOVO - AO VIVO)",
+     "c": "Flávio Vitor",
+     "d": "2024-05-16"
+    },
+    {
+     "id": "DAG2CPc7WoI",
+     "t": "QUEIMA DE NOVO - FLAVIO VITOR JR. & TONY ALLYSSON (NOVO DE NOVO - AO VIVO)",
+     "c": "Flávio Vitor",
+     "d": "2024-04-11"
+    },
+    {
+     "id": "Mnh38blmrsA",
+     "t": "BATENDO NA PORTA - FLAVIO VITOR JR. & RAMON E RAFAEL (NOVO DE NOVO - AO VIVO)",
+     "c": "Flávio Vitor",
+     "d": "2024-02-05"
     }
    ]
   }
