@@ -1,5 +1,5 @@
 {
- "rev": 35,
+ "rev": 36,
  "projects": [
   {
    "id": "pmvgrcjil",
@@ -573,6 +573,98 @@
      "t": "BATENDO NA PORTA - FLAVIO VITOR JR. & RAMON E RAFAEL (NOVO DE NOVO - AO VIVO)",
      "c": "Flávio Vitor",
      "d": "2024-02-05"
+    }
+   ]
+  },
+  {
+   "id": "pmvl8adqr",
+   "artist": "Flávio Vitor",
+   "name": "O FOGO NÃO SE APAGOU",
+   "launch": "2022-12-06",
+   "videos": [
+    {
+     "id": "cG1uioTqMxI",
+     "t": "Jesus Meu Esposo - Flavio Vitor Jr & Juninho Cassimiro (Ao Vivo em São Paulo)",
+     "c": "Flávio Vitor",
+     "d": "2023-03-30"
+    },
+    {
+     "id": "2fPehIKyVN8",
+     "t": "Queima de Novo - Flavio Vitor Jr (Ao Vivo em São Paulo",
+     "c": "Flávio Vitor",
+     "d": "2023-03-29"
+    },
+    {
+     "id": "SXDs_7R0Ki4",
+     "t": "Acaso Não Sabeis - Flavio Vitor Jr (Ao Vivo em São Paulo)",
+     "c": "Flávio Vitor",
+     "d": "2023-03-28"
+    },
+    {
+     "id": "7xqk1k4PVmQ",
+     "t": "Príncipe da Paz - Flavio Vitor Jr & Fraternidade São João Paulo II (Ao Vivo Em São Paulo)",
+     "c": "Flávio Vitor",
+     "d": "2023-03-27"
+    },
+    {
+     "id": "f0c9oy7jl5c",
+     "t": "Egito - Flavio Vitor Jr. (Ao Vivo em São Paulo)",
+     "c": "Flávio Vitor",
+     "d": "2023-03-23"
+    },
+    {
+     "id": "NGzR503kJjY",
+     "t": "Batendo na Porta - Flavio Vitor Jr. (Ao Vivo Em São Paulo)",
+     "c": "Flávio Vitor",
+     "d": "2023-03-20"
+    },
+    {
+     "id": "F5WDZjlru6Y",
+     "t": "Yeshua - Flavio Vitor Jr. (Ao Vivo Em São Paulo)",
+     "c": "Flávio Vitor",
+     "d": "2023-03-02"
+    },
+    {
+     "id": "JXokIc7CHUE",
+     "t": "Se Ninguém Te Adorar Eu Vou - Flavio Vitor Jr. (Ao Vivo Em São Paulo)",
+     "c": "Flávio Vitor",
+     "d": "2023-02-24"
+    },
+    {
+     "id": "X-ER0ofavhQ",
+     "t": "Abro Mão - Flavio Vitor Jr & Débora Pires (Ao Vivo Em São Paulo)",
+     "c": "Flávio Vitor",
+     "d": "2023-02-17"
+    },
+    {
+     "id": "VZWXrwwAx_8",
+     "t": "Mãe Presente - Flavio Vitor Jr. (Ao Vivo Em São Paulo)",
+     "c": "Flávio Vitor",
+     "d": "2023-02-10"
+    },
+    {
+     "id": "ZddZ35xwgpI",
+     "t": "Maior Que os Meus Medos - Flavio Vitor Jr. (Ao Vivo Em São Paulo)",
+     "c": "Flávio Vitor",
+     "d": "2023-01-19"
+    },
+    {
+     "id": "UMZ5pE__mks",
+     "t": "Romanos 5 - Flavio Vitor Jr. (Ao Vivo Em São Paulo)",
+     "c": "Flávio Vitor",
+     "d": "2023-01-18"
+    },
+    {
+     "id": "c4KeUQKYE_o",
+     "t": "Deus da Bíblia - Flavio Vitor Jr & Bruna Prates (Ao Vivo Em São Paulo)",
+     "c": "Flávio Vitor",
+     "d": "2023-01-17"
+    },
+    {
+     "id": "XoK9pmoNnqE",
+     "t": "O Fogo Não Se Apagou - Flavio Vitor Jr. (Ao Vivo Em São Paulo)",
+     "c": "Flávio Vitor",
+     "d": "2022-12-06"
     }
    ]
   }
