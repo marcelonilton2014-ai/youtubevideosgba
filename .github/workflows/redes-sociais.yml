@@ -9,6 +9,10 @@ on:
         description: 'Código do TikTok (só na primeira conexão; gere em tiktok-conectar.html)'
         required: false
         default: ''
+      tiktok_conta:
+        description: 'Conta que vai receber o código (ex.: gba-music-tiktok ou gba-worship-tiktok)'
+        required: false
+        default: ''
 
 concurrency:
   group: redes-sociais
@@ -36,6 +40,7 @@ jobs:
           SOCIAL_ACCOUNTS_5: ${{ secrets.SOCIAL_ACCOUNTS_5 }}
           SOCIAL_ACCOUNTS_6: ${{ secrets.SOCIAL_ACCOUNTS_6 }}
           TIKTOK_CODE: ${{ inputs.tiktok_code }}
+          TIKTOK_CONTA: ${{ inputs.tiktok_conta }}
 
       - name: Salvar no repositório
         run: |
