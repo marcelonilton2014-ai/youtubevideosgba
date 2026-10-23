@@ -348,8 +348,13 @@ async function tiktok(acc, hist, d, prevPosts) {
   try { tok = openTokens(fs.readFileSync(file, 'utf8'), secret); } catch {}
 
   const code = (process.env.TIKTOK_CODE || '').trim();
+  const alvo = (process.env.TIKTOK_CONTA || '').trim();
+  // O código vale para UMA conta só: ele só é usado na conta indicada em TIKTOK_CONTA (ex.: gba-music-tiktok).
+  const usaCodigo = !!code && !!alvo && alvo === acc.key;
+  if (!tok) console.error(`TikTok ${acc.key}: nenhuma conexão salva em ${path.relative(ROOT, file)}.`);
+  if (code && !alvo) console.error('Código do TikTok ignorado: preencha também o campo "conta" no Run workflow.');
   let r;
-  if (code && !tok) {
+  if (usaCodigo && !tok) {
     if (!acc.redirectUri) throw new Error('TikTok: falta redirectUri no SOCIAL_ACCOUNTS');
     // O código vale poucos minutos e só uma vez. Não imprimimos o código (o log é público), só o tamanho.
     console.error(`TikTok ${acc.key}: trocando o código recebido (${code.length} caracteres) por acesso...`);
