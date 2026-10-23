@@ -372,6 +372,12 @@ async function tiktok(acc, hist, d, prevPosts) {
         if (i === formas.length - 1) throw e;
       }
     }
+    // Conexão nova com "zerar = sim": apaga o histórico antigo desta conta (útil se ele ficou misturado com outra conta).
+    if ((process.env.TIKTOK_ZERAR || '').trim().toLowerCase() === 'sim') {
+      console.error(`TikTok ${acc.key}: histórico antigo apagado para recomeçar do zero.`);
+      delete hist.accounts[acc.key];
+      prevPosts = [];
+    }
   } else if (tok) {
     r = await ttToken({
       client_key: acc.clientKey, client_secret: secret, grant_type: 'refresh_token', refresh_token: tok.refresh_token
