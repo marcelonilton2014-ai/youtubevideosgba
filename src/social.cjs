@@ -303,7 +303,7 @@ function openTokens(b64, secret) {
   d.setAuthTag(b.subarray(12, 28));
   return JSON.parse(Buffer.concat([d.update(b.subarray(28)), d.final()]).toString('utf8'));
 }
-async function ttToken(params) {
+async function ttTokenRaw(params) {
   const r = await fetch(TT + '/oauth/token/', {
     method: 'POST',
     headers: { 'Content-Type': 'application/x-www-form-urlencoded', 'Cache-Control': 'no-cache' },
@@ -313,7 +313,7 @@ async function ttToken(params) {
   if (!r.ok || j.error) throw new Error('TikTok: ' + (j.error_description || j.error || 'HTTP ' + r.status));
   return j;
 }
-async function ttApi(path, access, opts = {}) {
+async function ttApiRaw(path, access, opts = {}) {
   const r = await fetch(TT + path, {
     ...opts,
     headers: { Authorization: 'Bearer ' + access, 'Content-Type': 'application/json; charset=UTF-8' }
@@ -324,6 +324,21 @@ async function ttApi(path, access, opts = {}) {
   }
   return j.data || {};
 }
+
+// O TikTok às vezes responde "rate limit exceeded". Em vez de desistir, o robô espera e tenta de novo.
+const limitado = (m) => /rate limit|too many|\b429\b/i.test(String(m));
+async function comRetry(fn) {
+  const esperas = [15000, 45000, 90000];
+  for (let i = 0; ; i++) {
+    try { return await fn(); } catch (e) {
+      if (!limitado(e.message) || i >= esperas.length) throw e;
+      console.error(`TikTok limitou as chamadas. Esperando ${esperas[i] / 1000}s e tentando de novo (${i + 1}/${esperas.length})...`);
+      await sleep(esperas[i]);
+    }
+  }
+}
+const ttToken = (p) => comRetry(() => ttTokenRaw(p));
+const ttApi = (path, access, opts) => comRetry(() => ttApiRaw(path, access, opts));
 
 async function tiktok(acc, hist, d, prevPosts) {
   const secret = acc.clientSecret;
@@ -361,20 +376,38 @@ async function tiktok(acc, hist, d, prevPosts) {
     user = (await ttApi(`/user/info/?fields=${base}`, access)).user || {};
   }
 
-  // vídeos (20 por página)
+  // vídeos (20 por página). Para não estourar o limite do TikTok: no dia a dia o robô lê só os 100 mais recentes;
+  // na primeira execução de cada dia ele percorre a lista inteira. Os mais antigos reaproveitam o que já estava salvo.
+  const hAcc = (hist.accounts[acc.key] ??= { followers: {}, posts: {} });
+  const fullDay = !(prevPosts && prevPosts.length) || hAcc.ttFull !== d;
+  const maxPages = fullDay ? Infinity : 5;
   const vids = [];
-  let cursor, more = true;
-  while (more && vids.length < MAX_POSTS) {
-    const data = await ttApi(
-      '/video/list/?fields=id,title,video_description,create_time,cover_image_url,share_url,duration,like_count,comment_count,share_count,view_count',
-      access,
-      { method: 'POST', body: JSON.stringify(cursor ? { max_count: 20, cursor } : { max_count: 20 }) }
-    );
+  let cursor, more = true, pages = 0, limited = false;
+  while (more && vids.length < MAX_POSTS && pages < maxPages) {
+    let data;
+    try {
+      data = await ttApi(
+        '/video/list/?fields=id,title,video_description,create_time,cover_image_url,share_url,duration,like_count,comment_count,share_count,view_count',
+        access,
+        { method: 'POST', body: JSON.stringify(cursor ? { max_count: 20, cursor } : { max_count: 20 }) }
+      );
+    } catch (e) {
+      if (limitado(e.message) && vids.length) {
+        limited = true;
+        console.error('TikTok continuou limitando no meio da lista: mantenho o que já li e o que estava salvo.');
+        break;
+      }
+      throw e;
+    }
     vids.push(...(data.videos || []));
     more = !!data.has_more && data.cursor != null;
     cursor = data.cursor;
+    pages++;
+    if (more) await sleep(400);
   }
-  console.log(vids.length + ' vídeos do TikTok encontrados');
+  const complete = !more && !limited;      // percorreu a lista inteira
+  if (complete && fullDay) hAcc.ttFull = d;
+  console.log(vids.length + ' vídeos do TikTok lidos' + (complete ? ' (lista completa)' : ' (só os mais recentes)'));
 
   const posts = vids.map((v) => ({
     id: String(v.id),
@@ -391,14 +424,21 @@ async function tiktok(acc, hist, d, prevPosts) {
     reach: null, saved: null, follows: null, visits: null, watch: null, interactions: null
   }));
 
-  const h = (hist.accounts[acc.key] ??= { followers: {}, posts: {} });
+  const fresh = new Set(posts.map((p) => p.id));
+  if (!complete) {
+    for (const o of prevPosts || []) if (!fresh.has(o.id)) posts.push(o);
+    posts.sort((a, b) => Date.parse(b.date) - Date.parse(a.date));
+  }
+
+  const h = hAcc;
   if (user.follower_count != null) h.followers[d] = user.follower_count;
   const limit = Date.now() - HIST_DAYS * 864e5;
   for (const p of posts) {
-    if (Date.parse(p.date) < limit) continue;
+    if (!fresh.has(p.id) || Date.parse(p.date) < limit) continue;
     (h.posts[p.id] ??= {})[d] = [p.views, p.likes];
   }
-  for (const id of Object.keys(h.posts)) if (!posts.find((p) => p.id === id)) delete h.posts[id];
+  const keep = new Set(posts.map((p) => p.id));
+  for (const id of Object.keys(h.posts)) if (!keep.has(id)) delete h.posts[id];
 
   return {
     key: acc.key,
