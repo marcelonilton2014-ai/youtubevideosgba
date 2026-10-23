@@ -351,10 +351,22 @@ async function tiktok(acc, hist, d, prevPosts) {
   let r;
   if (code && !tok) {
     if (!acc.redirectUri) throw new Error('TikTok: falta redirectUri no SOCIAL_ACCOUNTS');
-    r = await ttToken({
-      client_key: acc.clientKey, client_secret: secret, grant_type: 'authorization_code',
-      code: decodeURIComponent(code), redirect_uri: acc.redirectUri
-    });
+    // O código vale poucos minutos e só uma vez. Não imprimimos o código (o log é público), só o tamanho.
+    console.error(`TikTok ${acc.key}: trocando o código recebido (${code.length} caracteres) por acesso...`);
+    let decod = code;
+    try { decod = decodeURIComponent(code); } catch {}
+    const formas = [...new Set([decod, code])];
+    for (let i = 0; i < formas.length; i++) {
+      try {
+        r = await ttToken({
+          client_key: acc.clientKey, client_secret: secret, grant_type: 'authorization_code',
+          code: formas[i], redirect_uri: acc.redirectUri
+        });
+        break;
+      } catch (e) {
+        if (i === formas.length - 1) throw e;
+      }
+    }
   } else if (tok) {
     r = await ttToken({
       client_key: acc.clientKey, client_secret: secret, grant_type: 'refresh_token', refresh_token: tok.refresh_token
