@@ -13,6 +13,10 @@ on:
         description: 'Conta que vai receber o código (ex.: gba-music-tiktok ou gba-worship-tiktok)'
         required: false
         default: ''
+      tiktok_zerar:
+        description: 'Escreva sim para apagar o histórico antigo do TikTok dessa conta (só se ele estiver errado)'
+        required: false
+        default: ''
 
 concurrency:
   group: redes-sociais
@@ -41,13 +45,15 @@ jobs:
           SOCIAL_ACCOUNTS_6: ${{ secrets.SOCIAL_ACCOUNTS_6 }}
           TIKTOK_CODE: ${{ inputs.tiktok_code }}
           TIKTOK_CONTA: ${{ inputs.tiktok_conta }}
+          TIKTOK_ZERAR: ${{ inputs.tiktok_zerar }}
 
       - name: Salvar no repositório
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add docs/social.json docs/social-history.json
-          git add state/tiktok-*.enc state/ig-*.enc 2>/dev/null || true
+          # adiciona a pasta state inteira (um 'git add' com padrão sem arquivos correspondentes falha e não salva nada)
+          if [ -d state ]; then git add -f state; fi
           if git diff --cached --quiet; then echo "Sem mudanças"; exit 0; fi
           git commit -m "Atualiza redes sociais"
           for i in 1 2 3; do
