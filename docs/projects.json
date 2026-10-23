@@ -1,5 +1,5 @@
 {
- "rev": 37,
+ "rev": 38,
  "projects": [
   {
    "id": "pmvgrcjil",
@@ -745,6 +745,50 @@
      "t": "Filho Amado - Ramon e Rafael (DVD O Tempo - Ao Vivo)",
      "c": "Ramone Rafael",
      "d": "2024-04-22"
+    }
+   ]
+  },
+  {
+   "id": "pmvl8cjic",
+   "artist": "Um Peregrino",
+   "name": "Caminho Cruz e Canções - 1P",
+   "launch": "2026-04-20",
+   "videos": [
+    {
+     "id": "tEoj55Jr9EE",
+     "t": "Nosso Céu - Um Peregrino, Mariana Barros (Caminho, Cruz e Canções)",
+     "c": "Um Peregrino",
+     "d": "2026-05-12"
+    },
+    {
+     "id": "AzzrsV4bSCo",
+     "t": "Dez Corações - Um Peregrino (Caminho, Cruz e Canções)",
+     "c": "Um Peregrino",
+     "d": "2026-05-11"
+    },
+    {
+     "id": "1IJGsrutstw",
+     "t": "Tem Um Manto Me Esperando - Um Peregrino, Gabi Ribeiro (Caminho, Cruz e Canções)",
+     "c": "Um Peregrino",
+     "d": "2026-05-08"
+    },
+    {
+     "id": "B4UUswWbEno",
+     "t": "Reunião - Um Peregrino (Caminho, Cruz e Canções)",
+     "c": "Um Peregrino",
+     "d": "2026-04-30"
+    },
+    {
+     "id": "2mcFD77YO28",
+     "t": "Não Tire os Olhos de Mim - Um Peregrino (Caminho, Cruz e Canções)",
+     "c": "Um Peregrino",
+     "d": "2026-04-29"
+    },
+    {
+     "id": "jRYONSYppNI",
+     "t": "Desculpa Mundo - Um Peregrino (Caminho, Cruz e Canções)",
+     "c": "Um Peregrino",
+     "d": "2026-04-20"
     }
    ]
   }
