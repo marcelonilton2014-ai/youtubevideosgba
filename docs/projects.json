@@ -1,5 +1,5 @@
 {
- "rev": 39,
+ "rev": 40,
  "projects": [
   {
    "id": "pmvgrcjil",
@@ -368,6 +368,18 @@
      "t": "Ave Maria - Ramon e Rafael | O Som da Igreja 2",
      "c": "Ramone Rafael",
      "d": "2026-10-11"
+    },
+    {
+     "id": "sE15WmnS2Bs",
+     "t": "Me Ama - Ramon e Rafael | O Som da Igreja 2",
+     "c": "Ramone Rafael",
+     "d": "2026-10-28"
+    },
+    {
+     "id": "_rF8yJALF3E",
+     "t": "Jesus Meu Esposo - Ramon e Rafael | O Som da Igreja 2",
+     "c": "Ramone Rafael",
+     "d": "2026-10-26"
     }
    ]
   },
