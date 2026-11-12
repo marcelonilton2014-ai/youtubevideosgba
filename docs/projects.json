@@ -1,5 +1,5 @@
 {
- "rev": 41,
+ "rev": 42,
  "projects": [
   {
    "id": "pmvgrcjil",
@@ -809,7 +809,8 @@
      "c": "GBA Music",
      "d": "2026-08-28"
     }
-   ]
+   ],
+   "desc": "INICIADA 26/10\nENCERRADA 09/11"
   }
  ]
 }
