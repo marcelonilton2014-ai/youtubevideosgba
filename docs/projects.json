@@ -1,5 +1,5 @@
 {
- "rev": 40,
+ "rev": 41,
  "projects": [
   {
    "id": "pmvgrcjil",
@@ -794,6 +794,20 @@
      "t": "Desculpa Mundo - Um Peregrino (Caminho, Cruz e Canções)",
      "c": "Um Peregrino",
      "d": "2026-04-20"
+    }
+   ]
+  },
+  {
+   "id": "pmwdiuy76",
+   "artist": "CAMPANHAS ONERPM",
+   "name": "De Ti Preciso",
+   "launch": "2026-08-28",
+   "videos": [
+    {
+     "id": "NQANBHkvEos",
+     "t": "De Ti Preciso - Flavio Vitor Jr. | GBA Stage",
+     "c": "GBA Music",
+     "d": "2026-08-28"
     }
    ]
   }
