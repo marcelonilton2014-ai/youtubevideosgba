@@ -1,5 +1,5 @@
 {
- "rev": 42,
+ "rev": 43,
  "projects": [
   {
    "id": "pmvgrcjil",
@@ -811,6 +811,21 @@
     }
    ],
    "desc": "INICIADA 26/10\nENCERRADA 09/11"
+  },
+  {
+   "id": "pmwm8qut7",
+   "artist": "GBA Music",
+   "name": "VIVA JESUS",
+   "desc": "CLIPE DE NATAL COM TODOS ARTISTAS",
+   "launch": "2026-11-17",
+   "videos": [
+    {
+     "id": "ihRu_5DXnV8",
+     "t": "VIVA JESUS — GBA MUSIC | Especial de Natal",
+     "c": "GBA Music",
+     "d": "2026-11-17"
+    }
+   ]
   }
  ]
 }
